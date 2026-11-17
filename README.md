@@ -6,7 +6,7 @@
 
 Work with your AI visually, not through walls of text: it writes maps in Markdown, you see them drawn and edit them, and it reads them back as its context.
 
-[Get started](#get-started) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback-and-contributions)
+[Get started](#get-started) · [Live demo](https://florentbx.github.io/maps.md/showcase.html) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback-and-contributions)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="maps/images/markdown-to-map-dark.png">
@@ -14,6 +14,8 @@ Work with your AI visually, not through walls of text: it writes maps in Markdow
 </picture>
 
 ## Get started
+
+**Try it first, nothing to install**: [see the examples drawn](https://florentbx.github.io/maps.md/showcase.html), as your maps would be.
 
 In the folder of your project (Node 22 or later):
 
