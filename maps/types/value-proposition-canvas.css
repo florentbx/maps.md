@@ -1,0 +1,84 @@
+/* The style of the value proposition canvas (types/value-proposition-canvas.css). It reaches the drawing only through
+   the hooks of the page: a property (data-prop). Only tokens of the page, and, at the top, the dimensions of this type.
+   Nothing here depends on a map. As Strategyzer draws it: the value map as a square on the left, the customer profile
+   as a round shape on the right (a rounded square rather than a circle, so that any text stays inside), each answer
+   facing what it answers, each part with the icon of the canvas. Icons: Lucide (ISC license). */
+
+:root {
+  --i-gift: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%224%22%20rx%3D%221%22%2F%3E%3Cpath%20d%3D%22M12%208v13%22%2F%3E%3Cpath%20d%3D%22M19%2012v7a2%202%200%200%201-2%202H7a2%202%200%200%201-2-2v-7%22%2F%3E%3Cpath%20d%3D%22M7.5%208a2.5%202.5%200%200%201%200-5A4.8%208%200%200%201%2012%208a4.8%208%200%200%201%204.5-5%202.5%202.5%200%200%201%200%205%22%2F%3E%3C%2Fsvg%3E");
+  --i-trending-up: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2222%207%2013.5%2015.5%208.5%2010.5%202%2017%22%2F%3E%3Cpolyline%20points%3D%2216%207%2022%207%2022%2013%22%2F%3E%3C%2Fsvg%3E");
+  --i-pill: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m10.5%2020.5%2010-10a4.95%204.95%200%201%200-7-7l-10%2010a4.95%204.95%200%201%200%207%207Z%22%2F%3E%3Cpath%20d%3D%22m8.5%208.5%207%207%22%2F%3E%3C%2Fsvg%3E");
+  --i-smile: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%2F%3E%3Cpath%20d%3D%22M8%2014s1.5%202%204%202%204-2%204-2%22%2F%3E%3Cline%20x1%3D%229%22%20x2%3D%229.01%22%20y1%3D%229%22%20y2%3D%229%22%2F%3E%3Cline%20x1%3D%2215%22%20x2%3D%2215.01%22%20y1%3D%229%22%20y2%3D%229%22%2F%3E%3C%2Fsvg%3E");
+  --i-frown: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%2F%3E%3Cpath%20d%3D%22M16%2016s-1.5-2-4-2-4%202-4%202%22%2F%3E%3Cline%20x1%3D%229%22%20x2%3D%229.01%22%20y1%3D%229%22%20y2%3D%229%22%2F%3E%3Cline%20x1%3D%2215%22%20x2%3D%2215.01%22%20y1%3D%229%22%20y2%3D%229%22%2F%3E%3C%2Fsvg%3E");
+  --i-user: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2021v-2a4%204%200%200%200-4-4H9a4%204%200%200%200-4%204v2%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%227%22%20r%3D%224%22%2F%3E%3C%2Fsvg%3E");
+  --i-briefcase: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16%2020V4a2%202%200%200%200-2-2h-4a2%202%200%200%200-2%202v16%22%2F%3E%3Crect%20width%3D%2220%22%20height%3D%2214%22%20x%3D%222%22%20y%3D%226%22%20rx%3D%222%22%2F%3E%3C%2Fsvg%3E");
+  /* The dimensions of this type */
+  --canvas-width: 1100px; /* a value proposition */
+  --canvas-height: 460px; /* its square and its round shape */
+  --canvas-round: 140px; /* the corners of the round shape; the parts keep a third of it away from them */
+  --canvas-head: var(--space-2xl); /* the room of the titles above the shapes */
+  --canvas-badge: 2.75rem; /* the gift and the person in the middle of the shapes */
+  --canvas-layer-badge: 2; /* the badges and the arrows of the fit, over the parts (--z-raised) */
+  --canvas-layer-icon: 3; /* the icons, over their badges */
+  --canvas-fit-line: 1.2em; /* the line of the arrows of the fit, centered on the line between gains and pains */
+}
+
+/* A value proposition: its segment as its title, then the canvas */
+.cards--poster { justify-items: start; gap: var(--space-2xl); }
+.card { width: var(--canvas-width); padding: 0; border: 0; background: none; box-shadow: none; cursor: default; } /* not a card: its two shapes are */
+.card h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-title); cursor: pointer; }
+
+/* As the canvas is drawn, for who does not know it: a title above each shape, the offer on the left and the people
+   it serves on the right; a gift in the middle of the square, a person in the middle of the round shape, and two
+   arrows that meet between them, on the line that splits gains and pains: the fit */
+.poster { padding-top: var(--canvas-head); }
+.poster :is([data-prop="products-and-services"], [data-prop="customer-jobs"])::before { position: absolute; top: calc(-1 * var(--canvas-head)); left: 0; text-align: center; font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); color: var(--color-text); }
+.poster [data-prop="products-and-services"]::before { content: "Value map: the offer"; width: calc(200% - var(--space-xl)); }
+.poster [data-prop="customer-jobs"]::before { content: "Customer profile: the people"; top: 0; left: calc(50% + var(--space-xl)); width: calc(50% - var(--space-xl)); }
+.poster [data-prop="customer-jobs"] { position: static; }
+.poster [data-prop="gain-creators"]::before { content: ""; position: absolute; z-index: var(--canvas-layer-badge); bottom: calc(-1 * var(--canvas-badge) / 2); width: var(--canvas-badge); height: var(--canvas-badge); box-sizing: border-box; border: var(--border-width-strong) solid var(--color-text-muted); border-radius: 50%; background: var(--color-bg); }
+.poster [data-prop="gain-creators"]::before { left: calc(-1 * var(--canvas-badge) / 2); }
+.poster [data-prop="gains"]::after { content: ""; position: absolute; z-index: var(--canvas-layer-badge); right: calc(-1 * var(--canvas-badge) / 2); bottom: calc(-1 * var(--canvas-badge) / 2); width: var(--canvas-badge); height: var(--canvas-badge); box-sizing: border-box; border: var(--border-width-strong) solid var(--color-text-muted); border-radius: 50%; background: var(--color-bg); }
+/* (border-box: the circle, its border included, centered on the lines, as its icon) */
+/* Their icons, over them, in the color of the theme (a mask, as every icon) */
+.poster [data-prop="gain-creators"]::after, .poster [data-prop="gains"]::before { content: ""; position: absolute; z-index: var(--canvas-layer-icon); bottom: calc(-1 * var(--canvas-badge) / 2); width: var(--canvas-badge); height: var(--canvas-badge); background: var(--color-text-muted); -webkit-mask: var(--badge) center / 55% no-repeat; mask: var(--badge) center / 55% no-repeat; }
+.poster [data-prop="gain-creators"]::after { left: calc(-1 * var(--canvas-badge) / 2); --badge: var(--i-gift); }
+.poster [data-prop="gains"]::before { right: calc(-1 * var(--canvas-badge) / 2); --badge: var(--i-user); }
+.poster :is([data-prop="products-and-services"]) { padding-right: calc(var(--canvas-badge) / 2 + var(--space-sm)); }
+.poster :is([data-prop="pain-relievers"], [data-prop="gain-creators"]) { padding-left: calc(var(--canvas-badge) / 2 + var(--space-sm)); }
+.poster [data-prop="pain-relievers"]::after { content: "▶ ◀"; position: absolute; z-index: var(--canvas-layer-badge); right: calc(-2 * var(--space-xl)); top: calc(-1 * var(--canvas-fit-line) / 2); width: calc(2 * var(--space-xl)); text-align: center; font-size: var(--font-size-sm); line-height: var(--canvas-fit-line); color: var(--color-text-muted); }
+
+/* The square and the round shape, behind the parts: the two halves of the poster */
+.poster { position: relative; min-height: var(--canvas-height); gap: 0; margin: 0; }
+.poster::before, .poster::after { content: ""; position: absolute; top: var(--canvas-head); bottom: 0; width: calc(50% - var(--space-xl)); border: var(--border-width-strong) solid var(--color-text-muted); background: var(--color-bg); }
+.poster::before { left: 0; border-radius: var(--radius-md); }
+.poster::after { right: 0; border-radius: var(--canvas-round); }
+
+/* The parts: no box, over the shapes; lines between the parts of the square */
+.poster section { position: relative; z-index: var(--z-raised); min-height: 0; border: 0; border-radius: 0; padding: var(--space-lg); }
+.poster [data-prop="products-and-services"] { border-right: var(--border-width) solid var(--color-border); }
+.poster [data-prop="gain-creators"] { border-bottom: var(--border-width) solid var(--color-border); }
+/* The space between the square and the round shape, in the middle only */
+.poster :is([data-prop="gain-creators"], [data-prop="pain-relievers"]) { margin-right: var(--space-xl); }
+.poster :is([data-prop="gains"], [data-prop="pains"]) { margin-left: var(--space-xl); }
+/* In the round shape, the parts keep away from its corners */
+.poster [data-prop="gains"] { padding: var(--space-2xl) var(--space-lg) var(--space-lg) var(--space-2xl); }
+.poster [data-prop="pains"] { padding: var(--space-lg) var(--space-lg) var(--space-2xl) var(--space-2xl); }
+.poster [data-prop="customer-jobs"] { align-self: center; padding: var(--space-2xl) var(--space-2xl) var(--space-2xl) calc(var(--canvas-badge) / 2 + var(--space-sm)); }
+.poster [data-prop="gains"] { border-bottom: var(--border-width) solid var(--color-border); }
+.poster :is([data-prop="gains"], [data-prop="pains"]) { border-right: var(--border-width) solid var(--color-border); }
+
+/* Each part: its icon before its name */
+.poster h3 { display: flex; align-items: center; gap: var(--space-xs); color: var(--color-text); }
+.poster h3::before { content: ""; flex: none; width: var(--size-icon); height: var(--size-icon); background: var(--color-text-muted); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+.poster [data-prop="products-and-services"] { --icon: var(--i-gift); }
+.poster [data-prop="gain-creators"] { --icon: var(--i-trending-up); }
+.poster [data-prop="pain-relievers"] { --icon: var(--i-pill); }
+.poster [data-prop="gains"] { --icon: var(--i-smile); }
+.poster [data-prop="pains"] { --icon: var(--i-frown); }
+.poster [data-prop="customer-jobs"] { --icon: var(--i-briefcase); }
+
+/* The items: plain lines, no bullets */
+.poster ul { list-style: none; padding: 0; }
+.poster li { font-size: var(--font-size-sm); line-height: var(--leading-tight); }
+.poster li + li { margin-top: var(--space-xs); }

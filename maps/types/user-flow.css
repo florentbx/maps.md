@@ -1,0 +1,58 @@
+/* The style of the user flow (types/user-flow.css). It reaches the drawing only through the hooks of the page: the view
+   (data-view-name), the kind of a step and the label of an arrow (data-value), a property (data-prop). Nothing here
+   depends on a map. Only tokens of the page, and, at the top, the inks and the dimensions of this type: change them
+   there. */
+
+:root {
+  --ink-action: var(--color-ink-blue);
+  --ink-screen: var(--color-ink-purple);
+  --ink-decision: var(--color-ink-amber);
+  --screen-card: 260px; /* a screen, in Screens */
+}
+
+/* ---------- Every view: one look per kind of step ----------
+   A screen: a sharp card with a strong border, as a page; an action: a blue pill; a decision: an amber diamond. */
+.node[data-value="screen"] rect { rx: var(--radius-xs); fill: var(--color-bg); stroke: var(--ink-screen); stroke-width: var(--stroke-medium); }
+.node[data-value="screen"] text { font-weight: var(--font-weight-bold); }
+/* a pill: a radius larger than half the box (an SVG radius of 999px would round the box into an ellipse) */
+.node[data-value="action"] rect { rx: calc(var(--radius-xl) * 2); ry: calc(var(--radius-xl) * 2); fill: var(--color-tint-blue); stroke: var(--ink-action); stroke-width: var(--stroke-thin); }
+.node[data-value="decision"] polygon { fill: var(--color-tint-amber); stroke: var(--ink-decision); stroke-width: var(--stroke-thin); }
+.node[data-value="decision"] text { font-weight: var(--font-weight-bold); }
+
+/* The same look in the legend */
+.key[data-value="screen"] { border: var(--border-width-strong) solid var(--ink-screen); border-radius: var(--radius-xs); background: var(--color-bg); }
+.key[data-value="action"] { border: var(--border-width) solid var(--ink-action); border-radius: var(--radius-pill); background: var(--color-tint-blue); }
+.key[data-value="decision"] { border: var(--border-width) solid var(--ink-decision); background: var(--color-tint-amber); }
+
+/* The answers of a decision, on its arrows: easier to read; a yes in green, a no in red */
+.edge-label text { font-weight: var(--font-weight-bold); fill: var(--color-text); }
+.edge[data-value^="yes"] .edge-label text { fill: var(--color-positive); }
+.edge:is([data-value="no"], [data-value="refused"], [data-value="timeout"]) .edge-label text { fill: var(--color-negative); }
+
+/* ---------- "Flow": the main view; its description is the flow itself, as its title ---------- */
+[data-view-name="flow"] .view-description { font-size: var(--font-size-title); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); color: var(--color-text); }
+
+/* ---------- "Screens": the screens to design, each as a small window ---------- */
+[data-view-name="screens"] {
+  .cards { grid-template-columns: repeat(auto-fill, var(--screen-card)); gap: var(--space-lg); margin-top: calc(var(--space-lg) * 2); counter-reset: screen; }
+  .card { counter-increment: screen; position: relative; padding: 0; overflow: hidden; border: var(--border-width-strong) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: none; }
+  /* The bar of the window: three dots, the number of the screen */
+  .card::before { content: "●  ●  ●"; display: block; padding: var(--space-sm) var(--space-md); border-bottom: var(--border-width) solid var(--color-border); background: var(--color-surface); font-size: calc(var(--font-size-2xs) * .65); letter-spacing: calc(-1 * var(--border-width)); color: var(--color-text-muted); }
+  .card::after { content: "Screen " counter(screen); position: absolute; top: var(--space-xs); right: var(--space-md); font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-tight) var(--font-meta); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+  .card h2 { margin: 0; padding: var(--space-lg) var(--space-lg) 0; font-size: var(--font-size-md); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
+  .card dl { margin: 0; padding: var(--space-sm) var(--space-lg) var(--space-lg); }
+  .card dt { display: none; }
+  .card dd ul { list-style: none; margin: 0; padding: 0; }
+  .card dd li { font-size: var(--font-size-sm); line-height: var(--leading-normal); color: var(--color-text-muted); }
+}
+
+/* ---------- The panel of a step: its description first, its kind as a chip, its arrows, a yes in green, a no in red ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }
+.details-props > [data-prop="kind"] dd p[data-value] { box-shadow: none; }
+.details-props > [data-prop="kind"] dd p[data-value="action"] { background: var(--color-tint-blue); color: var(--ink-action); }
+.details-props > [data-prop="kind"] dd p[data-value="screen"] { background: var(--color-tint-purple); color: var(--ink-screen); }
+.details-props > [data-prop="kind"] dd p[data-value="decision"] { background: var(--color-tint-amber); color: var(--ink-decision); }
+li[data-value^="yes"] .details-arrow-label { background: var(--color-tint-green); box-shadow: none; color: var(--color-positive); }
+li:is([data-value="no"], [data-value="refused"], [data-value="timeout"]) .details-arrow-label { background: var(--color-tint-red); box-shadow: none; color: var(--color-negative); }
