@@ -8,10 +8,7 @@ Work with your AI visually, not through walls of text: it writes maps in Markdow
 
 [Get started](#get-started) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback)
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="maps/images/markdown-to-map-dark.png">
-  <img alt="On the left, the Markdown of a journey map that your AI reads and writes: the phases of a member of a food co-op whose week changes; on the right, the same map drawn, as you see it" src="maps/images/markdown-to-map.png">
-</picture>
+![On the left, the Markdown of a journey map that your AI reads and writes: the phases of a member of a food co-op whose week changes; on the right, the same map drawn, as you see it](maps/images/markdown-to-map.png)
 
 ## Get started
 
@@ -30,10 +27,7 @@ Show me the map.
 
 It writes the map in `maps/` and shows it to you, drawn. Click **Edit** to change it.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="maps/images/maps-landscape-dark.png">
-  <img alt="Nine maps drawn by maps.md, each with its type: a journey map, a roadmap, a data model, a system architecture, a story map, a user flow, an opportunity tree, a business model canvas and a service blueprint; 9 of the 28 types in the catalog" src="maps/images/maps-landscape.png">
-</picture>
+![Nine maps drawn by maps.md, each with its type: a journey map, a roadmap, a data model, a system architecture, a story map, a user flow, an opportunity tree, a business model canvas and a service blueprint; 9 of the 28 types in the catalog](maps/images/maps-landscape.png)
 
 ## What it is for
 
