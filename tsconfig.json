@@ -1,0 +1,18 @@
+// The TypeScript settings of the code of maps.md (renderer/, bin/init.mjs): strict, checked by `npm run check-types` and by
+// the CI, never compiled by tsc: esbuild (renderer/build.ts) makes the JavaScript people run.
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": ["es2023", "dom", "dom.iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true
+  },
+  "include": ["renderer", "bin"]
+}
