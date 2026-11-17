@@ -8,7 +8,10 @@ Work with your AI visually, not through walls of text: it writes maps in Markdow
 
 [Get started](#get-started) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback)
 
-![On the left, the Markdown of a journey map that your AI reads and writes: the phases of a member of a food co-op whose week changes; on the right, the same map drawn, as you see it](maps/images/markdown-to-map.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="maps/images/markdown-to-map-dark.png">
+  <img alt="On the left, the Markdown of a journey map that your AI reads and writes: the phases of a member of a food co-op whose week changes; on the right, the same map drawn, as you see it" src="maps/images/markdown-to-map.png">
+</picture>
 
 ## Get started
 
@@ -27,7 +30,10 @@ Show me the map.
 
 It writes the map in `maps/` and shows it to you, drawn. Click **Edit** to change it.
 
-![Nine maps drawn by maps.md, each with its type: a journey map, a roadmap, a data model, a system architecture, a story map, a user flow, an opportunity tree, a business model canvas and a service blueprint; 9 of the 28 types in the catalog](maps/images/maps-landscape.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="maps/images/maps-landscape-dark.png">
+  <img alt="Nine maps drawn by maps.md, each with its type: a journey map, a roadmap, a data model, a system architecture, a story map, a user flow, an opportunity tree, a business model canvas and a service blueprint; any type you want, from the catalog or your own" src="maps/images/maps-landscape.png">
+</picture>
 
 ## What it is for
 
@@ -49,15 +55,24 @@ Three maps from the examples in `showcase/`; a map can be written from another, 
 
 **UX: a journey map**, from research: what a person does, thinks and feels, phase by phase, where it goes wrong, and the insights each phase rests on. "Make a journey map from these insights."
 
-![A journey map: a member of a food co-op whose week changes, phase by phase, with the actions, the thoughts, the emotion, the pain points, the insights and the opportunities](maps/images/example-journey.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="maps/images/example-journey-dark.png">
+  <img alt="A journey map: a member of a food co-op whose week changes, phase by phase, with the actions, the thoughts, the emotion, the pain points, the insights and the opportunities" src="maps/images/example-journey.png">
+</picture>
 
 **Product: a roadmap**, from notes or a backlog: the initiatives in the order of time, each with where it stands, when and who carries it. "Make the roadmap of the next two quarters from these notes."
 
-![A roadmap: the initiatives of a marketplace to book sports courts on a timeline, each shipped, in progress, planned, undecided or cancelled](maps/images/example-roadmap.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="maps/images/example-roadmap-dark.png">
+  <img alt="A roadmap: the initiatives of a marketplace to book sports courts on a timeline, each shipped, in progress, planned, undecided or cancelled" src="maps/images/example-roadmap.png">
+</picture>
 
 **Technical: a system architecture**, from the code: the parts of the app, what each one runs on and how they talk. "Map the architecture of this codebase."
 
-![A system architecture: the parts of Spliit, an open-source app, and how they talk: the web app, its API, the domain library, PostgreSQL and the services around it](maps/images/example-architecture.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="maps/images/example-architecture-dark.png">
+  <img alt="A system architecture: the parts of Spliit, an open-source app, and how they talk: the web app, its API, the domain library, PostgreSQL and the services around it" src="maps/images/example-architecture.png">
+</picture>
 
 [See the examples drawn](https://florentbx.github.io/maps.md/showcase.html), with nothing to install: three projects, each with its own types, `1-courts/` (a product manager vibe-codes a marketplace), `2-spliit/` (an open-source app, mapped from its code) and `3-coop/` (the UX research of a food co-op).
 
