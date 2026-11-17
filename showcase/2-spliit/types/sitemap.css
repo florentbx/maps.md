@@ -1,0 +1,22 @@
+/* The style of the sitemap (types/sitemap.css). It reaches the drawing only through the hooks of the page: the view
+   (data-view-name), the level of a page (data-depth: 0 the site, 1 the first level), a property (data-prop). Only
+   tokens of the page: a theme changes it. Nothing here depends on a map. */
+
+/* Every page a card with rounded corners, joined by quiet lines */
+.node rect { rx: var(--radius-md); fill: var(--color-bg); stroke: var(--color-text-muted); stroke-width: var(--stroke-thin); }
+.edge path { stroke: var(--color-text-muted); }
+/* The site, at the top: a strong border, its name in bold */
+.node[data-depth="0"] rect { stroke: var(--color-text); stroke-width: var(--stroke-medium); }
+/* A page of the first level heads its column, as the title of a menu: filled */
+.node[data-depth="1"] rect { fill: var(--color-text); stroke: none; }
+.node[data-depth="1"] text { fill: var(--color-bg); font-weight: var(--font-weight-bold); }
+/* Deeper, quieter: the second level bold on a clear border, the third a lighter border, below it a gray card */
+.node[data-depth="2"] text { font-weight: var(--font-weight-bold); }
+.node[data-depth="3"] rect { stroke: var(--color-neutral); }
+.node:not([data-depth="0"], [data-depth="1"], [data-depth="2"], [data-depth="3"]) rect { fill: var(--color-surface); stroke: var(--color-border); }
+.node:not([data-depth="0"], [data-depth="1"], [data-depth="2"], [data-depth="3"]) text { fill: var(--color-text-muted); }
+
+/* ---------- The panel of a page: its description first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }

@@ -1,0 +1,21 @@
+/* The style of roles and permissions (types/roles-permissions.css): a grid of chips, as the RACI;
+   yes in a gray chip, own (a limited right) in blue, no quiet; no green, as yes is the usual case, not a good one. It reaches the drawing only through the hooks of the page (data-view-name,
+   data-value) and uses only tokens of the page. */
+
+[data-view-name="permissions"] {
+  --permissions-action: 15rem; /* the column of the actions */
+  --permissions-role: 7rem; /* the column of a role */
+  --permissions-chip: 3rem; /* the chip of a right, at its narrowest */
+}
+[data-view-name="permissions"] :is(th.corner, tbody th) { width: var(--permissions-action); min-width: var(--permissions-action); font-family: var(--font-sans); font-weight: var(--font-weight-medium); vertical-align: middle; }
+[data-view-name="permissions"] :is(thead th:not(.corner), td) { width: var(--permissions-role); min-width: var(--permissions-role); padding: var(--space-xs); }
+[data-view-name="permissions"] td { text-align: center; vertical-align: middle; }
+[data-view-name="permissions"] thead th { text-align: center; vertical-align: bottom; font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text); text-transform: none; letter-spacing: 0; white-space: normal; }
+[data-view-name="permissions"] td ul { list-style: none; margin: 0; padding: 0; }
+[data-view-name="permissions"] td li {
+  display: inline-grid; place-items: center; min-width: var(--permissions-chip); padding: 0 var(--space-xs); border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm); line-height: var(--leading-normal);
+}
+[data-view-name="permissions"] td li[data-value="yes"], .details-enum [data-value="yes"] { background: var(--color-tint-gray); font-weight: var(--font-weight-bold); }
+[data-view-name="permissions"] td li[data-value="own"], .details-enum [data-value="own"] { background: var(--color-tint-blue); }
+[data-view-name="permissions"] td li[data-value="no"], .details-enum [data-value="no"] { color: var(--color-text-muted); }

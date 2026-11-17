@@ -1,0 +1,50 @@
+/* The style of the brief (types/brief.css): one page, read as a doc, not a canvas. The product as a large title, its
+   description as the lead; how success is measured right under it, on a green tint; then each block as a heading with
+   its icon, its items as a list, and the non-goals as tags. No frame around the blocks nor the items. It reaches the
+   drawing only through the hooks of the page (data-view-name, data-prop) and uses only tokens of the page. Icons:
+   Lucide (ISC license). */
+
+:root {
+  --i-circle-alert: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20%2F%3E%3Cline%20x1%3D%2212%22%20x2%3D%2212%22%20y1%3D%228%22%20y2%3D%2212%22%20%2F%3E%3Cline%20x1%3D%2212%22%20x2%3D%2212.01%22%20y1%3D%2216%22%20y2%3D%2216%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-users: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2%22%20%2F%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%224%22%20%2F%3E%3Cpath%20d%3D%22M22%2021v-2a4%204%200%200%200-3-3.87%22%20%2F%3E%3Cpath%20d%3D%22M16%203.13a4%204%200%200%201%200%207.75%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-target: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%226%22%20%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-ban: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20%2F%3E%3Cpath%20d%3D%22M4.929%204.929%2019.07%2019.071%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-lock: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Crect%20width%3D%2218%22%20height%3D%2211%22%20x%3D%223%22%20y%3D%2211%22%20rx%3D%222%22%20ry%3D%222%22%20%2F%3E%3Cpath%20d%3D%22M7%2011V7a5%205%200%200%201%2010%200v4%22%20%2F%3E%3C%2Fsvg%3E");
+  --brief-width: 56rem; /* a brief */
+}
+
+[data-view-name="brief"] {
+  .cards { grid-template-columns: repeat(auto-fill, var(--brief-width)); gap: var(--space-2xl); }
+  .card { padding: var(--space-2xl); border-radius: var(--radius-lg); cursor: default; }
+  .card h2 { margin: 0; font-size: var(--font-size-xl); line-height: var(--leading-tight); cursor: pointer; }
+  .card > dl { margin: var(--space-sm) 0 var(--space-xl); }
+  .card > dl > dt[data-prop="description"] { display: none; }
+  .card > dl > dd[data-prop="description"] { margin: 0; font-size: var(--font-size-lg); line-height: var(--leading-normal); color: var(--color-text); }
+  .card > dl > dd[data-prop="description"] ul { list-style: none; margin: 0; padding: 0; }
+
+  /* Each block: a heading with its icon on its left and a line under it, its items as a list */
+  .poster { gap: var(--space-xl) var(--space-2xl); }
+  .poster section { min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; }
+  .poster section h3 { display: flex; align-items: center; gap: var(--space-xs); margin: 0 0 var(--space-sm); padding-bottom: var(--space-xs); border-bottom: var(--border-width) solid var(--color-border); font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+  .poster section h3::before { content: ""; flex: none; width: var(--size-icon); height: var(--size-icon); background: var(--color-text-muted); mask: var(--icon) center / contain no-repeat; }
+  .poster section ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-xs); }
+  .poster section li { position: relative; margin: 0; padding-left: var(--space-md); font-size: var(--font-size-md); line-height: var(--leading-normal); }
+  .poster section li::before { content: ""; position: absolute; left: 0; top: calc(var(--font-size-md) * var(--leading-normal) / 2 - var(--space-2xs) / 2); width: var(--space-xs); height: var(--space-xs); border-radius: var(--radius-pill); background: var(--color-text-muted); }
+
+  /* How success is measured: right under the description, on a green tint */
+  .poster [data-prop="success-metrics"] { padding: var(--space-md) var(--space-lg); border-radius: var(--radius-md); background: var(--color-tint-green); }
+  .poster [data-prop="success-metrics"] h3 { border-bottom: 0; padding-bottom: 0; margin-bottom: var(--space-xs); }
+  .poster [data-prop="success-metrics"] h3::before { background: var(--color-text); }
+  .poster [data-prop="success-metrics"] li { padding-left: 0; font-weight: var(--font-weight-medium); }
+  .poster [data-prop="success-metrics"] li::before { display: none; }
+  /* What it will not do: tags */
+  .poster [data-prop="non-goals"] ul { flex-direction: row; flex-wrap: wrap; }
+  .poster [data-prop="non-goals"] li { padding: 0 var(--space-sm); border-radius: var(--radius-pill); background: var(--color-tint-red); font-size: var(--font-size-sm); }
+  .poster [data-prop="non-goals"] li::before { display: none; }
+
+  .poster [data-prop="problem"] { --icon: var(--i-circle-alert); }
+  .poster [data-prop="for-whom"] { --icon: var(--i-users); }
+  .poster [data-prop="success-metrics"] { --icon: var(--i-target); }
+  .poster [data-prop="non-goals"] { --icon: var(--i-ban); }
+  .poster [data-prop="constraints"] { --icon: var(--i-lock); }
+}

@@ -1,0 +1,33 @@
+/* The style of test scenarios (types/test-scenarios.css): as a .feature file, each feature a section, one under the
+   other, its scenarios side by side, so that the map stays as wide however many features it has; each scenario a card,
+   what it checks at the bottom, then Given, When and Then as keywords, the values of one keyword joined by "and", as Gherkin reads. It reaches the
+   drawing only through the hooks of the page (data-view-name, data-prop) and uses only tokens of the page. */
+
+:root {
+  --scenarios-width: 24rem; /* a scenario */
+  --scenarios-keyword: 3.5rem; /* the column of the keywords */
+}
+
+[data-view-name="scenarios"] {
+  .board-columns { flex-direction: column; align-items: stretch; gap: var(--space-xl); }
+  .board-column { flex: none; padding: 0; background: none; }
+  .board-column > h3 { margin-bottom: var(--space-sm); font-size: var(--font-size-lg); }
+  .board-column .cards { display: grid; grid-template-columns: repeat(auto-fill, var(--scenarios-width)); align-items: start; gap: var(--space-md); }
+  .cards { grid-template-columns: repeat(auto-fill, var(--scenarios-width)); gap: var(--space-lg); align-items: start; }
+  .card h2 { margin: 0 0 var(--space-sm); }
+  .card dl { display: grid; grid-template-columns: var(--scenarios-keyword) 1fr; gap: var(--space-xs) var(--space-sm); margin: 0; }
+  .card dt, .card dd { margin: 0; }
+  .card ul { list-style: none; margin: 0; padding: 0; }
+  .card dd { font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+
+  /* What it checks: at the bottom, across the card, quiet, after a line: the scenario is read first */
+  dt[data-prop="checks"] { display: none; }
+  dd[data-prop="checks"] { order: 1; grid-column: 1 / -1; margin-top: var(--space-xs); padding-top: var(--space-xs); border-top: var(--border-width) solid var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+  dd[data-prop="checks"] li::before { content: "Checks "; }
+
+  /* Given, When, Then: keywords in the accent, as Gherkin */
+  dt:is([data-prop="given"], [data-prop="when"], [data-prop="then"]) { font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-accent); text-transform: none; letter-spacing: 0; line-height: var(--leading-normal); }
+  dd:is([data-prop="given"], [data-prop="then"]) li + li::before { content: "and "; color: var(--color-text-muted); font-style: italic; }
+  dd[data-prop="then"] { padding-top: var(--space-2xs); }
+  dt[data-prop="then"] { padding-top: var(--space-2xs); }
+}

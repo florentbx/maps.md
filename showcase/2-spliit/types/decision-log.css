@@ -1,0 +1,95 @@
+/* The style of the decision log (types/decision-log.css). "Log", as a changelog: a rail with a point per decision in
+   the color of its status, its date on the left; its name with its status, then its problem, why, and
+   who took it, each on a line. "Records", as in a doc: a record per decision, its status, date and deciders on top, its name, then the
+   problem, the options, why (the rationale) and the consequences, each with its label on the left. A decision rejected,
+   deprecated or superseded is quieter, its name struck through. It reaches the drawing only through the hooks of the
+   page (data-view-name, data-prop, data-value) and uses only tokens of the page. */
+
+:is([data-view-name="log"], [data-view-name="records"]) {
+  --log-date: 6rem; /* the column of the date */
+  --log-rail: 1.4rem; /* the column of the rail */
+  --log-dot: .8rem; /* the point of a decision */
+  --record-label: 7.5rem; /* the labels of a record */
+  --log-width: 56rem; /* the log and the records, at their widest */
+}
+:root { --chip-leading: 1.6; } /* the status as a chip, in every view and in the panel: its height, from its text */
+:is([data-view-name="log"], [data-view-name="records"]) .grid { max-width: var(--log-width); }
+:is([data-view-name="log"], [data-view-name="records"]) :is(table, tbody) { display: block; border: 0; min-width: 0; }
+:is([data-view-name="log"], [data-view-name="records"]) thead { display: none; }
+:is([data-view-name="log"], [data-view-name="records"]) :is(th, td) { padding: 0; border: 0; background: none; min-width: 0; width: auto; }
+:is([data-view-name="log"], [data-view-name="records"]) td ul { margin: 0; padding: 0; list-style: none; }
+:is([data-view-name="log"], [data-view-name="records"]) tbody th { font-family: var(--font-sans); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+/* Nothing to say when it is not known, or when nothing supersedes it */
+:is([data-view-name="log"], [data-view-name="records"]) td:not([data-prop="date"]):has(.undefined) { display: none; }
+
+/* ---------- "Log" ---------- */
+[data-view-name="log"] tbody { padding: var(--space-md) var(--space-xl); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: var(--shadow-note); }
+[data-view-name="log"] tbody tr {
+  --dot: var(--color-neutral);
+  display: block; position: relative; padding: var(--space-md) 0 var(--space-md) calc(var(--log-date) + var(--log-rail) + var(--space-md) * 2);
+  font-size: var(--font-size-sm); line-height: var(--leading-normal);
+}
+/* The rail, and the point of the decision on it */
+[data-view-name="log"] tbody tr::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--log-date) + var(--space-md) + var(--log-rail) / 2 - var(--border-width-strong) / 2); width: var(--border-width-strong); background: var(--color-border); }
+[data-view-name="log"] tbody tr:first-child::before { top: var(--space-lg); }
+[data-view-name="log"] tbody tr:last-child::before { bottom: auto; height: var(--space-lg); }
+[data-view-name="log"] tbody tr::after { content: ""; position: absolute; top: calc(var(--space-md) + var(--space-2xs)); left: calc(var(--log-date) + var(--space-md) + var(--log-rail) / 2 - var(--log-dot) / 2); width: var(--log-dot); height: var(--log-dot); box-sizing: border-box; border-radius: var(--radius-pill); background: var(--dot); box-shadow: 0 0 0 var(--border-width-strong) var(--color-bg); }
+[data-view-name="log"] tbody tr:has(td[data-prop="status"] li[data-value="accepted"]) { --dot: var(--color-positive); }
+[data-view-name="log"] tbody tr:has(td[data-prop="status"] li[data-value="rejected"]) { --dot: var(--color-negative); }
+[data-view-name="log"] tbody tr:has(td[data-prop="status"] li[data-value="proposed"]) { --dot: var(--color-ink-amber); }
+[data-view-name="log"] tbody tr:has(td[data-prop="status"] li[data-value="proposed"])::after { background: var(--color-bg); border: var(--border-width-strong) solid var(--dot); }
+[data-view-name="log"] tbody tr + tr > :is(th, td):not([data-prop="date"]) { border-top: 0; }
+/* The date on the left, level with the name */
+[data-view-name="log"] td[data-prop="date"] { position: absolute; top: var(--space-md); left: 0; width: var(--log-date); text-align: right; color: var(--color-text-muted); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; line-height: var(--leading-normal); }
+[data-view-name="log"] td[data-prop="date"] .undefined { padding: 0; border: 0; }
+/* The name and its status on the first line; the problem, why and who took it, each on the next */
+[data-view-name="log"] tbody th { display: inline; font-size: var(--font-size-md); font-weight: var(--font-weight-bold); }
+[data-view-name="log"] td[data-prop="status"] { display: inline-block; margin-left: var(--space-sm); vertical-align: text-bottom; }
+[data-view-name="log"] td:is([data-prop="problem"], [data-prop="rationale"]), [data-view-name="log"] td:is([data-prop="problem"], [data-prop="rationale"]) :is(ul, li) { display: inline; }
+[data-view-name="log"] td[data-prop="problem"] { color: var(--color-text-muted); }
+[data-view-name="log"] td[data-prop="problem"]::before { content: "\A"; white-space: pre; }
+[data-view-name="log"] td[data-prop="problem"] li + li::before, [data-view-name="log"] td[data-prop="rationale"] li + li::before { content: " "; }
+/* Why, on a line of its own: the problem rarely ends with a period, and the two ran together */
+[data-view-name="log"] td[data-prop="rationale"]::before { content: "\A Because: "; white-space: pre; font-weight: var(--font-weight-bold); }
+[data-view-name="log"] td[data-prop="deciders"] { display: block; margin-top: var(--space-2xs); color: var(--color-text-muted); font-size: var(--font-size-xs); }
+[data-view-name="log"] td[data-prop="deciders"] li { display: inline; }
+[data-view-name="log"] td[data-prop="deciders"] li + li::before { content: ", "; }
+[data-view-name="log"] td[data-prop="superseded-by"] { display: block; margin-top: var(--space-2xs); font-size: var(--font-size-xs); }
+[data-view-name="log"] td[data-prop="superseded-by"] li::before { content: "→ Superseded by "; color: var(--color-text-muted); }
+
+/* ---------- "Records" ---------- */
+[data-view-name="records"] tbody { display: flex; flex-direction: column; gap: var(--space-md); }
+[data-view-name="records"] tbody tr { display: grid; grid-template-columns: auto auto 1fr; align-items: baseline; gap: var(--space-sm) var(--space-sm); padding: var(--space-lg) var(--space-xl); border-radius: var(--radius-lg); background: var(--color-bg); box-shadow: var(--shadow-note); font-size: var(--font-size-sm); }
+/* On top: the status, the date and who decided; then the name */
+[data-view-name="records"] td[data-prop="status"] { grid-row: 1; grid-column: 1; }
+[data-view-name="records"] td[data-prop="date"] { grid-row: 1; grid-column: 2; color: var(--color-text-muted); font-size: var(--font-size-xs); font-variant-numeric: tabular-nums; }
+[data-view-name="records"] td[data-prop="deciders"] { grid-row: 1; grid-column: 3; color: var(--color-text-muted); font-size: var(--font-size-xs); }
+[data-view-name="records"] td[data-prop="deciders"] li { display: inline; }
+[data-view-name="records"] td[data-prop="deciders"] li + li::before { content: ", "; }
+[data-view-name="records"] tbody th { grid-row: 2; grid-column: 1 / -1; margin-bottom: var(--space-xs); font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); }
+/* Then each part, its label on the left */
+[data-view-name="records"] td:is([data-prop="problem"], [data-prop="options"], [data-prop="rationale"], [data-prop="consequences"], [data-prop="superseded-by"]) { grid-column: 1 / -1; display: grid; grid-template-columns: var(--record-label) 1fr; column-gap: var(--space-md); }
+[data-view-name="records"] td:is([data-prop="problem"], [data-prop="options"], [data-prop="rationale"], [data-prop="consequences"], [data-prop="superseded-by"])::before { color: var(--color-text-muted); font-size: var(--font-size-2xs); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: var(--tracking-caps); padding-top: var(--space-3xs); }
+[data-view-name="records"] td[data-prop="problem"]::before { content: "Problem"; }
+[data-view-name="records"] td[data-prop="options"]::before { content: "Options"; }
+[data-view-name="records"] td[data-prop="rationale"]::before { content: "Because"; }
+[data-view-name="records"] td[data-prop="consequences"]::before { content: "Consequences"; }
+[data-view-name="records"] td[data-prop="superseded-by"]::before { content: "Superseded by"; }
+[data-view-name="records"] td li + li { margin-top: var(--space-2xs); }
+[data-view-name="records"] td[data-prop="rationale"] ul { padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--color-tint-gray); }
+
+/* ---------- The status as a chip: accepted green, proposed amber, rejected red, the others gray ---------- */
+[data-view-name] :is(td, dd)[data-prop="status"] li {
+  display: inline-block; padding: 0 var(--space-sm); border-radius: var(--radius-pill); font-size: var(--font-size-xs); line-height: var(--chip-leading);
+  background: var(--color-surface); color: var(--color-text-muted); border: var(--border-width) solid var(--color-border);
+}
+[data-view-name] td[data-prop="status"] li[data-value="accepted"], .details-enum[data-prop="status"] [data-value="accepted"] { background: var(--color-tint-green); border-color: transparent; color: var(--color-text); }
+[data-view-name] td[data-prop="status"] li[data-value="proposed"], .details-enum[data-prop="status"] [data-value="proposed"] { background: var(--color-tint-amber); border-color: transparent; color: var(--color-text); }
+[data-view-name] td[data-prop="status"] li[data-value="rejected"], .details-enum[data-prop="status"] [data-value="rejected"] { background: var(--color-tint-red); border-color: transparent; color: var(--color-text); }
+
+/* A decision rejected, deprecated or superseded is quieter, its name struck through */
+:is([data-view-name="log"], [data-view-name="records"]) tbody tr:has(td[data-prop="status"] li:is([data-value="rejected"], [data-value="deprecated"], [data-value="superseded"])) th { color: var(--color-text-muted); font-weight: var(--font-weight-medium); text-decoration: line-through; text-decoration-color: var(--color-border); }
+
+/* Not known: no part of a record for it; the dates in the font of the text */
+[data-view-name="records"] td:is([data-prop="problem"], [data-prop="options"], [data-prop="rationale"], [data-prop="consequences"], [data-prop="superseded-by"]):is(:has(.undefined), :not(:has(li))) { display: none; }
+:is([data-view-name="log"], [data-view-name="records"]) td[data-prop="date"] :is(*) { font-family: var(--font-sans); }
