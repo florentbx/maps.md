@@ -1,0 +1,28 @@
+/* The style of integrations (types/integrations.css): each system a card, its description under its
+   name, then its poster, reads and writes side by side, each block with its name and its values as plain lines; when it
+   is down, at the bottom, in amber; a block not said quiet and dashed. It reaches the drawing only through the hooks of the page (data-view-name,
+   data-prop) and uses only tokens of the page. */
+
+:root {
+  --integrations-width: 40rem; /* a system */
+}
+
+[data-view-name="systems"] {
+  .cards { grid-template-columns: repeat(auto-fill, var(--integrations-width)); gap: var(--space-xl); align-items: start; }
+  .card { padding: var(--space-lg); border-radius: var(--radius-lg); }
+  .card h2 { margin: 0; font-size: var(--font-size-lg); }
+  .card > dl { margin: var(--space-2xs) 0 var(--space-md); }
+  .card > dl > dt[data-prop="description"] { display: none; }
+  .card > dl > dd[data-prop="description"] { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+  .card ul { list-style: none; margin: 0; padding: 0; }
+
+  .poster { gap: var(--space-xs); }
+  .poster section { padding: var(--space-sm) var(--space-md); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+  .poster section h3 { margin: 0 0 var(--space-2xs); font-family: var(--font-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); color: var(--color-text-muted); text-transform: none; letter-spacing: 0; }
+  .poster section li { margin: 0; font-size: var(--font-size-sm); line-height: var(--leading-tight); }
+  .poster section li + li { margin-top: var(--space-xs); }
+  .poster [data-prop="when-down"]:not(:has(.undefined)) { background: var(--color-tint-amber); border-color: transparent; }
+  .poster [data-prop="when-down"]:not(:has(.undefined)) h3 { color: var(--color-text); }
+  /* A block not said: quiet, dashed, so that what is said stands out */
+  .poster section:has(> ul > .undefined, > .undefined) { padding-block: var(--space-xs); border-style: dashed; background: none; }
+}

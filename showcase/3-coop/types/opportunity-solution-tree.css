@@ -1,0 +1,50 @@
+/* The style of the opportunity solution tree (types/opportunity-solution-tree.css). It reaches the drawing only through
+   the hooks of the page: the view (data-view-name), the kind of a node (data-value), a property (data-prop). Only
+   tokens of the page, and, at the top, the dimensions of this type. Nothing here depends on a map. One look per kind,
+   as light tints: the outcome filled, the opportunities in yellow, the solutions in blue, the assumptions in green with
+   a dashed border (a bet to test, not a thing to build). */
+
+:root {
+  --ost-card: 300px; /* a card, in Opportunities and Assumptions */
+}
+
+/* ---------- "Tree": one look per kind ---------- */
+.node rect { rx: var(--radius-md); stroke: var(--color-text-muted); stroke-width: var(--stroke-thin); }
+.edge path { stroke: var(--color-text-muted); }
+.node[data-value="outcome"] rect { fill: var(--color-text); stroke: none; }
+.node[data-value="outcome"] text { fill: var(--color-bg); font-weight: var(--font-weight-bold); }
+.node[data-value="opportunity"] rect { fill: var(--color-tint-amber); }
+.node[data-value="solution"] rect { fill: var(--color-tint-blue); }
+.node[data-value="assumption"] rect { fill: var(--color-tint-green); stroke-dasharray: var(--dash-missing); }
+
+/* What a node says under its name (Tree, Outline): the measure of the outcome, the evidence of an opportunity, the
+   category, the test and what it showed of an assumption; without their labels, but the category's */
+:is([data-view-name="tree"], [data-view-name="outline"]) .node-detail:not([data-prop="category"]) .detail-label { display: none; }
+:is([data-view-name="tree"], [data-view-name="outline"]) .node-detail[data-prop="category"] { font-weight: var(--font-weight-bold); }
+:is([data-view-name="tree"], [data-view-name="outline"]) .node[data-value="outcome"] .node-detail { fill: var(--color-bg); font-weight: normal; }
+
+/* The same look in the legend */
+.key { border-radius: var(--radius-xs); border: var(--border-width) solid var(--color-text-muted); }
+.key[data-value="outcome"] { background: var(--color-text); border-color: transparent; }
+.key[data-value="opportunity"] { background: var(--color-tint-amber); }
+.key[data-value="solution"] { background: var(--color-tint-blue); }
+.key[data-value="assumption"] { background: var(--color-tint-green); border-style: dashed; }
+
+/* ---------- "Opportunities" and "Assumptions": cards, the element each one is under above its name ---------- */
+:is([data-view-name="opportunities"], [data-view-name="assumptions"]) {
+  .cards { grid-template-columns: repeat(auto-fill, var(--ost-card)); gap: var(--space-lg); margin-top: var(--space-xl); }
+  .card { padding: var(--space-lg); border-radius: var(--radius-xl); }
+  .card h2 { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-tight); }
+  .card dt { margin-top: var(--space-md); }
+  .card dd ul { list-style: none; padding: 0; }
+}
+[data-view-name="opportunities"] .card { background: var(--color-tint-amber); border-color: transparent; }
+[data-view-name="assumptions"] .card { border-style: dashed; }
+/* The category of an assumption: a chip, before the rest */
+[data-view-name="assumptions"] .card :is(dt[data-prop="category"]) { display: none; }
+[data-view-name="assumptions"] .card dd[data-prop="category"] li { display: inline-block; margin-top: var(--space-xs); padding: 0 var(--space-sm); border-radius: var(--radius-pill); background: var(--color-tint-green); font-size: var(--font-size-xs); }
+
+/* ---------- The panel of a node: its description first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }

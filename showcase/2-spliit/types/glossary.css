@@ -1,0 +1,20 @@
+/* The style of the glossary (types/glossary.css): a table, a term per row, in the order of the map (alphabetical); the
+   other words people use as quiet chips and the words to avoid as red ones; how the
+   code names it, smaller. It reaches the drawing only through the
+   hooks of the page (data-view-name, data-prop, data-value) and uses only tokens of the page. */
+
+[data-view-name="glossary"] {
+  td[data-prop="definition"] { min-width: var(--size-board-column); line-height: var(--leading-normal); }
+  td:is([data-prop="also-called"], [data-prop="avoid"]) ul { display: flex; flex-wrap: wrap; gap: var(--space-2xs); margin: 0; padding: 0; list-style: none; }
+  td:is([data-prop="also-called"], [data-prop="avoid"]) li { margin: 0; padding: 0 var(--space-sm); border-radius: var(--radius-sm); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+  td[data-prop="also-called"] li { background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); }
+  td[data-prop="avoid"] li { background: var(--color-tint-red); }
+  td[data-prop="code"] { font-size: var(--font-size-sm); }
+}
+
+/* The kind, in the panel: a chip in a tint of its own */
+.details-enum[data-prop="kind"] [data-value] { background: var(--color-tint-gray); color: var(--color-text); }
+.details-enum[data-prop="kind"] [data-value="action"] { background: var(--color-tint-blue); }
+.details-enum[data-prop="kind"] [data-value="state"] { background: var(--color-tint-green); }
+.details-enum[data-prop="kind"] [data-value="role"] { background: var(--color-tint-purple); }
+.details-enum[data-prop="kind"] [data-value="technical"] { background: var(--color-tint-amber); }

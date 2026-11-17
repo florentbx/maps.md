@@ -1,0 +1,41 @@
+/* The style of the story map (types/story-map.css): the wall of a story mapping workshop, cleaned up. The backbone as
+   stickies, the activities in blue, their steps in yellow; each release a band across the whole map, its name in clear,
+   the first release (the one being cut) tinted, the next ones gray, the stories without a release on no band; the
+   stories as white stickies. It reaches the drawing only through the hooks of the page: the level of an element
+   (data-depth: 1 an activity, 2 a step, 3 a story), the release of a lane (data-value), a property (data-prop). Only
+   tokens of the page. Nothing here depends on a map: the first release is the first lane, whatever its name. */
+
+.board {
+  --story-column: 10.5rem; /* a column: a step and its stories */
+  --story-card-min: 3.2rem; /* the smallest sticky of a story */
+}
+.board table { border-spacing: 0; }
+.board :is(th, td) { width: var(--story-column); min-width: var(--story-column); } /* each column keeps its width: the board wider than the page when it needs */
+
+/* The backbone: the activities, then their steps, as stickies */
+.board thead th { border: var(--space-xs) solid transparent; background-clip: padding-box; border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); box-shadow: none; }
+.board th[data-depth="1"] { background-color: var(--color-tint-blue); font-size: var(--font-size-md); }
+.board th[data-depth="2"] { background-color: var(--color-tint-amber); font-weight: var(--font-weight-medium); }
+.board thead th.board-none { border-color: transparent; background: none; outline: var(--border-width) dashed var(--color-border); outline-offset: calc(-1 * var(--space-xs)); }
+
+/* A release: a band across the map, its name in clear, then its stories */
+.board tbody tr { --band: var(--color-tint-gray); }
+.board tbody tr:nth-child(-n + 2) { --band: var(--color-tint-green); } /* the first release */
+.board tbody tr[data-value="none"] { --band: transparent; }
+.board .board-lane th { padding: var(--space-sm) var(--space-md) var(--space-xs); border: 0; border-top: var(--space-lg) solid var(--color-canvas); background: var(--band); background-clip: padding-box; border-radius: 0; font-family: var(--font-sans); font-size: var(--font-size-md); font-weight: var(--font-weight-bold); text-transform: none; letter-spacing: 0; color: var(--color-text); }
+.board .board-lane .board-count { font-weight: normal; font-size: var(--font-size-xs); }
+.board tbody tr[data-value="none"] th { border-bottom: var(--border-width) dashed var(--color-border); }
+.board .board-cards td { padding: 0 var(--space-xs) var(--space-sm); background: var(--band); }
+.board .board-cards td:first-child { padding-left: var(--space-md); }
+.board .board-cards td:last-child { padding-right: var(--space-md); }
+
+/* A story: a white sticky, lifted off its band */
+.board-card { min-height: var(--story-card-min); margin: 0 0 var(--space-sm); padding: var(--space-sm); border: 0; border-radius: var(--radius-xs); font-size: var(--font-size-sm); box-shadow: var(--shadow-note); }
+.board-card:hover, .board thead th:not(.board-none):hover { outline: var(--border-width) solid var(--color-text-muted); }
+/* The stories with no release: quieter, on no band */
+.board-cards[data-value="none"] .board-card { background: none; box-shadow: none; outline: var(--border-width) dashed var(--color-border); color: var(--color-text-muted); }
+
+/* ---------- The panel of an element: its description first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }

@@ -1,0 +1,11 @@
+/* The style of the states of a booking (types/booking-states.css), copied from the state machine of the catalog: as UML
+   draws states, each a rounded box with a clear border, its name in bold; a final state with a thick dark border, the
+   end of its life; the events on the arrows, quiet. The fill comes from the colors of the layout (the slot), so the
+   purple of the style of the catalog is gone. It reaches the drawing only through the hooks and classes of a graph and uses
+   only tokens of the page. */
+
+.node:not(.node--unknown, .node--missing) rect:not(.node-head) { rx: var(--radius-xl); ry: var(--radius-xl); stroke: var(--color-text-muted); stroke-width: var(--stroke-medium); }
+.node text { font-weight: var(--font-weight-bold); }
+.edge-label text { fill: var(--color-text-muted); font-style: italic; }
+/* A final state: no round End after it, a thick dark border */
+.node.node--final:not(.node--unknown, .node--missing) rect:not(.node-head) { stroke: var(--color-text); stroke-width: var(--border-width-strong); }

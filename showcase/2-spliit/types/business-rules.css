@@ -1,0 +1,38 @@
+/* The style of business rules (types/business-rules.css): each rule a card, under its area, the areas one under
+   the other, as the features of test scenarios; its statement first, as the text of the card, then its examples as the
+   rows of a decision table, the situation, then the result in bold, then why, where it applies and where the code applies it, quiet.
+   It reaches the drawing only through the hooks of the page (data-view-name, data-prop) and uses only tokens of the
+   page. */
+
+:root {
+  --rules-width: 26rem; /* a rule */
+}
+
+[data-view-name="rules"] {
+  .board-columns { flex-direction: column; align-items: stretch; gap: var(--space-xl); }
+  .board-column { flex: none; padding: 0; background: none; }
+  .board-column > h3 { margin-bottom: var(--space-sm); font-size: var(--font-size-lg); }
+  .board-column .cards { display: grid; grid-template-columns: repeat(auto-fill, var(--rules-width)); align-items: start; gap: var(--space-lg); }
+  .cards { grid-template-columns: repeat(auto-fill, var(--rules-width)); gap: var(--space-lg); align-items: start; }
+  .card { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .card h2 { margin: 0; }
+  .card dl { display: contents; }
+  .card dt, .card dd { margin: 0; }
+  .card ul { list-style: none; margin: 0; padding: 0; }
+  dt[data-prop="statement"] { display: none; }
+  dd[data-prop="statement"] { font-size: var(--font-size-md); line-height: var(--leading-normal); }
+
+  /* The examples: rows on a surface, one under the other */
+  dt[data-prop="examples"] { margin-top: var(--space-sm); }
+  dd[data-prop="examples"] ul { border-radius: var(--radius-md); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); }
+  dd[data-prop="examples"] li { display: grid; grid-template-columns: 1fr minmax(0, .7fr); gap: var(--space-md); margin: 0; padding: var(--space-xs) var(--space-sm); font-size: var(--font-size-sm); line-height: var(--leading-tight); }
+  dd[data-prop="examples"] .value-arrow { display: none; } /* the two columns say it */
+  dd[data-prop="examples"] .value-to { font-weight: var(--font-weight-bold); }
+  dt[data-prop="area"], dd[data-prop="area"] { display: none; } /* said by its section */
+  dd[data-prop="examples"] li + li { border-top: var(--border-width) solid var(--color-border); }
+
+  /* Why and where it applies: quiet, at the end */
+  dt:is([data-prop="why"], [data-prop="applies-to"], [data-prop="code"]) { margin-top: var(--space-sm); }
+  dd:is([data-prop="why"], [data-prop="applies-to"], [data-prop="code"]) { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+  dd[data-prop="applies-to"] li + li { margin-top: var(--space-3xs); }
+}
