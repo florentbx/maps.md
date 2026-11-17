@@ -1,0 +1,26 @@
+/* The style of the system architecture (types/system-architecture.css): as the usual architecture diagrams (C4) draw
+   them, each component a box filled with the color of its kind, its name in bold, its technology under it; a database a
+   cylinder, a person a person; the system in a dashed frame; in the view Components, each card in the color of its kind. It reaches the drawing only through the hooks of the page
+   (data-value, node-body) and uses only tokens of the page. */
+
+.node :is(rect, path.node-body) { stroke: var(--color-text-muted); }
+/* The colors of the kinds, a matter of look (a color with a meaning would be a `- Color:` of the layout) */
+.node[data-value="person"] :is(rect, path.node-body), .key[data-value="person"] { --tint: var(--color-tint-green); }
+.node[data-value="application"] :is(rect, path.node-body), .key[data-value="application"] { --tint: var(--color-tint-blue); }
+.node[data-value="service"] :is(rect, path.node-body), .key[data-value="service"] { --tint: var(--color-tint-purple); }
+.node[data-value="database"] :is(rect, path.node-body), .key[data-value="database"] { --tint: var(--color-tint-amber); }
+.node[data-value="external-system"] :is(rect, path.node-body), .key[data-value="external-system"] { --tint: var(--color-tint-gray); }
+.node[data-value] :is(rect, path.node-body):not(.node-head) { fill: var(--tint); }
+.key[data-value] { background: var(--tint); }
+.node line.node-rule { display: none; }
+.node text:not(.node-detail) { font-weight: var(--font-weight-bold); }
+.node text.node-detail { fill: var(--color-text-muted); }
+
+/* The view Components: each card in the color of its kind, as in the diagram */
+[data-view-name="components"] .board-column[data-value="person"] { --tint: var(--color-tint-green); }
+[data-view-name="components"] .board-column[data-value="application"] { --tint: var(--color-tint-blue); }
+[data-view-name="components"] .board-column[data-value="service"] { --tint: var(--color-tint-purple); }
+[data-view-name="components"] .board-column[data-value="database"] { --tint: var(--color-tint-amber); }
+[data-view-name="components"] .board-column[data-value="external-system"] { --tint: var(--color-tint-gray); }
+[data-view-name="components"] .card { background: var(--tint, var(--color-bg)); border-color: transparent; }
+[data-view-name="components"] .board-column > h3 { width: fit-content; padding: var(--space-3xs) var(--space-md); border-radius: var(--radius-pill); background: var(--tint); } /* the head of a column a chip of its color, as in the page */

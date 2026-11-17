@@ -1,0 +1,300 @@
+/* The style of the journey map (types/journey-map.css). It reaches the drawing only through the hooks of the page: the
+   view (data-view-name), a property (data-prop), a short value or the number of an emotion (data-value). Nothing here
+   depends on a map: what belongs to one map (an emoji for a phase) is written in its Markdown. Icons: Lucide (ISC
+   license), inline. Only tokens of the page, and, at the top, the inks and the dimensions of this type: change them
+   there. */
+
+:root {
+  --i-search: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2211%22%20r%3D%228%22/%3E%3Cpath%20d%3D%22m21%2021-4.3-4.3%22/%3E%3C/svg%3E");
+  --i-globe: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3Cpath%20d%3D%22M12%202a14.5%2014.5%200%200%200%200%2020%2014.5%2014.5%200%200%200%200-20%22/%3E%3Cpath%20d%3D%22M2%2012h20%22/%3E%3C/svg%3E");
+  --i-phone: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M22%2016.92v3a2%202%200%200%201-2.18%202%2019.79%2019.79%200%200%201-8.63-3.07%2019.5%2019.5%200%200%201-6-6%2019.79%2019.79%200%200%201-3.07-8.67A2%202%200%200%201%204.11%202h3a2%202%200%200%201%202%201.72%2012.84%2012.84%200%200%200%20.7%202.81%202%202%200%200%201-.45%202.11L8.09%209.91a16%2016%200%200%200%206%206l1.27-1.27a2%202%200%200%201%202.11-.45%2012.84%2012.84%200%200%200%202.81.7A2%202%200%200%201%2022%2016.92z%22/%3E%3C/svg%3E");
+  --i-mail: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2220%22%20height%3D%2216%22%20x%3D%222%22%20y%3D%224%22%20rx%3D%222%22/%3E%3Cpath%20d%3D%22m22%207-8.97%205.7a1.94%201.94%200%200%201-2.06%200L2%207%22/%3E%3C/svg%3E");
+  --i-voicemail: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2212%22%20r%3D%224%22/%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2212%22%20r%3D%224%22/%3E%3Cline%20x1%3D%226%22%20x2%3D%2218%22%20y1%3D%2216%22%20y2%3D%2216%22/%3E%3C/svg%3E");
+  --i-user: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2021v-2a4%204%200%200%200-4-4H9a4%204%200%200%200-4%204v2%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%227%22%20r%3D%224%22/%3E%3C/svg%3E");
+  --i-monitor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2220%22%20height%3D%2214%22%20x%3D%222%22%20y%3D%223%22%20rx%3D%222%22/%3E%3Cpath%20d%3D%22M8%2021h8%22/%3E%3Cpath%20d%3D%22M12%2017v4%22/%3E%3C/svg%3E");
+  --i-card: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20width%3D%2220%22%20height%3D%2214%22%20x%3D%222%22%20y%3D%225%22%20rx%3D%222%22/%3E%3Cline%20x1%3D%222%22%20x2%3D%2222%22%20y1%3D%2210%22%20y2%3D%2210%22/%3E%3C/svg%3E");
+  --i-clock: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3Cpolyline%20points%3D%2212%206%2012%2012%2016%2014%22/%3E%3C/svg%3E");
+  --i-pin: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%2010c0%204.993-5.539%2010.193-7.399%2011.799a1%201%200%200%201-1.202%200C9.539%2020.193%204%2014.993%204%2010a8%208%200%200%201%2016%200%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2210%22%20r%3D%223%22/%3E%3C/svg%3E");
+  --i-zap: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%202%203%2014h9l-1%208%2010-12h-9l1-8z%22/%3E%3C/svg%3E");
+  --i-bulb: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M15%2014c.2-1%20.7-1.7%201.5-2.5%201-.9%201.5-2.2%201.5-3.5A6%206%200%200%200%206%208c0%201%20.2%202.2%201.5%203.5.7.7%201.3%201.5%201.5%202.5%22/%3E%3Cpath%20d%3D%22M9%2018h6%22/%3E%3Cpath%20d%3D%22M10%2022h4%22/%3E%3C/svg%3E");
+  --i-arrow: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3Cpath%20d%3D%22M8%2012h8%22/%3E%3Cpath%20d%3D%22m12%2016%204-4-4-4%22/%3E%3C/svg%3E");
+
+  /* The inks of this type: the strong color of a tint */
+  --ink-action: var(--color-ink-blue);
+  --ink-thought: var(--color-ink-purple);
+  --ink-progress: var(--color-ink-amber);
+  /* The dimensions of this type */
+  --stop-size: 1.625rem; /* the numbered stop of a phase */
+  --dash: .375rem; /* the journey line, dashed */
+  --dash-gap: .3125rem;
+  --item-icon: var(--size-icon-sm); /* the icon of an item: an action, a pain point, an idea, a touchpoint */
+  --item-indent: calc(var(--space-md) + var(--item-icon) + var(--space-sm)); /* the text of an item, after its icon */
+  --face-size: 1.5rem; /* the face of an emotion */
+  --phase-column: 14.75rem; /* a phase, in Pain points */
+  --phase-card: 16.75rem; /* a phase, in Summary */
+  --chart-width: 56.25rem; /* the impact / effort chart, in Opportunities */
+  --gutter: 7rem; /* the names of its bands, on its left */
+  --idea-dot: .625rem; /* the point of an idea, on it */
+  --lane-width: 15rem; /* a lane of the board, in Tracking */
+  --lane-gap: .75rem;
+  --board-height: 47.5rem;
+  --emotion-top: 1.125rem; /* the room above the curve of the emotions, in Journey */
+  --emotion-span: 7.5rem; /* the height of its values, from +3 to -3 */
+}
+
+/* A face for each emotion, in every view */
+.curve-value[data-value="-3"]::before { content: "😣"; }
+.curve-value[data-value="-2"]::before { content: "😟"; }
+.curve-value[data-value="-1"]::before { content: "🙁"; }
+.curve-value[data-value="0"]::before { content: "😐"; }
+.curve-value[data-value="1"]::before { content: "🙂"; }
+.curve-value[data-value="2"]::before { content: "😊"; }
+.curve-value[data-value="3"]::before { content: "😄"; }
+
+/* ---------- Every view: the same board and the same items ---------- */
+
+/* The board: rounded corners, the borders drawn once between the cells (separate, so that the table can be rounded) */
+.grid table { border-collapse: separate; border-spacing: 0; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-xl); overflow: hidden; }
+.grid :is(th, td) { border: 0; border-right: var(--border-width) solid var(--color-border); border-bottom: var(--border-width) solid var(--color-border); }
+.grid tr > :last-child { border-right: 0; }
+.grid tbody tr:last-child > * { border-bottom: 0; }
+
+/* The phases: a journey line with a numbered stop per phase */
+.grid thead tr { counter-reset: phase; }
+.grid thead th { position: relative; font-size: var(--font-size-md); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); padding: calc(var(--space-lg) * 2 + var(--stop-size)) var(--space-lg) var(--space-lg); }
+.grid thead th[scope="col"] { counter-increment: phase; }
+.grid thead th[scope="col"]::before { content: counter(phase); position: absolute; top: var(--space-lg); left: var(--space-lg); z-index: var(--z-raised); display: grid; place-items: center; width: var(--stop-size); height: var(--stop-size); border-radius: 50%; background: var(--color-text); color: var(--color-bg); font-family: var(--font-meta); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); box-shadow: 0 0 0 var(--space-xs) var(--color-bg); }
+.grid thead th[scope="col"]::after { content: ""; position: absolute; top: calc(var(--space-lg) + var(--stop-size) / 2 - var(--border-width)); left: 0; right: 0; height: var(--border-width-strong); background: repeating-linear-gradient(90deg, var(--color-text-muted) 0 var(--dash), transparent var(--dash) calc(var(--dash) + var(--dash-gap))); opacity: var(--opacity-quiet); }
+.grid thead th[scope="col"]:first-of-type::after { left: calc(var(--space-lg) + var(--stop-size) / 2); }
+
+/* Pain points and opportunities: tinted cards with an icon */
+.view :is(tr, dd)[data-prop="pain-points"] li { --ink: var(--color-negative); --icon: var(--i-zap); background: var(--color-tint-red); }
+.view :is(tr, dd)[data-prop="opportunities"] li { --ink: var(--color-positive); --icon: var(--i-bulb); background: var(--color-tint-green); }
+.view :is(tr, dd):is([data-prop="pain-points"], [data-prop="opportunities"]) li { position: relative; width: auto; border: 0; box-shadow: none; border-radius: var(--radius-lg); padding: var(--space-sm) var(--space-md) var(--space-sm) var(--item-indent); }
+.view :is(tr, dd):is([data-prop="pain-points"], [data-prop="opportunities"]) li + li { margin-top: var(--space-sm); }
+.view :is(tr, dd):is([data-prop="pain-points"], [data-prop="opportunities"]) li::before { content: ""; position: absolute; left: var(--space-md); top: var(--space-md); width: var(--item-icon); height: var(--item-icon); background: var(--ink); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+
+/* ---------- The main view ("Journey") ---------- */
+[data-view-name="journey"] {
+  /* Actions: steps with an arrow */
+  tr[data-prop="actions"] td li { position: relative; width: auto; background: var(--color-tint-blue); border: 0; box-shadow: none; border-radius: var(--radius-lg); padding: var(--space-sm) var(--space-md) var(--space-sm) var(--item-indent); }
+  tr[data-prop="actions"] td li::before { content: ""; position: absolute; left: var(--space-md); top: var(--space-md); width: var(--item-icon); height: var(--item-icon); border-radius: 0; background: var(--ink-action); -webkit-mask: var(--i-arrow) center / contain no-repeat; mask: var(--i-arrow) center / contain no-repeat; }
+
+  /* Touchpoints: chips, with the icon of their channel when a word of their name says it (data-value, its words
+     joined by "-": a word alone, first, last or in the middle; "WhatsApp group" is not an "app"), a pin otherwise */
+  tr[data-prop="touchpoints"] td > ul { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  tr[data-prop="touchpoints"] td li { --icon: var(--i-pin); display: inline-flex; align-items: center; gap: var(--space-xs); margin: 0; width: auto; background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-md) var(--space-2xs) var(--space-sm); font-size: var(--font-size-xs); color: var(--color-text); }
+  tr[data-prop="touchpoints"] td li::before { content: ""; flex: none; width: var(--item-icon); height: var(--item-icon); background: var(--color-text-muted); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  tr[data-prop="touchpoints"] td li:is([data-value|="site"], [data-value$="-site"], [data-value*="-site-"], [data-value|="website"], [data-value$="-website"], [data-value*="-website-"], [data-value|="web"], [data-value$="-web"], [data-value*="-web-"], [data-value|="online"], [data-value$="-online"], [data-value*="-online-"]) { --icon: var(--i-globe); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="search"], [data-value$="-search"], [data-value*="-search-"]) { --icon: var(--i-search); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="platform"], [data-value$="-platform"], [data-value*="-platform-"], [data-value|="app"], [data-value$="-app"], [data-value*="-app-"], [data-value|="picker"], [data-value$="-picker"], [data-value*="-picker-"], [data-value|="screen"], [data-value$="-screen"], [data-value*="-screen-"]) { --icon: var(--i-monitor); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="phone"], [data-value$="-phone"], [data-value*="-phone-"], [data-value|="call"], [data-value$="-call"], [data-value*="-call-"]) { --icon: var(--i-phone); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="mail"], [data-value$="-mail"], [data-value*="-mail-"], [data-value|="email"], [data-value$="-email"], [data-value*="-email-"], [data-value|="letter"], [data-value$="-letter"], [data-value*="-letter-"], [data-value|="sms"], [data-value$="-sms"], [data-value*="-sms-"]) { --icon: var(--i-mail); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="voicemail"], [data-value$="-voicemail"], [data-value*="-voicemail-"]) { --icon: var(--i-voicemail); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="reception"], [data-value$="-reception"], [data-value*="-reception-"], [data-value|="receptionist"], [data-value$="-receptionist"], [data-value*="-receptionist-"], [data-value|="desk"], [data-value$="-desk"], [data-value*="-desk-"], [data-value|="staff"], [data-value$="-staff"], [data-value*="-staff-"]) { --icon: var(--i-user); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="waiting"], [data-value$="-waiting"], [data-value*="-waiting-"]) { --icon: var(--i-clock); }
+  tr[data-prop="touchpoints"] td li:is([data-value|="payment"], [data-value$="-payment"], [data-value*="-payment-"], [data-value|="terminal"], [data-value$="-terminal"], [data-value*="-terminal-"]) { --icon: var(--i-card); }
+
+  /* Thoughts: tinted speech bubbles */
+  tr[data-prop="thoughts"] td li { position: relative; background: var(--color-tint-purple); border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm); padding: var(--space-md) var(--space-md) var(--space-md) var(--item-indent); font-style: italic; }
+  tr[data-prop="thoughts"] td li + li { margin-top: var(--space-sm); }
+  tr[data-prop="thoughts"] td li::before { content: "\201C"; position: absolute; left: var(--space-md); top: var(--space-3xs); font: var(--font-weight-bold) var(--font-size-xl)/1 var(--font-quote); color: var(--ink-thought); opacity: var(--opacity-quiet); }
+
+  /* Emotion: the curve over the height of the row (+3 at the top, -3 at the bottom), the face of each value as its
+     point, its word under it. The curve draws its values from 15% to 85% of its height (renderer/draw.ts), so it is
+     made taller than the span of the values to use the whole row. */
+  tr[data-prop="emotion"] td.scale { --top: var(--emotion-top); --span: var(--emotion-span); height: calc(var(--top) + var(--span) + var(--face-size) + var(--space-md)); }
+  tr[data-prop="emotion"] .curve { top: calc(var(--top) + var(--border-width) / 2 - var(--span) * 15 / 70); height: calc(var(--span) / .7); }
+  tr[data-prop="emotion"] :is(.curve-base, .curve-point) { display: none; }
+  tr[data-prop="emotion"] .curve-value[data-value] { top: calc(var(--top) + var(--span) * var(--level) / 6 - var(--face-size) / 2); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); z-index: var(--z-raised); white-space: nowrap; padding: 0 var(--space-xs); background: linear-gradient(transparent var(--face-size), var(--color-bg) var(--face-size)); font-size: var(--font-size-2xs); line-height: var(--leading-tight); }
+  tr[data-prop="emotion"] .curve-value[data-value]::before { display: block; width: var(--face-size); height: var(--face-size); margin: 0 auto; border-radius: 50%; background: var(--color-bg); font-size: calc(var(--face-size) * .8); line-height: var(--face-size); text-align: center; }
+  tr[data-prop="emotion"] .curve-value[data-value="3"] { --level: 0; }
+  tr[data-prop="emotion"] .curve-value[data-value="2"] { --level: 1; }
+  tr[data-prop="emotion"] .curve-value[data-value="1"] { --level: 2; }
+  tr[data-prop="emotion"] .curve-value[data-value="0"] { --level: 3; }
+  tr[data-prop="emotion"] .curve-value[data-value="-1"] { --level: 4; }
+  tr[data-prop="emotion"] .curve-value[data-value="-2"] { --level: 5; }
+  tr[data-prop="emotion"] .curve-value[data-value="-3"] { --level: 6; }
+}
+
+/* ---------- "Pain points": the problems first, numbered to be named in a workshop, each with its answers below ---------- */
+[data-view-name="pain-points"] {
+  .grid :is(td, thead th[scope="col"]) { width: var(--phase-column); min-width: var(--phase-column); max-width: var(--phase-column); }
+  tr[data-prop="emotion"] td.scale { height: calc(var(--face-size) * 2 + var(--space-lg)); }
+  tr[data-prop="emotion"] .curve { display: none; }
+  tr[data-prop="emotion"] .curve-value { top: var(--space-md); bottom: auto; font-size: var(--font-size-2xs); }
+  tr[data-prop="emotion"] .curve-value::before { display: block; font-size: var(--face-size); line-height: var(--leading-dense); }
+  tr[data-prop="pain-points"] { counter-reset: pain; }
+  tr[data-prop="pain-points"] li { counter-increment: pain; padding: var(--space-md); font-size: var(--font-size-md); font-weight: var(--font-weight-medium); line-height: var(--leading-tight); }
+  tr[data-prop="pain-points"] li::before { position: static; display: inline-block; vertical-align: calc(-1 * var(--space-3xs)); margin-right: var(--space-xs); }
+  tr[data-prop="pain-points"] li::after { content: "P" counter(pain); position: absolute; top: var(--space-md); right: var(--space-md); font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-tight) var(--font-mono); color: var(--color-negative); }
+  tr[data-prop="pain-points"] li { padding-right: calc(var(--space-md) * 3); }
+  tr[data-prop="opportunities"] li { background: none; padding: var(--space-3xs) 0 var(--space-3xs) var(--space-xl); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+  tr[data-prop="opportunities"] li::before { left: 0; top: var(--space-xs); }
+}
+
+/* ---------- "Opportunities": every idea of the journey as a point on an impact / effort chart ----------
+   The cards of the phases give way to their items (display: contents), so that the ideas of every phase are one chart:
+   white, nine cells (a column per effort, low to high; a band per impact, high at the top), from their details
+   (`- Impact: high`, `- Effort: low`). Each idea is a point and its name; two ideas in one cell stack in it, as they are
+   placed in order (impact, then effort) and a band starts after each line. A quick win (high impact, low effort) is
+   green. An idea with no impact comes last, hollow. The names of the bands are the name of the first phase (the
+   first band) and the two pseudo-elements of the chart; the names of the columns are under it, at tab stops. */
+[data-view-name="opportunities"] {
+  --line: color-mix(in oklab, var(--color-text-muted) 22%, transparent);
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-flow: column; align-items: start; gap: 0; box-sizing: border-box; width: var(--chart-width); margin: calc(var(--space-lg) * 2) 0 0 var(--gutter); padding: 0 0 var(--space-xl); background: var(--color-bg) linear-gradient(90deg, transparent calc(100% / 3 - var(--border-width) / 2), var(--line) 0 calc(100% / 3 + var(--border-width) / 2), transparent 0 calc(200% / 3 - var(--border-width) / 2), var(--line) 0 calc(200% / 3 + var(--border-width) / 2), transparent 0) no-repeat; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-xl); counter-reset: phase idea; }
+  .card, .card dl, .card dd, .card dd > ul { display: contents; }
+  .card dt, .card dd > :not(ul) { display: none; }
+  /* The names of the phases are not shown, but count them (an element with display: contents counts nothing) */
+  .card h2 { counter-increment: phase; position: absolute; width: 0; height: 0; margin: 0; padding: 0; overflow: hidden; }
+
+  /* The bands: a line across the chart between them, and their name out of the chart, on its left (the line is a grid
+     item of no height, its name overflows it, pushed out by a negative indent) */
+  .card:first-child h2, .cards::before, .cards::after { position: static; grid-column: 1 / -1; width: auto; height: 0; overflow: visible; margin: 0 0 calc(-1 * var(--space-sm)); padding: var(--space-lg) 0 0; white-space: nowrap; text-indent: calc(-1 * var(--gutter)); font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-tight) var(--font-meta); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+  .card:first-child h2 { order: -1; font-size: 0; }
+  .card:first-child h2::before { content: "High impact"; font-size: var(--font-size-2xs); }
+  .cards::before { content: "Medium impact"; order: 4; margin-top: var(--space-md); border-top: var(--border-width) solid var(--line); }
+  .cards::after { content: "Low impact"; order: 8; margin-top: var(--space-md); border-top: var(--border-width) solid var(--line); }
+
+  /* An idea: a point and its name, its description under it; a block, not a grid, so that a name with inline code or a
+     link stays one text */
+  .card dd > ul > li { order: 12; display: block; position: relative; box-sizing: border-box; width: 100%; max-width: none; margin: 0; padding: var(--space-xs) var(--space-lg) var(--space-xs) calc(var(--space-lg) + var(--idea-dot) + var(--space-sm)); background: none; border: 0; border-radius: 0; box-shadow: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); line-height: var(--leading-tight); cursor: pointer; }
+  .card dd > ul > li::before { content: ""; flex: none; position: absolute; left: var(--space-lg); top: calc(var(--space-xs) + (1lh - var(--idea-dot)) / 2); width: var(--idea-dot); height: var(--idea-dot); border-radius: 50%; background: var(--color-text); -webkit-mask: none; mask: none; transform: translateY(var(--border-width)); }
+  .card dd > ul > li > ul { display: block; margin: var(--space-3xs) 0 var(--space-xs); padding: 0; list-style: none; }
+  .card dd > ul > li > ul > li { display: none; }
+  .detail-label { display: none; }
+  .card dd > ul > li > ul > li[data-prop="description"] { display: block; margin: 0; padding: 0; background: none; border: 0; font-size: var(--font-size-xs); font-weight: normal; line-height: var(--leading-tight); color: var(--color-text-muted); }
+  .card dd > ul > li > ul > li::before { content: none; }
+  .card dd > ul > li:hover { color: var(--color-accent); text-decoration: underline; text-decoration-color: var(--color-border); text-underline-offset: var(--space-2xs); }
+  .card dd > ul > li:not(:has([data-value^="impact-"]))::before { background: none; box-shadow: inset 0 0 0 var(--border-width-strong) var(--color-text-muted); }
+
+  /* Its column: the effort. In a column flow, an item locked to a column goes under the last one placed in that
+     column, so each cell fills from its top, and a band starts under the tallest cell of the band above */
+  .card dd > ul > li:has([data-value="effort-low"]) { grid-column: 1; }
+  .card dd > ul > li:has([data-value="effort-medium"]) { grid-column: 2; }
+  .card dd > ul > li:has([data-value="effort-high"]) { grid-column: 3; }
+
+  /* Its band: the impact, then the effort, so that each band fills its cells before the next line */
+  .card dd > ul > li:has([data-value="impact-high"]) { order: 3; }
+  .card dd > ul > li:has([data-value="impact-high"]):has([data-value="effort-low"]) { order: 0; }
+  .card dd > ul > li:has([data-value="impact-high"]):has([data-value="effort-low"])::before { background: var(--color-positive); box-shadow: 0 0 0 var(--space-xs) var(--color-tint-green); }
+  .card dd > ul > li:has([data-value="impact-high"]):has([data-value="effort-medium"]) { order: 1; }
+  .card dd > ul > li:has([data-value="impact-high"]):has([data-value="effort-high"]) { order: 2; }
+  .card dd > ul > li:has([data-value="impact-medium"]) { order: 7; }
+  .card dd > ul > li:has([data-value="impact-medium"]):has([data-value="effort-low"]) { order: 5; }
+  .card dd > ul > li:has([data-value="impact-medium"]):has([data-value="effort-medium"]) { order: 6; }
+  .card dd > ul > li:has([data-value="impact-medium"]):has([data-value="effort-high"]) { order: 7; }
+  .card dd > ul > li:has([data-value="impact-low"]) { order: 11; }
+  .card dd > ul > li:has([data-value="impact-low"]):has([data-value="effort-low"]) { order: 9; }
+  .card dd > ul > li:has([data-value="impact-low"]):has([data-value="effort-medium"]) { order: 10; }
+  .card dd > ul > li:has([data-value="impact-low"]):has([data-value="effort-high"]) { order: 11; }
+
+  /* The columns named under the chart: a tab stop at the start of each (three columns) */
+  &::after { content: "Low effort\9Medium effort\9High effort"; white-space: pre; tab-size: calc(var(--chart-width) / 3); display: block; box-sizing: border-box; width: calc(var(--chart-width) + var(--gutter)); padding: var(--space-md) var(--space-lg) 0 calc(var(--gutter) + var(--space-lg)); font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-dense) var(--font-meta); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+}
+
+/* ---------- "Tracking": the ideas followed up, as a board, a lane per status ----------
+   The status, owner, due date and result are details under each idea. Counters give the numbers. */
+[data-view-name="tracking"] {
+  --lane: color-mix(in oklab, var(--color-text-muted) 8%, transparent);
+  counter-reset: phase idea planned progress live;
+  &:not([hidden]) { display: flex; flex-direction: column; align-items: flex-start; }
+  .view-description { order: -2; }
+  /* The names of the lanes and their numbers, above the board (an ::after is drawn after the ideas, so its counters
+     are complete; order puts it first) */
+  &::after { order: -1; content: "Ideas  " counter(idea) "\9Planned  " counter(planned) "\9In progress  " counter(progress) "\9Live  " counter(live); white-space: pre; tab-size: calc(var(--lane-width) + var(--lane-gap)); margin-top: calc(var(--space-lg) * 2); padding: var(--space-md) var(--space-xl) var(--space-md); width: calc((var(--lane-width) + var(--lane-gap)) * 4); box-sizing: border-box; background: repeating-linear-gradient(90deg, var(--lane) 0 var(--lane-width), transparent var(--lane-width) calc(var(--lane-width) + var(--lane-gap))); border-radius: 0; font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-dense) var(--font-meta); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+  /* The board: columns of cards, one per lane, each filled from its top. A flex column that wraps, its lanes split by
+     three breaks (empty items as high as the board, which is why it has a height: a lane longer than that wraps) */
+  .cards { display: flex; flex-flow: column wrap; align-content: flex-start; height: var(--board-height); width: calc((var(--lane-width) + var(--lane-gap)) * 4); margin: 0; padding: 0; gap: 0; background: repeating-linear-gradient(90deg, var(--lane) 0 var(--lane-width), transparent var(--lane-width) calc(var(--lane-width) + var(--lane-gap))); }
+  .card, .card dl, .card dd, .card dd > ul { display: contents; }
+  .card dt, .card dd > :not(ul) { display: none; }
+  .card h2 { counter-increment: phase; position: absolute; width: 0; height: 0; margin: 0; padding: 0; overflow: hidden; }
+  .card:first-child h2, .cards::before, .cards::after { content: ""; position: static; flex: 0 0 100%; width: var(--lane-gap); height: auto; font-size: 0; }
+  .card:first-child h2 { order: 2; }
+  .cards::before { order: 4; }
+  .cards::after { order: 6; }
+
+  /* An idea: a card, its phase above its name */
+  .card dd > ul > li { order: 1; counter-increment: idea; display: block; box-sizing: border-box; width: calc(var(--lane-width) - var(--lane-gap) * 4 / 3); max-width: none; margin: 0 calc(var(--lane-gap) * 2 / 3) calc(var(--lane-gap) * 2 / 3); padding: var(--space-md) var(--space-md) var(--space-md); flex: none; background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); line-height: var(--leading-tight); cursor: pointer; }
+  .card dd > ul > li:hover { border-color: var(--color-text-muted); }
+  .card dd > ul > li::before { content: "Phase " counter(phase); display: block; position: static; width: auto; height: auto; margin-bottom: var(--space-xs); background: none; -webkit-mask: none; mask: none; font: var(--font-weight-bold) var(--font-size-2xs)/var(--leading-dense) var(--font-meta); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--color-text-muted); }
+  .card dd > ul > li:has(> ul > [data-value="status-planned"]) { order: 3; counter-increment: planned; }
+  .card dd > ul > li:has(> ul > [data-value="status-in-progress"]) { order: 5; counter-increment: progress; }
+  .card dd > ul > li:has(> ul > [data-value="status-live"]) { order: 7; counter-increment: live; }
+  .card dd > ul > li:has(> ul > [data-value="status-in-progress"])::before { content: "● Phase " counter(phase); color: var(--ink-progress); }
+  .card dd > ul > li:has(> ul > [data-value="status-live"])::before { content: "✓ Phase " counter(phase); color: var(--color-positive); }
+
+  /* Its details: the owner and the due date as small tags, the result in green; the rest is in the panel */
+  .detail-label { display: none; } /* the name of a detail, but for the tags */
+  .card dd > ul > li > ul > li:is([data-prop="owner"], [data-prop="due"]) .detail-label { display: inline; }
+  .card dd > ul > li > ul { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: var(--space-md) 0 0; padding: 0; list-style: none; }
+  .card dd > ul > li > ul > li { display: none; margin: 0; padding: var(--space-3xs) var(--space-sm); background: var(--color-surface); border: 0; border-radius: var(--radius-md); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); font-size: var(--font-size-2xs); font-weight: normal; color: var(--color-text-muted); }
+  .card dd > ul > li > ul > li::before { content: none; }
+  .card dd > ul > li > ul > li:is([data-prop="owner"], [data-prop="due"]) { display: block; }
+  .card dd > ul > li > ul > li[data-prop="description"] { display: block; flex-basis: 100%; margin: calc(-1 * var(--space-sm)) 0 var(--space-xs); padding: 0; background: none; box-shadow: none; font-size: var(--font-size-xs); line-height: var(--leading-tight); }
+  .card dd > ul > li > ul > li[data-prop="result"] { display: block; flex-basis: 100%; padding: var(--space-xs) var(--space-sm); background: var(--color-tint-green); box-shadow: none; font-weight: var(--font-weight-bold); color: var(--color-positive); }
+}
+
+/* ---------- "Journey": the main view; its description is the journey itself, as its title ---------- */
+[data-view-name="journey"] .view-description { font-size: var(--font-size-title); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); color: var(--color-text); }
+
+/* ---------- "Summary": the journey at a glance, one white card per phase, its number, its face in the corner ---------- */
+[data-view-name="summary"] {
+  .cards { counter-reset: phase; grid-template-columns: repeat(auto-fill, var(--phase-card)); gap: var(--space-lg); margin-top: calc(var(--space-lg) * 2); }
+  .card { counter-increment: phase; position: relative; padding: var(--space-lg); border-radius: var(--radius-xl); box-shadow: none; }
+  .card h2 { margin: 0; padding-right: calc(var(--face-size) * 2 + var(--space-xs)); font-size: var(--font-size-md); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
+  .card h2::before { content: counter(phase); display: grid; place-items: center; width: var(--stop-size); height: var(--stop-size); margin-bottom: var(--space-md); border-radius: 50%; background: var(--color-text); color: var(--color-bg); font-family: var(--font-meta); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); }
+  .card dt { margin-top: var(--space-lg); }
+  .card :is(dt[data-prop="description"], dt[data-prop="emotion"]) { display: none; }
+  .card ul { list-style: none; padding: 0; }
+  dd[data-prop="description"] { margin-top: var(--space-md); font-size: var(--font-size-sm); line-height: var(--leading-normal); color: var(--color-text-muted); }
+  dd[data-prop="emotion"] .curve-value { position: absolute; top: var(--space-lg); right: var(--space-md); left: auto; bottom: auto; min-width: calc(var(--face-size) * 2); white-space: nowrap; text-align: center; font-size: var(--font-size-2xs); line-height: var(--leading-dense); }
+  dd[data-prop="emotion"] .curve-value::before { display: block; font-size: var(--face-size); line-height: var(--leading-dense); }
+  dd:is([data-prop="pain-points"], [data-prop="opportunities"]) li { font-size: var(--font-size-xs); line-height: var(--leading-tight); }
+}
+
+/* ---------- The panel: the details of a value (written under it in the Markdown), each drawn by what it is ----------
+   Their hooks, as on the map: the property of the value (data-prop on the list), the name of a detail (data-prop on its
+   row) and a short value (data-value). The ratings first, as chips; then the quote, the evidence, and the source last. */
+.details-body .details-props:where([data-prop="pain-points"], [data-prop="opportunities"]) { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-lg) var(--space-sm); }
+.details-props:where([data-prop="pain-points"], [data-prop="opportunities"]) > div { flex: 1 0 100%; order: 3; } /* low, so that each detail below can change it */
+.details-props > [data-prop="quote"] { order: 1; }
+.details-props > :is([data-prop="evidence"], [data-prop="metric"], [data-prop="seen-in"]) { order: 2; }
+.details-props > [data-prop="source"] { order: 4; }
+/* The description: a sentence first, before the ratings, with no name */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; }
+
+/* Ratings: chips, side by side, with their name inside */
+.details-props > :is([data-prop="severity"], [data-prop="impact"], [data-prop="effort"]) { flex: none; order: 0; display: inline-flex; align-items: baseline; gap: var(--space-xs); padding: var(--space-xs) var(--space-md); border-radius: var(--radius-pill); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); }
+.details-props > :is([data-prop="severity"], [data-prop="impact"], [data-prop="effort"]) :is(dt, dd) { margin: 0; font-size: var(--font-size-xs); line-height: var(--leading-tight); }
+.details-props > :is([data-prop="severity"], [data-prop="impact"], [data-prop="effort"]) dd { font-weight: var(--font-weight-bold); }
+/* The pill is the row itself: its value, one of a list, has no chip of its own */
+.details-props > :is([data-prop="severity"], [data-prop="impact"], [data-prop="effort"]) dd p { padding: 0; background: none; box-shadow: none; font-size: inherit; }
+.details-props > [data-prop="severity"]:has(dd[data-value^="high"]) { background: var(--color-tint-red); box-shadow: none; color: var(--color-negative); }
+.details-props > [data-prop="severity"]:has(dd[data-value^="medium"]) { background: var(--color-tint-amber); box-shadow: none; }
+.details-props > [data-prop="severity"]:has(dd[data-value^="high"]) dt { color: inherit; }
+.details-props > [data-prop="impact"]:has(dd[data-value="high"]) { background: var(--color-positive); box-shadow: none; }
+.details-props > [data-prop="impact"]:has(dd[data-value="high"]) :is(dt, dd) { color: var(--color-bg); }
+.details-props > [data-prop="impact"]:has(dd[data-value="medium"]) { background: var(--color-tint-green); box-shadow: none; color: var(--color-positive); }
+.details-props > [data-prop="effort"] { align-items: center; background: none; box-shadow: none; padding-inline: var(--space-xs); }
+.details-props > [data-prop="effort"] dd { font-size: 0; }
+.details-props > [data-prop="effort"] dd::after { font-size: var(--font-size-2xs); letter-spacing: var(--space-3xs); }
+.details-props > [data-prop="effort"] dd[data-value="low"]::after { content: "●○○"; }
+.details-props > [data-prop="effort"] dd[data-value="medium"]::after { content: "●●○"; }
+.details-props > [data-prop="effort"] dd[data-value="high"]::after { content: "●●●"; }
+
+/* The quote: in her words, as the thoughts on the map */
+.details-props > [data-prop="quote"] dt { display: none; }
+.details-props > [data-prop="quote"] blockquote { position: relative; margin: 0; padding: var(--space-lg) var(--space-lg) var(--space-lg) calc(var(--space-md) * 2 + var(--space-lg)); border: 0; border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm); background: var(--color-tint-purple); font-size: var(--font-size-lg); line-height: var(--leading-normal); }
+.details-props > [data-prop="quote"] blockquote::before { content: "\201C"; position: absolute; left: var(--space-md); top: var(--space-xs); font: var(--font-weight-bold) calc(var(--font-size-xl) * 1.5)/1 var(--font-quote); font-style: normal; color: var(--ink-thought); opacity: var(--opacity-quiet); }
+
+/* The evidence: a quiet card, its name above */
+.details-props > :is([data-prop="evidence"], [data-prop="metric"], [data-prop="seen-in"]) { padding: var(--space-md) var(--space-lg); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); }
+.details-props > :is([data-prop="evidence"], [data-prop="metric"], [data-prop="seen-in"]) dd { font-weight: var(--font-weight-medium); }
+
+/* The source: last, small, as a footnote */
+.details-props > [data-prop="source"] { display: flex; align-items: baseline; gap: var(--space-sm); padding-top: var(--space-md); border-top: var(--border-width) solid var(--color-border); }
+.details-props > [data-prop="source"] :is(dt, dd) { margin: 0; }
+.details-props > [data-prop="source"] dd { font-size: var(--font-size-xs); color: var(--color-text-muted); }
