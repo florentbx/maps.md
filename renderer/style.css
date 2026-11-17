@@ -1,0 +1,783 @@
+/* The page of a map: the cards, the grid, the graph, the tree, and the page maps.html.
+   Design tokens, in three layers; the rules below the tokens use only tokens, never a raw value:
+   1. Scales: type, space, sizes, radii, strokes, shadows, layers. Shared by every theme.
+   2. Theme: the colors, by their role (background, text, accent, tints…). A theme redefines only these. Text keeps a
+      contrast of 4.5:1 at least on the backgrounds it is drawn on (WCAG AA), and lines and points 3:1.
+   3. Components: the rules of the page, from the two layers above.
+   To change the theme, redefine the color tokens (layer 2) on :root; to change the density or the look, the scales. */
+
+/* ---- 1. Scales ---- */
+:root {
+  /* Type */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* the font of the system: there on every computer, nothing to load; the boxes of the drawings are measured in it */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-meta: var(--font-mono); /* what is about the file, not its content: labels of properties, types, paths */
+  --font-quote: Georgia, serif; /* the quotation mark drawn before a quote */
+  --font-size-root: 15px; /* the text of the page; a rem stays the browser's (16px): --font-size-md is 14.4px */
+  --font-size-2xs: .72rem; /* labels in capitals */
+  --font-size-xs: .8rem;
+  --font-size-sm: .85rem;
+  --font-size-md: .9rem;
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.5rem;
+  --font-size-title: 1.25rem; /* the sentence of a view, when a type makes it its title */
+  --font-size-sup: .75em; /* the mark of a source link */
+  --font-size-code: .9em;
+  /* Text in a drawing; the boxes are measured for these sizes in draw.ts (G.font, G.small), so keep them close. */
+  --font-size-diagram: 13px;
+  --font-size-diagram-sm: 12px;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --leading-normal: 1.5;
+  --leading-editor: 1.6; /* the Markdown of a map, in monospace, in the editor */
+  --leading-tight: 1.35;
+  --leading-dense: 1.1; /* a caption right under its title */
+  --tracking-caps: .04em;
+
+  /* Space */
+  --space-3xs: .1rem;
+  --space-2xs: .2rem;
+  --space-xs: .3rem;
+  --space-sm: .5rem;
+  --space-md: .85rem;
+  --space-lg: 1.15rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 3rem;
+
+  /* Sizes */
+  --size-column: 14rem; /* a column of a grid */
+  --size-label: 7.5rem; /* the labels of the rows of a grid */
+  --size-card: 16rem; /* the narrowest card */
+  --size-board-column: 20rem; /* a column of a board: its cards hold sentences */
+  --size-box: 9.5rem; /* a box in a lane of a sequence (a service blueprint) */
+  --size-box-min-height: 3.5rem;
+  --size-matrix-box: 9.5rem; /* a box of a matrix: the same size however many elements it holds */
+  --size-dot-mark: .75rem; /* the dot of a table with `- Dots:`, where an element has a value */
+  --size-point: 1.6rem; /* the numbered point of an element in a matrix */
+  --size-text: 48rem; /* the widest line of text: context, open questions */
+  --size-canvas-page: 90rem; /* the width a map is laid out in, on the canvas: not the window's, so that resizing it does not lay the map out again */
+  --size-scale-cell: 7rem; /* the height of a row drawn as a curve */
+  --size-poster-cell: 5rem;
+  --size-key-width: 14px;
+  --size-key-height: 10px;
+  --size-curve-point: 9;
+  --size-files: 16rem; /* the files, on the left, at first */
+  --size-files-min: 10rem; /* narrower, it closes */
+  --size-files-max: 32rem;
+  --size-bar: 3rem; /* the height of the bar, and of the head of the files */
+  --size-bar-pill-min: 3em; /* a pill of the bar, at its narrowest, in its own text */
+  --size-bar-title-min: 4em; /* the title of the map in the bar, cut no narrower */
+  --size-zoom-level: 4.5em; /* the zoom, "100 %", without moving the buttons around it */
+  --size-edge: 8px; /* the edge of a panel, dragged to resize it */
+  --size-editor: 28rem; /* the editor, at first */
+  --size-editor-min: 16rem; /* narrower, it closes */
+  --size-editor-max: 48rem;
+  --size-completion: 14rem; /* the list of the completion, in the editor: its narrowest */
+  --size-completion-max: 26rem;
+  --size-completion-height: 16rem; /* taller, it scrolls */
+  --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); /* Lucide chevron-down, drawn in the color it is given */
+  --size-button: 1.875rem; /* the height of a ghost button, and its width with an icon alone */
+  --size-chevron: .75rem; /* the arrow of a folder in the list of the maps */
+  --offset-chevron: -.1em; /* how far it is lowered, onto the line of its text */
+  --size-icon: 1rem;
+  --size-icon-sm: .85rem; /* an icon inside a small control: the cross of the search */
+  --size-dot: 1px; /* the dots behind the map, at a zoom of 1; they follow the zoom */
+  --size-dot-min: .4px;
+  --size-dot-gap: 20px;
+
+  /* Radii */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* Borders and strokes */
+  --border-width: 1px;
+  --border-width-strong: 3px;
+  --stroke-thin: 1.2;
+  --stroke-line: 1.3;
+  --stroke-icon: 2; /* the icons, on their grid of 24 */
+  --stroke-medium: 2;
+  --stroke-thick: 2.5;
+  --stroke-focus: 3;
+  --stroke-halo: 4px; /* behind a label drawn on a line */
+  --dash-base: 3 3;
+  --dash-missing: 4 3;
+  --dash-back: 5 4;
+
+  /* Shadows and layers */
+  --shadow-popover: 0 6px 24px var(--color-shadow);
+  --shadow-card: 0 2px 6px var(--color-shadow-soft); /* a card in a lane, lifted off the lines */
+  --shadow-note: 0 1px 2px var(--color-shadow-soft), 0 3px 8px var(--color-shadow-soft); /* an item drawn as a card or a note: a card, a card of a board, a note of a canvas, lifted off the board */
+  --shadow-note-filter: drop-shadow(0 1px 2px var(--color-shadow-soft)) drop-shadow(0 3px 8px var(--color-shadow-soft)); /* --shadow-note as a filter, for a shape with rounded corners of its own: the grid of a matrix */
+  --shadow-node: drop-shadow(0 1px 1px var(--color-shadow-soft)) drop-shadow(0 2px 4px var(--color-shadow-soft)); /* a box of a graph, lifted off the board as a card: a filter, as SVG has no box-shadow */
+  --shadow-control: none; /* a button with a frame, a pill of the bar: flat here, raised by a theme */
+  --shadow-selected: none; /* what is chosen: the map in the files, a pill pressed, a view: flat here, raised by a theme */
+  --duration-panel: .2s; /* a panel that opens or closes */
+  --duration-fade: .15s; /* what fades out when something else is brought out */
+  --duration-tip: .1s; /* a tip that shows */
+  --delay-tip: .3s; /* the hover before a tip shows */
+  --duration-hint: 2.5s; /* a hint shown once, then gone */
+  --duration-notice: 6s; /* what the page did by itself, said for a moment: long enough to read two names */
+  --opacity-faded: .2; /* what is faded out, around what is brought out */
+  --opacity-quiet: .5; /* a line or a mark that stays in the background */
+  --ease-panel: cubic-bezier(.2, 0, 0, 1); /* fast, then settles */
+  --delay-edge: .25s; /* the hover of the edge of a panel, before its line shows */
+  --z-raised: 1; /* in a drawing: what is drawn over the lines behind it (a step over its arrows, a point over its rail) */
+  --z-panel: 1; /* the bar and the panels, over the canvas */
+  --z-bar: 5;
+  --z-bubble: 10;
+}
+
+/* ---- 2. Theme: colors by role ---- */
+:root {
+  --color-bg: #ffffff; /* the page, and the contents of a map: cards, cells, boxes */
+  --color-canvas: #f3f4f6; /* behind the map in maps.html: a light gray, so that the white map stands out */
+  --color-surface: #ffffff; /* the bar, the panels, badges: the map itself is white */
+  --color-text: #1b1a22;
+  --color-text-muted: #545a6e;
+  --color-border: #dfe3ee;
+  --color-accent: #2b66e0; /* a blue */
+  --color-positive: #0b7542;
+  --color-negative: #bd2117;
+  --color-neutral: #8b88a0;
+  --color-code-bg: rgba(0, 0, 0, .05);
+  --color-dot: #d3d6dc;
+  --color-unknown: #d3d8e6; /* the dashed outline of a value the source did not say */
+  --color-hover: #edf2fd; /* a row under the pointer */
+  --color-selected: #e2eafb; /* the row chosen */
+  --color-active-line: rgba(0, 0, 0, .035); /* the line of the cursor in the editor, over the selection */
+  --color-text-selection: #cfdcff; /* the text selected in the editor */
+  --color-shadow: rgba(20, 40, 90, .18);
+  --color-shadow-soft: rgba(20, 40, 90, .10);
+  /* The tints of the boxes: the colors a layout can name, and the looks of the values of an enum by their place. */
+  --color-tint-blue: #cfe4ff;
+  --color-tint-amber: #fff3b0;
+  --color-tint-green: #c9f2d6;
+  --color-tint-purple: #e6dbff;
+  --color-tint-red: #ffd6d2;
+  --color-tint-gray: #eaedf4;
+  /* The inks: the strong color of a hue, for a stroke or an icon on its tint. */
+  --color-ink-blue: #1f6bff;
+  --color-ink-amber: #f2a900;
+  --color-ink-purple: #8a3ffc;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark; /* the scrollbars and the fields of the browser, dark too */
+    --color-bg: #24262e;
+    --color-canvas: #1b1c20;
+    --color-surface: #20222a;
+    --color-text: #f2f1f7;
+    --color-text-muted: #aeaac4;
+    --color-border: #373b47;
+    --color-accent: #7aa7ff; /* a light blue */
+    --color-positive: #3ddc84;
+    --color-negative: #ff6b5e;
+    --color-neutral: #8b88a0;
+    --color-dot: #31353f;
+    --color-unknown: #4d4a5c;
+    --color-hover: #2b2f3b;
+    --color-selected: #2c3a5c;
+    --color-active-line: rgba(255, 255, 255, .04);
+    --color-text-selection: #2f4a85;
+    --color-tint-blue: #1d3560;
+    --color-tint-amber: #4a3d0d;
+    --color-tint-green: #173f2a;
+    --color-tint-purple: #362461;
+    --color-tint-red: #4e1f1c;
+    --color-tint-gray: #302e3b;
+    --color-ink-blue: #6ea2ff;
+    --color-ink-amber: #ffc93d;
+    --color-ink-purple: #b88cff;
+    --color-shadow: rgba(0, 0, 0, .45);
+    --color-shadow-soft: rgba(0, 0, 0, .3);
+  }
+}
+
+/* ---- 3. Components ---- */
+* { box-sizing: border-box; }
+body { --backdrop: var(--color-bg); margin: 0; background: var(--color-bg); color: var(--color-text); font: var(--font-size-root)/var(--leading-normal) var(--font-sans); }
+
+/* Cards and posters */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--size-card), 1fr)); gap: var(--space-md); margin-top: var(--space-lg); align-items: start; }
+.card { background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); font-size: var(--font-size-md); cursor: pointer; box-shadow: var(--shadow-note); }
+.card h2 { font-size: var(--font-size-lg); margin: 0 0 var(--space-sm); }
+.card-parent { margin: 0 0 var(--space-2xs); font-size: var(--font-size-xs); color: var(--color-text-muted); } /* an element of a tree drawn as a card: the element it is under */
+.card dl { margin: 0; }
+.card dt { color: var(--color-text-muted); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); margin-top: var(--space-sm); } /* a label in a card: in sentence case, the font of the text */
+.card dd { margin: var(--space-2xs) 0 0; }
+.card ul { margin: 0; padding-left: var(--space-lg); }
+.card li + li { margin-top: var(--space-2xs); }
+.card dd.single ul { padding-left: 0; list-style: none; } /* one value alone: text, not a list of one */
+:is(.card, .grid--rows) .curve-value { position: static; text-align: left; }
+.cards--poster { grid-template-columns: 1fr; }
+/* The filters above cards: a button per value of an enum; pressed, the cards without it fade */
+.filters { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); margin-top: var(--space-lg); font-size: var(--font-size-xs); }
+.filters-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+.filters-label { color: var(--color-text-muted); font-weight: var(--font-weight-medium); }
+.filter { font: inherit; padding: var(--space-3xs) var(--space-sm); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-pill); background: var(--color-bg); color: var(--color-text); cursor: pointer; }
+.filter:hover { border-color: var(--color-text-muted); }
+.filter[aria-pressed="true"] { background: var(--color-text); border-color: var(--color-text); color: var(--color-bg); }
+.filters-count { color: var(--color-text-muted); }
+.filters--table:not(:has(:not([hidden]))) { display: none; } /* above a table, only once a filter is on */
+/* The filter of a column of a table, as in Google Sheets: the icon of a filter at the right of its header, as high as
+   the header (three lines; a funnel, filled, once on), the list of its values under it; the name selects the column */
+.grid--rows thead th { position: relative; }
+.grid--rows thead th:has(.column-filter) { padding-right: calc(var(--size-icon) + var(--space-md) * 2); white-space: nowrap; }
+.column-filter { position: absolute; top: 0; right: 0; bottom: 0; display: flex; align-items: flex-end; padding: var(--space-sm) var(--space-md); border: 0; background: none; color: var(--color-text-muted); cursor: pointer; }
+.column-filter:hover, .column-filter[aria-expanded="true"] { background: var(--color-hover); color: var(--color-text); }
+.column-filter-icon .icon-on, th:has(.filter[aria-pressed="true"]) .column-filter-icon .icon-off { display: none; }
+th:has(.filter[aria-pressed="true"]) .column-filter-icon .icon-on { display: inline; fill: currentColor; }
+th:has(.filter[aria-pressed="true"]), th:has(.filter[aria-pressed="true"]) .column-filter { color: var(--color-accent); }
+.column-filter-menu { position: absolute; top: 100%; right: 0; z-index: var(--z-bubble); display: flex; flex-direction: column; min-width: max-content; padding: var(--space-2xs); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); box-shadow: var(--shadow-note); }
+.column-filter-menu[hidden] { display: none; }
+.filter-option { display: flex; align-items: center; gap: var(--space-sm); border: 0; border-radius: var(--radius-sm); text-align: left; }
+.filter-option::before { content: ""; flex: none; width: var(--space-md); height: var(--space-md); border: var(--border-width) solid var(--color-text-muted); border-radius: var(--radius-xs); }
+.filter-option:hover { background: var(--color-hover); }
+.filter-option[aria-pressed="true"] { background: none; color: var(--color-text); }
+.filter-option[aria-pressed="true"]::before { content: "✓"; display: grid; place-items: center; background: var(--color-text); border-color: var(--color-text); color: var(--color-bg); font-size: var(--font-size-2xs); }
+.grid--rows tbody tr.is-filtered { display: none; } /* a table keeps its columns: its rows filtered out are hidden */
+.filters-clear { font: inherit; padding: 0; border: 0; background: none; color: var(--color-text-muted); text-decoration: underline; cursor: pointer; }
+.filters-clear:hover { color: var(--color-text); }
+.card { transition: opacity var(--duration-fade); }
+.card.is-filtered { opacity: var(--opacity-faded); }
+.poster { display: grid; gap: var(--space-sm); margin-top: var(--space-md); }
+.poster section { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); min-height: var(--size-poster-cell); }
+.poster h3 { color: var(--color-text-muted); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); margin: 0 0 var(--space-xs); }
+
+/* Grid */
+.grid { margin-top: var(--space-lg); }
+.grid--arrows { position: relative; }
+.grid--arrows td li { width: fit-content; position: relative; z-index: var(--z-raised); background: var(--color-bg); }
+.grid--arrows td li.step { border: var(--border-width) solid var(--color-text-muted); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); }
+.grid--arrows td li + li { margin-top: var(--space-md); }
+tr.has-background td li { width: fit-content; max-width: 100%; background: var(--tint); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); }
+tr.has-background td li + li { margin-top: var(--space-xs); }
+.grid--boxes :is(th, td) { background: var(--color-bg); border: 0; }
+.grid--boxes thead th { border-bottom: var(--border-width) solid var(--color-border); }
+.grid--boxes tr.has-line > * { border-top: var(--border-width) dashed var(--color-border); }
+.grid--boxes .line-name { display: block; margin: calc(-1 * var(--space-xs)) 0 var(--space-sm); color: var(--color-text-muted); font-size: var(--font-size-xs); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: normal; }
+.grid--boxes tr.boxes-row td ul { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+.grid--boxes tr.boxes-row td li { display: flex; align-items: center; justify-content: center; text-align: center; flex: none; width: var(--size-box); min-height: var(--size-box-min-height); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-sm) var(--space-md); background: var(--color-bg); box-shadow: var(--shadow-card); position: relative; z-index: var(--z-raised); }
+.grid--boxes tr.boxes-row td li + li { margin-top: 0; }
+.arrows { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+.arrows path { fill: none; stroke: var(--color-accent); stroke-width: var(--stroke-line); }
+.arrows marker path { fill: var(--color-accent); stroke: none; }
+/* A chain followed (a value chosen in a sequence with arrows): the values and arrows of its chain stand out */
+.has-chain td li:not(.in-chain), .has-chain .arrows > path:not(.in-chain) { opacity: var(--opacity-faded); transition: opacity var(--duration-fade); }
+.has-chain .arrows path.in-chain { stroke-width: var(--stroke-medium); }
+table { border-collapse: collapse; table-layout: fixed; min-width: 100%; font-size: var(--font-size-md); }
+th, td { background: var(--color-bg); border: var(--border-width) solid var(--color-border); padding: var(--space-sm) var(--space-md); text-align: left; vertical-align: top; min-width: var(--size-column); }
+thead th { font-size: var(--font-size-lg); }
+th.corner, tbody th { width: var(--size-label); min-width: var(--size-label); }
+tbody th { color: var(--color-text-muted); font-size: var(--font-size-2xs); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+/* A property the type does not know, in italics: the name of its row, its column or its field */
+:is(tr.added th, th.added, .card dt.added) { font-style: italic; }
+/* A table with an element per row, as a table is drawn anywhere: a light header row in sentence case, lines between
+   the rows only, a frame around it, as wide as its columns need */
+.grid--rows table { border-collapse: separate; border-spacing: 0; table-layout: auto; width: auto; min-width: 0; max-width: 100%; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); }
+.grid--rows :is(th, td) { border: 0; border-bottom: var(--border-width) solid var(--color-border); }
+.grid--rows tbody tr:last-child > * { border-bottom: 0; }
+/* `- Dots:`: a narrow column per value, a dot where the element has it */
+.grid--rows :is(th.dot-column, td.dot-cell) { min-width: 0; padding-inline: var(--space-xs); text-align: center; }
+.grid--rows td.dot-cell { vertical-align: middle; }
+.grid--rows :is(th, td).dot-total { min-width: 0; padding-left: var(--space-md); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.grid--rows td.dot-total { font-weight: var(--font-weight-medium); vertical-align: middle; }
+.grid--rows .dot { display: inline-block; width: var(--size-dot-mark); height: var(--size-dot-mark); border-radius: var(--radius-pill); background: var(--color-accent); }
+.grid--rows thead th { background: var(--color-canvas); font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-muted); text-transform: none; letter-spacing: 0; vertical-align: bottom; }
+.grid--rows thead th:first-child { border-top-left-radius: var(--radius-lg); }
+.grid--rows thead th:last-child { border-top-right-radius: var(--radius-lg); }
+/* The corners of the last row too: the background of its cells would cover the round corners of the table */
+.grid--rows tbody tr:last-child > :first-child { border-bottom-left-radius: var(--radius-lg); }
+.grid--rows tbody tr:last-child > :last-child { border-bottom-right-radius: var(--radius-lg); }
+.grid--rows tbody th { color: var(--color-text); font-family: var(--font-sans); font-size: var(--font-size-md); text-transform: none; letter-spacing: 0; font-weight: var(--font-weight-bold); }
+.grid--rows :is(th.corner, tbody th) { width: auto; min-width: var(--size-label); }
+/* A tree drawn with an element per row: each level under the first indented, and lighter */
+.grid--rows tr[data-depth] > th { padding-left: calc(var(--space-md) + (var(--depth) - 1) * var(--space-lg)); }
+.grid--rows tr[data-depth]:not([data-depth="1"]) > th { font-weight: var(--font-weight-medium); }
+.grid--rows td.scale { height: auto; padding: var(--space-sm) var(--space-md); }
+td ul { margin: 0; padding: 0; list-style: none; }
+td li + li { margin-top: var(--space-sm); }
+td li ul { margin: var(--space-xs) 0 0 var(--space-md); padding-left: var(--space-sm); border-left: var(--border-width-strong) solid var(--color-border); }
+
+/* A row drawn as a curve (a number with Min and Max) */
+td.scale { padding: 0; position: relative; height: var(--size-scale-cell); }
+.curve { position: absolute; inset: 0; width: calc(100% + var(--border-width)); height: 100%; overflow: visible; } /* over the border on its right, so that the line is not cut between the cells */
+.curve-base { stroke: var(--color-border); stroke-width: 1; stroke-dasharray: var(--dash-base); fill: none; }
+.curve-line { stroke: var(--color-accent); stroke-width: var(--stroke-medium); stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.curve-point { stroke-width: var(--size-curve-point); stroke-linecap: round; fill: none; }
+.curve-point--positive { stroke: var(--color-positive); }
+.curve-point--negative { stroke: var(--color-negative); }
+.curve-point--neutral { stroke: var(--color-neutral); }
+.curve-value { position: absolute; left: 0; right: 0; bottom: var(--space-xs); text-align: center; font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.curve-value b { color: var(--color-text); }
+.curve-value.invalid, .curve-value.invalid b { color: var(--color-negative); font-style: italic; }
+.curve-value.invalid ul { list-style: none; margin: 0; padding: 0; }
+
+/* A board (`- Board: <enum>` in a view of cards): a column per value, its cards one under the other */
+.board-columns { display: flex; gap: var(--space-md); align-items: flex-start; margin-top: var(--space-lg); }
+.board-column { flex: 0 0 var(--size-board-column); padding: var(--space-sm); border-radius: var(--radius-lg); background: var(--color-surface); }
+.board-column > h3 { margin: 0 0 var(--space-sm); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); }
+.board-column > h3::first-letter { text-transform: uppercase; } /* in sentence case, as the labels of the cards */
+.board-column.tinted > h3 { width: fit-content; padding: var(--space-3xs) var(--space-md); border-radius: var(--radius-pill); background: var(--tint); } /* the color its layout gives the value of the column: a chip, as the value anywhere else */
+.board-count { margin-left: var(--space-2xs); color: var(--color-text-muted); font-weight: normal; }
+.board-column .cards { display: flex; flex-direction: column; align-items: stretch; gap: var(--space-sm); margin: 0; }
+/* A card of a board, compact: each label beside its value */
+.board-column .card dl { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2xs) var(--space-sm); align-items: baseline; }
+.board-column .card :is(dt, dd) { margin: 0; }
+/* A matrix (`- Matrix: yes` in a view of cards): a box per pair of values, of a fixed size, a numbered point per element
+   in it, its name on hover; beside the grid, the key: the cards, by box, in the order the boxes are read */
+.matrix { display: flex; align-items: flex-start; gap: var(--space-2xl); margin-top: var(--space-lg); }
+.matrix table { border-collapse: separate; border-spacing: 0; table-layout: fixed; min-width: 0; }
+.matrix :is(th, td) { border: 0; background: none; padding: 0; text-transform: none; letter-spacing: 0; color: var(--color-text); }
+/* The points of a box in its middle, as on a chart: a box is a position, not a list */
+.matrix .matrix-cell { position: relative; width: var(--size-matrix-box); height: var(--size-matrix-box); box-sizing: border-box; padding: var(--space-sm); vertical-align: middle; text-align: center; line-height: 0; background: var(--color-bg); border-right: var(--border-width) dashed var(--color-border); border-bottom: var(--border-width) dashed var(--color-border); }
+/* The grid as the 2×2 of a slide: white boxes, dashed lines between them, a rounded frame lifted off the canvas */
+.matrix .matrix-cell:last-child { border-right: 0; }
+.matrix tr:nth-last-child(3) .matrix-cell { border-bottom: 0; }
+.matrix tr:first-child .matrix-value[scope="row"] + .matrix-cell { border-top-left-radius: var(--radius-xl); }
+.matrix tr:first-child .matrix-cell:last-child { border-top-right-radius: var(--radius-xl); }
+.matrix tr:nth-last-child(3) .matrix-value[scope="row"] + .matrix-cell { border-bottom-left-radius: var(--radius-xl); }
+.matrix tr:nth-last-child(3) .matrix-cell:last-child { border-bottom-right-radius: var(--radius-xl); }
+.matrix tbody { filter: var(--shadow-note-filter); }
+/* A matrix whose axes are scores: the nine boxes as the ground, each point at its scores */
+.matrix-chart { display: grid; grid-template-columns: auto auto calc(var(--size-matrix-box) * 3); grid-template-rows: calc(var(--size-matrix-box) * 3) auto auto; }
+.matrix-chart .matrix-axis--y { grid-column: 1; grid-row: 1; display: flex; align-items: center; }
+.matrix-ticks { font-size: var(--font-size-xs); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.matrix-ticks--y { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 0 var(--space-sm); text-align: right; }
+.matrix-ticks--x { grid-column: 3; grid-row: 2; display: flex; justify-content: space-between; padding-top: var(--space-xs); }
+.matrix-chart .matrix-axis--x { grid-column: 3; grid-row: 3; }
+.matrix-plot { grid-column: 3; grid-row: 1; position: relative; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); border-radius: var(--radius-xl); background: var(--color-bg); filter: var(--shadow-note-filter); --matrix-overlap: calc(var(--size-point) * .8); } /* --matrix-overlap: how far apart two points at the same scores are: they overlap by a fifth, their numbers whole */
+.matrix-box { border-right: var(--border-width) dashed var(--color-border); border-bottom: var(--border-width) dashed var(--color-border); }
+.matrix-box:nth-child(3n) { border-right: 0; }
+.matrix-box:nth-child(n + 7) { border-bottom: 0; }
+.matrix-plot .matrix-point { position: absolute; margin: 0; transform: translate(-50%, 50%); box-shadow: 0 0 0 var(--border-width-strong) var(--color-bg); } /* a ring of the ground, so that overlapping points stay apart */
+.matrix-point { display: inline-grid; place-items: center; width: var(--size-point); height: var(--size-point); margin: calc(var(--space-2xs) / 2); border-radius: var(--radius-pill); background: var(--color-text); color: var(--color-bg); font-size: var(--font-size-2xs); font-weight: var(--font-weight-bold); font-variant-numeric: tabular-nums; cursor: pointer; }
+.matrix-point:is(.is-pointed, .is-selected) { background: var(--color-accent); }
+.matrix-point.is-filtered { opacity: var(--opacity-faded); }
+.matrix-point[data-tip]::after { width: max-content; max-width: var(--size-card); white-space: normal; text-align: left; }
+.matrix .matrix-value { padding: var(--space-xs) var(--space-sm); font-family: var(--font-sans); font-size: var(--font-size-xs); font-weight: normal; color: var(--color-text-muted); text-align: center; }
+.matrix .matrix-value[scope="row"] { text-align: right; vertical-align: middle; }
+.matrix .matrix-axis { font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-text); text-align: center; }
+.matrix .matrix-axis span::after, .matrix .matrix-axis--x::after { content: " →"; } /* toward high */
+.matrix .matrix-value::first-letter { text-transform: uppercase; }
+.matrix .matrix-axis--y { width: var(--space-xl); vertical-align: middle; }
+.matrix .matrix-axis--y span { display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg); }
+.matrix .matrix-axis--x { padding-top: var(--space-2xs); }
+.matrix-key { columns: 2 var(--size-card); column-gap: var(--space-xl); max-width: calc(var(--size-card) * 2 + var(--space-xl)); }
+.matrix-group { break-inside: avoid; margin-bottom: var(--space-lg); }
+.matrix-group > h3 { margin: 0 0 var(--space-xs); font-family: var(--font-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); letter-spacing: 0; text-transform: none; color: var(--color-text-muted); }
+.matrix-key .cards { display: flex; flex-direction: column; gap: var(--space-2xs); margin: 0; }
+.matrix-key .card { display: flex; align-items: baseline; gap: var(--space-sm); padding: var(--space-2xs) var(--space-xs); border: 0; border-radius: var(--radius-sm); background: none; box-shadow: none; }
+.matrix-key .card h2 { margin: 0; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); line-height: var(--leading-tight); }
+.matrix-key .card dl { display: none; } /* the key names the elements; their properties are in the panel */
+.matrix-key .card.is-pointed { background: var(--color-hover); }
+.matrix-number { flex: none; min-width: var(--size-point); text-align: right; font-size: var(--font-size-2xs); font-weight: var(--font-weight-bold); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+/* A tree as a board (a story map): the first level as a header, the second as columns, the cards in lanes */
+.board { margin-top: var(--space-lg); }
+.board table { border-collapse: separate; border-spacing: var(--space-xs); table-layout: fixed; min-width: 0; }
+.board :is(th, td) { width: var(--size-box); min-width: 0; padding: var(--space-xs) var(--space-sm); border: 0; background: none; vertical-align: top; text-align: left; font-size: var(--font-size-sm); line-height: var(--leading-tight); text-transform: none; letter-spacing: 0; color: var(--color-text); }
+.board thead th { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); font-weight: var(--font-weight-bold); cursor: pointer; }
+.board thead th.board-none { border: 0; background: none; cursor: default; }
+.board .board-lane th { padding: var(--space-md) 0 0; border-bottom: var(--border-width) dashed var(--color-text-muted); color: var(--color-text-muted); font-family: var(--font-meta); font-size: var(--font-size-2xs); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.board-count { margin-left: var(--space-xs); }
+.board td { padding: 0; }
+.board td ul { list-style: none; margin: 0; padding: 0; }
+.board td li + li { margin-top: 0; }
+.board-card { margin: 0 0 var(--space-xs); padding: var(--space-xs) var(--space-sm); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); cursor: pointer; box-shadow: var(--shadow-note); }
+
+/* Graph and tree: boxes, diamonds when the layout says so, lines between them */
+.graph { margin-top: var(--space-sm); }
+.graph svg { display: block; max-width: none; font-size: var(--font-size-diagram); }
+.node rect, .node polygon, .node path.node-body { fill: var(--color-bg); stroke: var(--color-text-muted); stroke-width: var(--stroke-thin); }
+/* The corners of the boxes of the drawings, by the tokens (a pill, a return, keeps the radius it is drawn with) */
+.node:not(.node--return) rect { rx: var(--radius-md); }
+.node path.node-cap { fill: none; stroke: var(--color-text-muted); stroke-width: var(--stroke-thin); }
+/* A frame around some elements (`- Frame:`, the system): dashed, with no name */
+.frame rect { rx: var(--radius-xl); fill: none; stroke: var(--color-text-muted); stroke-width: var(--stroke-thin); stroke-dasharray: var(--dash-back); }
+.node text { fill: var(--color-text); text-anchor: middle; }
+.node text.node-title { font-weight: var(--font-weight-bold); }
+.node text.node-detail { fill: var(--color-text-muted); text-anchor: start; font-size: var(--font-size-diagram-sm); }
+.node line.node-rule { stroke: var(--color-border); }
+.node .node-head { fill: none; stroke: none; } /* the head of a box, above its line: for the style of a type */
+/* Its corners are those of the box, within its outline (half of it inside the box): the stroke and the radius of the
+   box as the style of the type sets them (--box-stroke, --box-radius, read from a rect box once drawn: viewer.ts; for
+   another shape, those of the page), or, chosen, the strong stroke */
+.node rect.node-head { --head-in: calc(var(--box-stroke, calc(var(--stroke-thin) * 1px)) / 2); --head-round: max(0px, var(--box-radius, var(--radius-md)) - var(--head-in)); rx: 0; clip-path: inset(var(--head-in) var(--head-in) 0 round var(--head-round) var(--head-round) 0 0) fill-box; }
+#page g.is-selected rect.node-head { --head-in: calc(var(--border-width-strong) / 2); }
+.node--top rect { fill: var(--color-bg); stroke: var(--color-text); stroke-width: var(--stroke-medium); }
+.node--thick :is(rect, polygon, path.node-body) { stroke: var(--color-text-muted); stroke-width: var(--stroke-thick); }
+.node--return rect { fill: var(--color-bg); stroke: var(--color-text-muted); stroke-dasharray: var(--dash-missing); }
+.node--return text { fill: var(--color-text-muted); }
+.node--return:hover rect { stroke: var(--color-text); }
+.node--return { cursor: pointer; }
+.node:not(.node--return, .node--unknown, .node--external, .node--missing) { filter: var(--shadow-node); } /* not under a dashed box: it is not there */
+.node--start circle, .node--end circle { fill: var(--color-text); stroke: none; }
+.node--start text, .node--end text { fill: var(--color-bg); font-size: var(--font-size-diagram-sm); font-weight: var(--font-weight-bold); }
+.node--missing rect { stroke: var(--color-negative); stroke-dasharray: var(--dash-missing); }
+.node--missing text { fill: var(--color-negative); font-style: italic; }
+.node--unknown rect, .node--external rect { stroke: var(--color-neutral); stroke-dasharray: var(--dash-missing); }
+.node--external text { fill: var(--color-text-muted); font-style: italic; }
+.node--invalid :is(rect, polygon, path.node-body) { stroke: var(--color-negative); stroke-width: var(--stroke-medium); }
+.node--unknown text { fill: var(--color-text-muted); }
+/* A sequence drawn as lifelines: the dashed line of each participant, the messages as arrows */
+.lifeline { stroke: var(--color-border); stroke-width: var(--stroke-line); stroke-dasharray: var(--dash-back); }
+.lifeline-arrow path { fill: none; stroke: var(--color-text-muted); stroke-width: var(--stroke-line); }
+.lifeline-arrow text { fill: var(--color-text); }
+.lifeline-arrow .lifeline-number { font-weight: var(--font-weight-bold); }
+.graph g[data-participant], .canvas #page .grid--rows th[scope="col"][data-prop] { cursor: pointer; }
+.edge path { fill: none; stroke: var(--color-text-muted); stroke-width: var(--stroke-line); }
+.edge path.edge-head { fill: var(--color-text-muted); stroke: none; } /* the head of an arrow, a path of its line */
+.edge--back path:not(.edge-card) { stroke-dasharray: var(--dash-back); }
+.edge--dashed path:not(.edge-head, .edge-card) { stroke-dasharray: var(--dash-missing); } /* an arrow the layout dashes by its label (`- Dashed: optional`) */
+marker path { fill: var(--color-text-muted); }
+.edge-label rect { rx: var(--radius-sm); fill: var(--color-bg); stroke: var(--color-border); }
+.edge-label text { fill: var(--color-text-muted); text-anchor: middle; font-size: var(--font-size-diagram-sm); }
+.edge-label--plain text { paint-order: stroke; stroke: var(--backdrop); stroke-width: var(--stroke-halo); stroke-linejoin: round; }
+.graph a .node rect, .graph a .node polygon { cursor: pointer; }
+
+/* The tints of the boxes and of their keys in the legend: by place (v1–v4), by name (a layout's Color), the default. */
+.node--v1, .node--blue { --tint: var(--color-tint-blue); }
+.node--v2, .node--amber { --tint: var(--color-tint-amber); }
+.node--v3, .node--green { --tint: var(--color-tint-green); }
+.node--v4, .node--purple { --tint: var(--color-tint-purple); }
+.node--red { --tint: var(--color-tint-red); }
+.node--default { --tint: var(--color-bg); }
+.node--gray { --tint: var(--color-tint-gray); }
+.node--white { --tint: var(--color-bg); }
+:is(.node--v1, .node--v2, .node--v3, .node--v4, .node--blue, .node--amber, .node--green, .node--purple, .node--red, .node--default, .node--gray, .node--white) :is(rect, polygon, path.node-body) { fill: var(--tint); }
+.key:is(.node--v1, .node--v2, .node--v3, .node--v4, .node--blue, .node--amber, .node--green, .node--purple, .node--red, .node--default, .node--gray, .node--white) { background: var(--tint); }
+/* A box that takes the color its layout gives a value (`- Color:`, a color that says something: a status, a risk): it
+   wins over the style of the type, which may fill the boxes by their kind, as a matter of look. */
+.node--tinted :is(rect, polygon, path.node-body):not(.node-head) { fill: var(--tint) !important; }
+
+/* Legend */
+.legend { color: var(--color-text-muted); font-size: var(--font-size-xs); display: flex; gap: var(--space-sm); align-items: center; flex-wrap: wrap; }
+.key { display: inline-block; width: var(--size-key-width); height: var(--size-key-height); border: var(--border-width) solid var(--color-text-muted); border-radius: var(--radius-xs); margin-left: var(--space-md); }
+.key.node--thick { border: var(--border-width-strong) solid var(--color-text-muted); }
+.key--diamond { width: var(--size-key-height); transform: rotate(45deg); border-radius: 0; }
+.key--cylinder { border-radius: 50% / 30%; }
+.key--person { width: var(--size-key-height); border-radius: 50%; }
+
+/* Open questions and decisions */
+.decisions { margin-top: var(--space-lg); }
+.decisions > summary { list-style: none; margin-left: calc(-1 * var(--space-sm)); color: var(--color-text-muted); }
+.decisions > summary::-webkit-details-marker { display: none; }
+.decisions > ul > li { color: var(--color-text-muted); }
+.decisions li ul { color: var(--color-text); }
+.decisions time { margin-left: var(--space-xs); padding: 0 var(--space-xs); border-radius: var(--radius-pill); background: var(--color-hover); font-size: var(--font-size-xs); color: var(--color-text); white-space: nowrap; }
+
+/* Links between maps, one look on the map and in the panel: the color of their text, dotted under
+   it; the accent under the pointer only, the accent being the selection's. A value that is a link alone too. */
+a.link { color: inherit; text-decoration: none; border-bottom: var(--border-width) dotted var(--color-text-muted); }
+a.link:hover { color: var(--color-accent); border-bottom: var(--border-width) solid currentColor; }
+.mark { color: var(--color-text-muted); text-decoration: none; font-size: var(--font-size-sup); vertical-align: super; line-height: 0; margin-left: var(--space-3xs); }
+.mark:hover { color: var(--color-accent); }
+code { font-family: var(--font-mono); font-size: var(--font-size-code); background: var(--color-code-bg); padding: 0 var(--space-xs); border-radius: var(--radius-xs); }
+.link--broken { color: var(--color-negative); text-decoration: line-through dotted; }
+/* What the source says there is none of (`none`, alone as the value): quiet, as a fact that calls for nothing */
+:is(li, p, .curve-value)[data-value="none"] { color: var(--color-text-muted); font-weight: normal; }
+/* What the source did not say: a discreet dashed outline, as an empty box to fill */
+.undefined { display: inline-block; padding: 0 var(--space-xs); border: var(--border-width) dashed var(--color-unknown); border-radius: var(--radius-sm); color: var(--color-text-muted); line-height: var(--leading-tight); }
+/* A touch of monospace on what is about the file, not its content: a map is a text file */
+:is(tbody th, .map-type, .files-path-text, .row-caption) { font-family: var(--font-meta); letter-spacing: 0; }
+
+/* The element shown: the target of a link */
+.target, th.target { outline: var(--border-width-strong) solid var(--color-accent); outline-offset: calc(-1 * var(--border-width-strong)); }
+g.target rect, g.target polygon { stroke: var(--color-accent); stroke-width: var(--stroke-focus); }
+
+[data-el] { cursor: pointer; }
+
+/* Buttons */
+.button { font: inherit; font-size: var(--font-size-sm); border: var(--border-width) solid var(--color-border); background: var(--color-bg); color: var(--color-text); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-md); cursor: pointer; box-shadow: var(--shadow-control); }
+.button--icon { display: inline-flex; padding: var(--space-xs); }
+/* Ghost: a button with no frame, its icon (if any) before its text, all of the same height; a background under the
+   pointer, a ring on the focus of the keyboard. With `button--icon`, an icon alone, square. */
+.button--ghost { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); box-sizing: border-box; min-height: var(--size-button); padding: 0 var(--space-sm); border-color: transparent; background: transparent; color: var(--color-text); font-size: var(--font-size-sm); line-height: var(--leading-tight); box-shadow: none; }
+.button--ghost:hover { background: var(--color-hover); }
+.button--ghost:focus-visible { outline: var(--border-width-strong) solid var(--color-accent); outline-offset: calc(-1 * var(--border-width-strong)); }
+.button--ghost.button--icon { width: var(--size-button); padding: 0; }
+/* The name of an icon alone, under it, on hover or on the focus of the keyboard */
+[data-tip] { position: relative; }
+[data-tip]::after { content: attr(data-tip); position: absolute; top: calc(100% + var(--space-2xs)); left: 50%; transform: translateX(-50%); z-index: var(--z-bubble); padding: var(--space-3xs) var(--space-xs); border-radius: var(--radius-sm); background: var(--color-text); color: var(--color-bg); font-size: var(--font-size-xs); font-weight: normal; line-height: var(--leading-tight); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity var(--duration-tip); }
+[data-tip]:hover::after, [data-tip]:focus-visible::after { opacity: 1; transition-delay: var(--delay-tip); }
+@media (hover: none) { [data-tip]::after { content: none; } } /* no pointer to hover: on a phone, out of the window, they widened the page */
+/* At the edge of a panel or of the window, the name is aligned on that edge */
+:is(.files-head, .bar) > [data-tip]:first-child::after { left: 0; transform: none; }
+:is(.files-head, .bar-end) > [data-tip]:last-child::after, .files-head-actions > [data-tip]::after { left: auto; right: 0; transform: none; } /* at the right edge: within the window, or the files */
+/* The text centered on its capitals, not on the room the font keeps above them */
+.button--ghost span { text-box: trim-both cap alphabetic; }
+/* The icons: Lucide, drawn in the color of their text */
+.icon { flex: none; width: var(--size-icon); height: var(--size-icon); fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
+.empty { color: var(--color-text-muted); }
+.error { color: var(--color-negative); }
+pre.plain { white-space: pre-wrap; font-size: var(--font-size-sm); color: var(--color-text); }
+
+/* The views of a map, as tabs */
+.views { display: flex; gap: var(--space-xs); }
+.views button { font: inherit; font-size: var(--font-size-md); padding: var(--space-sm) var(--space-md); border: 0; border-bottom: var(--border-width-strong) solid transparent; background: none; color: var(--color-text-muted); cursor: pointer; margin-bottom: calc(-1 * var(--border-width)); }
+.views button[aria-selected="true"] { color: var(--color-text); border-bottom-color: var(--color-accent); }
+
+/* maps.html: the files on the left, the map under its bar, the editor on the right; the map on a canvas, where nothing
+   scrolls */
+body { height: 100vh; overflow: hidden; }
+/* The canvas fills the window, behind: the bar and the panels are over it, and opening one does not move the map */
+.workspace { position: relative; height: 100%; display: flex; overflow: clip; } /* a panel sliding out of the window does not widen the page of a phone */
+.files, .center, .editor { position: relative; z-index: var(--z-panel); }
+.center { flex: 1; min-width: 0; display: flex; flex-direction: column; pointer-events: none; }
+.center > * { pointer-events: auto; }
+/* Under the bar, which spans the panel on the right too, so that the button of the panel keeps its place: the tabs of
+   the views over the canvas, then the panel */
+.center > .below { flex: 1; min-height: 0; display: flex; pointer-events: none; }
+.stage { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.stage > .views-bar, .below > .editor, .below > .panel-edge { pointer-events: auto; }
+main.canvas { --backdrop: var(--color-canvas); position: absolute; inset: 0; overflow: hidden; padding: 0; background-color: var(--color-canvas); --dot: max(var(--size-dot-min), var(--size-dot) * var(--zoom, 1)); background-image: radial-gradient(circle, var(--color-dot) var(--dot), transparent calc(1.5 * var(--dot))); background-size: var(--size-dot-gap) var(--size-dot-gap); }
+.canvas #page { box-sizing: border-box; width: var(--size-canvas-page); padding: var(--space-xl) var(--space-lg) var(--space-2xl); text-rendering: geometricPrecision; } /* text scales exactly with the zoom, so that it stays in its box */
+/* The map alone (@): the files, the bars and the panel hidden, a hint for a moment on how to show them again */
+.ui-hidden :is(#files, #files-edge, .center) { display: none !important; }
+:is(.ui-hidden, .no-slide) :is(.files, .editor) { transition: none; } /* the map alone, at once both ways: not as a drawer */
+/* The hint, and a notice: what the page did by itself (the links that followed a name edited), said for a moment, as the hint */
+.ui-hidden::after, .notice { position: fixed; left: 50%; bottom: var(--space-lg); transform: translateX(-50%); z-index: var(--z-bubble); padding: var(--space-xs) var(--space-md); background: var(--color-text); color: var(--color-bg); font-size: var(--font-size-sm); pointer-events: none; }
+.ui-hidden::after { content: "@ or Esc to show the interface"; border-radius: var(--radius-pill); animation: hint-out var(--duration-hint) forwards; }
+.notice { max-width: calc(100vw - 2 * var(--space-lg)); margin: 0; border-radius: var(--radius-lg); animation: hint-out var(--duration-notice) forwards; }
+@keyframes hint-out { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+/* The sentence that says what a view is for (`- Description:` in the layout), above its drawing */
+.view-description { max-width: var(--size-text); margin: var(--space-xl) 0 0; font-size: var(--font-size-sm); line-height: var(--leading-normal); color: var(--color-text-muted); }
+.view-meta { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-xl); margin: var(--space-sm) 0 0; font-size: var(--font-size-sm); } /* the keys of the front matter a view shows (`- Meta:`) */
+.view-meta dt { color: var(--color-text-muted); }
+.view-meta dd { margin: 0; color: var(--color-text); }
+.view-meta > div { display: flex; gap: var(--space-xs); }
+/* Its text can be selected, to copy it (the canvas, which moves when dragged, does not let it otherwise) */
+.canvas #page :is(p, li, dt, dd, h1, h2, h3, th, td, code, text, .curve-value) { user-select: text; cursor: text; }
+/* The chevrons of the decisions and of the folders: down when open */
+.decisions > summary::after, .files summary.row::before { content: ""; display: inline-block; flex: none; width: var(--size-chevron); height: var(--size-chevron); vertical-align: var(--offset-chevron); background: var(--color-text-muted); -webkit-mask: var(--icon-chevron) center / contain no-repeat; mask: var(--icon-chevron) center / contain no-repeat; }
+.decisions[open] > summary::after { transform: rotate(180deg); }
+.files summary.row::before { transform: rotate(-90deg); }
+.files details[open] > summary.row::before { transform: none; }
+
+/* The bar above the map, on one line: the title, the type, the date, About this map and the open questions (in the
+   panel); the Markdown */
+.bar, .files-head, .editor-head { flex: none; min-height: var(--size-bar); display: flex; align-items: center; gap: var(--space-sm); padding: 0 var(--space-sm); background: var(--color-surface); border-bottom: var(--border-width) solid var(--color-border); }
+.bar, .files-head { white-space: nowrap; }
+.map-head { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: var(--space-sm); overflow-x: clip; } /* nothing out of it, under Markdown */
+:is(.map-head, .bar-end, #export, .navigation, .bar-pill, .files-head-actions, .files-path, .files-search, .files-search-clear, .panel-back)[hidden] { display: none; }
+.map-actions { flex: 0 1 auto; min-width: 0; display: flex; gap: var(--space-xs); align-self: center; }
+.bar-pill { flex: none; min-width: var(--size-bar-pill-min); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; font-size: var(--font-size-xs); padding: var(--space-3xs) var(--space-sm); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-pill); background: var(--color-bg); color: var(--color-text); cursor: pointer; box-shadow: var(--shadow-control); }
+.bar.is-tight .bar-pill { flex: 0 1 auto; } /* the last resort: Markdown is already its icon alone */
+.bar-pill:hover { border-color: var(--color-text-muted); }
+.bar-pill--error { color: var(--color-negative); } /* what is still wrong in the map has errors */
+/* What the panel shows, pressed */
+:is(.bar-pill, .editor-open)[aria-pressed="true"] { background: var(--color-selected); border-color: var(--color-selected); box-shadow: var(--shadow-selected); }
+#map-title { flex: 0 1000 auto; min-width: var(--size-bar-title-min); overflow: hidden; text-overflow: ellipsis; } /* cut before the pills */
+/* Too narrow for the pills, Markdown is its icon alone */
+/* Read only, the button reads Markdown, with the icon of a file, not a pen: nothing can be edited */
+.editor-open.is-read-only .when-writable, .editor-open:not(.is-read-only) .when-read-only { display: none; }
+.editor-open.is-left-out { width: var(--size-button); padding: 0; }
+.editor-open.is-left-out span { display: none; }
+.map-meta { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.map-meta:is(:empty, .is-left-out) { display: none; } /* left out when the bar is too narrow for them (viewer.ts) */
+/* The type of the map, as a tag */
+.map-type { padding: var(--space-3xs) var(--space-sm); border-radius: var(--radius-pill); background: var(--color-hover); color: var(--color-text); font-size: var(--font-size-xs); }
+/* The tabs on one line: too many for the width, they scroll sideways, with no scrollbar (it showed for the pixel of
+   their underline) */
+.views-bar { flex: none; padding: 0 var(--space-sm); background: var(--color-surface); border-bottom: var(--border-width) solid var(--color-border); overflow: auto hidden; scrollbar-width: none; }
+.views-bar::-webkit-scrollbar { display: none; }
+.views-bar .views button { flex: none; white-space: nowrap; }
+/* How to move in the map, at the bottom right of the part seen, over the canvas: mouse or trackpad, − 65 % + */
+.navigation { margin: auto var(--space-md) var(--space-md) auto; display: flex; align-items: center; padding: var(--space-3xs); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--shadow-popover); pointer-events: auto; }
+.zoom-level { min-width: var(--size-zoom-level); font-variant-numeric: tabular-nums; }
+.navigation [data-tip]::after { top: auto; bottom: calc(100% + var(--space-2xs)); } /* above: there is no room below */
+#scroll-open:not([data-shows="trackpad"]) .when-trackpad, #scroll-open[data-shows="trackpad"] .when-mouse { display: none; } /* the icon of the one in use */
+@media (hover: none) { #scroll-open { display: none; } } /* a touch screen: no mouse, no trackpad to choose */
+/* A menu (mouse or trackpad): above its button, placed by the page */
+.menu { position: fixed; inset: auto; margin: 0 0 var(--space-2xs); padding: var(--space-2xs); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-popover); }
+.menu-item { display: flex; align-items: flex-start; gap: var(--space-sm); width: 100%; padding: var(--space-xs) var(--space-sm); border: 0; border-radius: var(--radius-sm); background: none; color: inherit; font: inherit; font-size: var(--font-size-sm); text-align: left; cursor: pointer; }
+.menu-item:hover, .menu-item:focus-visible { background: var(--color-hover); outline: none; }
+.menu-item[aria-checked="false"] .icon { visibility: hidden; }
+.menu-item span { display: flex; flex-direction: column; gap: var(--space-3xs); }
+.menu-item small { color: var(--color-text-muted); font-size: var(--font-size-xs); }
+.bar-end { margin-left: auto; display: flex; align-items: center; gap: var(--space-sm); }
+/* The button of the files: in their head when they are open, in the bar when they are closed */
+/* The buttons of the panels keep their place: the files' at the left of the window, Markdown at the right */
+.files:not([hidden]) ~ .center .files-open { display: none; } /* at the same place, at the start of the head of the files */
+.files-head strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; } /* the name of the folder, cut at its end when long */
+
+/* The edges of the panels, dragged to resize them; closed, an edge stays at the side of the window, over the canvas */
+.panel-edge { flex: none; width: var(--size-edge); margin: 0 calc(-1 * var(--size-edge) / 2); position: relative; z-index: var(--z-bar); cursor: col-resize; touch-action: none;
+  background: linear-gradient(var(--color-accent), var(--color-accent)) center / 0 100% no-repeat; transition: background-size 0s; }
+/* Its line shows after a short hover only, so that it does not flash when a panel slides under the pointer; at once
+   while dragged */
+.panel-edge:hover { background-size: var(--border-width-strong) 100%; transition-delay: var(--delay-edge); }
+.panel-edge.dragged { background-size: var(--border-width-strong) 100%; transition-delay: 0s; }
+.files[hidden] + .panel-edge { margin: 0 calc(-1 * var(--size-edge)) 0 0; }
+.panel-edge:has(+ .editor[hidden]) { margin: 0 0 0 calc(-1 * var(--size-edge)); }
+
+/* The files, on the left: open a folder or files, then the maps by folder; the chosen row only changes its background */
+.files { flex: none; width: var(--panel-width, var(--size-files)); min-width: var(--size-files-min); max-width: min(var(--size-files-max), 80%); display: flex; flex-direction: column; background: var(--color-surface); border-right: var(--border-width) solid var(--color-border); font-size: var(--font-size-sm); }
+.files[hidden] { display: none; }
+/* Its button first, where the bar has it when the files are hidden; the icons of the end at the distance of a name */
+.files-head { padding: 0 calc(var(--space-md) - (var(--size-button) - var(--size-icon)) / 2) 0 var(--space-sm); }
+/* Open a folder: a button on the empty canvas, then an icon in the head of the files once a folder is open */
+.empty-actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.files-head-actions { display: flex; gap: var(--space-3xs); }
+/* The folder opened, on one line; a long path loses its start, so that the folder itself stays */
+.files-path { display: flex; align-items: center; gap: var(--space-xs); margin: 0; padding: var(--space-md) var(--space-md) var(--space-sm); color: var(--color-text-muted); font-size: var(--font-size-xs); }
+.files-path-name { color: var(--color-text); font-weight: var(--font-weight-bold); }
+.files-path-text { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: left; }
+.files-list { flex: 1; min-height: 0; overflow: auto; padding: var(--space-xs); }
+/* The search of the files: discreet, a white field with no border until it is used */
+.files-search { display: flex; align-items: center; gap: var(--space-xs); margin: var(--space-sm) var(--space-xs); padding: var(--space-2xs) var(--space-xs) var(--space-2xs) calc(var(--space-md) - var(--space-xs) - var(--border-width)); border: var(--border-width) solid transparent; border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text-muted); cursor: text; }
+.files-search:focus-within { border-color: var(--color-border); }
+.files-search input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; color: var(--color-text); font: inherit; outline: none; }
+.files-search input::placeholder { color: var(--color-text-muted); }
+.files-search input::-webkit-search-cancel-button { display: none; } /* the cross of the page clears it, as Escape does */
+.files-search-clear { flex: none; display: grid; place-items: center; width: calc(var(--size-icon-sm) + var(--space-xs)); height: calc(var(--size-icon-sm) + var(--space-xs)); padding: 0; border: 0; border-radius: 50%; background: none; color: var(--color-text-muted); cursor: pointer; }
+.files-search-clear:hover { background: var(--color-selected); color: var(--color-text); }
+.files-search-clear .icon { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.files-path:not([hidden]) + .files-list, .files-search:not([hidden]) + .files-list { padding-top: 0; }
+.files ul { list-style: none; margin: 0; padding: 0; }
+.files .row { display: block; padding: var(--space-2xs) var(--space-xs) var(--space-2xs) calc(var(--space-xs) + var(--depth) * var(--space-sm) + var(--size-chevron)); line-height: var(--leading-tight); border-radius: var(--radius-sm); color: var(--color-text); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+/* A map on two lines: its title, then its type */
+.files a.row { padding-block: var(--space-xs); }
+.files li + li { margin-top: var(--space-3xs); }
+.row-title, .row-caption { display: block; overflow: hidden; text-overflow: ellipsis; }
+.row-caption { color: var(--color-text-muted); font-size: var(--font-size-2xs); line-height: var(--leading-dense); }
+.files .row:is(:hover, .is-next) { background: var(--color-hover); }
+.files:has(.is-next) .row:hover:not(.is-next) { background: none; } /* searching: only the row chosen */
+.files .row[aria-current="page"] { background: var(--color-selected); box-shadow: var(--shadow-selected); }
+.files summary.row { font-weight: var(--font-weight-bold); list-style: none; padding-left: calc(var(--space-xs) + var(--depth) * var(--space-sm)); }
+.files summary.row::-webkit-details-marker { display: none; }
+
+
+/* maps.html: the panel on the right, in one of two modes: the Markdown of the map, or the details of what was clicked */
+.editor { flex: none; width: var(--panel-width, var(--size-editor)); min-width: var(--size-editor-min); max-width: min(var(--size-editor-max), 60%); display: flex; flex-direction: column; background: var(--color-bg); border-left: var(--border-width) solid var(--color-border); }
+.editor[hidden] { display: none; }
+/* The files and the panel slide in and out, as a drawer: each keeps its width and moves out by its side, a negative
+   margin as wide as it is, so that the map follows it. No fade. Not while dragged to resize (`is-dragged`). */
+.files { --panel-out: 0 0 0 calc(-1 * var(--panel-width, var(--size-files))); }
+.editor { --panel-out: 0 calc(-1 * var(--panel-width, var(--size-editor))) 0 0; }
+.files, .editor { transition: margin var(--duration-panel) var(--ease-panel), display var(--duration-panel) allow-discrete; }
+:is(.files, .editor)[hidden] { margin: var(--panel-out); }
+@starting-style { :is(.files, .editor):not([hidden]) { margin: var(--panel-out); } }
+:is(.files, .editor).is-dragged { transition: none; }
+@media (prefers-reduced-motion: reduce) { .files, .editor { transition: none; } }
+/* Narrower than 40rem (a media query cannot read a token; 48rem kept it too long): on a phone,
+   or a narrow window of a computer (the preview of the Claude app), the files and the panel cover the whole width: the files over
+   the bar too, the panel under it; no edge to drag. Their cross, at the top right, goes back to the map: the files'
+   in place of the icon of the panel.
+   The button that shows them, in the bar, is then a menu: its second icon in place of the first.
+   The whole width wins over a width dragged while the window was wide (`!important`: that one is written on the panel). */
+.files-x, .files-open .icon + .icon { display: none; }
+@media (max-width: 40rem) {
+  .files-open .icon:first-child { display: none; }
+  .files-open .icon + .icon { display: block; }
+  .files, .editor { --panel-width: 100% !important; min-width: 0; max-width: none; border: 0; }
+  .files { position: absolute; inset: 0 auto 0 0; z-index: var(--z-bar); }
+  .panel-edge, #files-close { display: none; }
+  .files-x { display: inline-flex; }
+}
+.editor[data-mode="markdown"] .details-body, .editor[data-mode="details"] :is(.editor-status, .editor-text, .panel-back) { display: none; }
+.panel-close { margin-left: auto; }
+.panel-close::after { left: auto; right: 0; transform: none; } /* its tip within the window */
+/* The details: what it is (the kicker), its name, then its properties one under the other, then its parts (arrows,
+   links…) under small headings; a value with details is a row to click */
+.editor[data-mode="details"] .editor-head { border-bottom-color: transparent; background: none; } /* the cross alone: no line under it */
+.editor[data-mode="details"] .details-body { padding-top: 0; } /* right under the cross: the head is its room */
+.details-body { flex: 1; min-height: 0; overflow: auto; padding: var(--space-lg) var(--space-xl) var(--space-2xl); }
+.details-kicker { margin: 0 0 var(--space-xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-meta); font-size: var(--font-size-2xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.details-kicker .map-type { margin-left: var(--space-xs); text-transform: none; } /* the type of the map: said, not typed */
+.details-updated { margin: calc(-1 * var(--space-lg)) 0 var(--space-xl); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.details-title { margin: 0 0 var(--space-xl); font-size: var(--font-size-title); line-height: var(--leading-tight); }
+.details-body dl { margin: 0; display: grid; gap: var(--space-md); }
+.details-body dt { font-family: var(--font-meta); font-size: var(--font-size-2xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.details-body dd { margin: var(--space-2xs) 0 0; font-size: var(--font-size-sm); line-height: var(--leading-normal); overflow-wrap: anywhere; }
+.details-body dd p { margin: 0; }
+.details-body .details-props { gap: var(--space-lg); }
+/* A value in a list (an enum): a chip, on the line of its name; a style gives it a tint by its value (data-value) */
+.details-props > .details-enum { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-md); } /* the name on the line of the text of its chips */
+.details-enum :is(dt, dd) { margin: 0; }
+.details-enum dd ul { display: flex; flex-wrap: wrap; gap: var(--space-2xs); margin: 0; padding: 0; list-style: none; }
+:where(.details-enum dd) :is(p, li):not(.details-empty) { display: inline-block; margin: 0; padding: var(--space-3xs) var(--space-md); border-radius: var(--radius-pill); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
+/* A value in the color its layout gives it (`- Color: <value> = <color>`): a chip, on the map as in the panel */
+:is(li, p).chip { display: block; width: fit-content; white-space: nowrap; padding: var(--space-3xs) var(--space-md); border-radius: var(--radius-pill); background: var(--tint); box-shadow: none; font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
+.card ul:has(> .chip) { padding-left: 0; list-style: none; }
+.details-body .details-pairs { grid-template-columns: max-content 1fr; gap: var(--space-2xs) var(--space-md); font-size: var(--font-size-sm); }
+.details-pairs > div { display: contents; }
+.details-pairs dt { font-size: var(--font-size-sm); text-transform: none; letter-spacing: 0; }
+.details-pairs dd { margin: 0; font-size: var(--font-size-sm); }
+.details-part { margin-top: var(--space-2xl); }
+.details-part h3 { margin: 0 0 var(--space-xs); font-family: var(--font-meta); font-size: var(--font-size-2xs); font-weight: normal; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.details-part ul, .details-body dd ul { margin: var(--space-2xs) 0 0; padding-left: var(--space-lg); }
+.details-body li { margin: var(--space-3xs) 0; line-height: var(--leading-normal); }
+.details-body li::marker { color: var(--color-text-muted); }
+.details-body blockquote { margin: 0; padding: var(--space-sm) var(--space-md); border-left: var(--border-width-strong) solid var(--color-accent); background: var(--color-surface); font-size: var(--font-size-md); font-style: italic; line-height: var(--leading-normal); }
+.details-more { cursor: pointer; }
+.details-more:hover { color: var(--color-accent); }
+.details-open { margin-left: var(--space-xs); color: var(--color-text-muted); } /* a value with details: › opens them, as a card */
+.details-more:hover .details-open { color: inherit; }
+.details-up { display: inline; font: inherit; padding: 0; border: 0; border-bottom: var(--border-width) dotted var(--color-text-muted); background: none; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; } /* a link, as the others */
+.details-up:hover { color: var(--color-accent); border-bottom-style: solid; border-bottom-color: currentColor; }
+.details-text { font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.details-text > :first-child { margin-top: 0; }
+.details-text ul { padding-left: var(--space-lg); }
+.details-questions li ul { list-style: none; padding-left: var(--space-sm); color: var(--color-text-muted); }
+.details-empty { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-muted); }
+:is(.canvas, .export) :is(.grid td, .card dd) li > ul { display: none; } /* the details are in the panel, with no mark: a value is clicked to see them */
+:is(.canvas, .export) .mark { display: none; } /* the sources of a fact: in the panel */
+.canvas #page .view :is(li[data-src], [data-el], [data-el] *, td) { cursor: pointer; } /* what a click selects (a cell: the element of its column or row) */
+#page .is-selected:not(g, th[scope="row"], td, thead th) { outline: var(--border-width-strong) solid var(--color-accent); outline-offset: var(--border-width-strong); }
+/* An element drawn as a row: the whole row is chosen, not only its name; a style may draw it otherwise (:where, so
+   that it can) */
+:where(#page) tr:has(> th.is-selected[scope="row"]) { outline: var(--border-width-strong) solid var(--color-accent); outline-offset: var(--border-width-strong); }
+#page g.is-selected :is(rect:not(.node-head), path, ellipse, polygon) { stroke: var(--color-accent); stroke-width: var(--border-width-strong); }
+/* What a click selects, under the pointer, quietly: a thin gray outline; around the cells of a
+   column or a row, a thin frame, no ground */
+#page .is-pointed:not(g, td, th, tr, .is-selected) { outline: var(--border-width) solid var(--color-neutral); outline-offset: var(--border-width); }
+#page g.is-pointed:not(.is-selected) :is(rect:not(.node-head), path, ellipse, polygon) { stroke: var(--color-neutral); }
+/* An element drawn as a column, chosen: the frame around its cells, strong, in the accent (as under the pointer) */
+#page :is(thead th, td).is-selected { box-shadow: inset var(--border-width-strong) 0 0 var(--color-accent), inset calc(-1 * var(--border-width-strong)) 0 0 var(--color-accent); }
+#page thead th.is-selected { box-shadow: inset var(--border-width-strong) 0 0 var(--color-accent), inset calc(-1 * var(--border-width-strong)) 0 0 var(--color-accent), inset 0 var(--border-width-strong) 0 var(--color-accent); }
+#page tr:last-child > td.is-selected { box-shadow: inset var(--border-width-strong) 0 0 var(--color-accent), inset calc(-1 * var(--border-width-strong)) 0 0 var(--color-accent), inset 0 calc(-1 * var(--border-width-strong)) 0 var(--color-accent); }
+#page :is(td, th).is-pointed:not(.is-selected) { box-shadow: inset var(--border-width) 0 0 var(--color-border), inset calc(-1 * var(--border-width)) 0 0 var(--color-border); }
+#page th.is-pointed:not(.is-selected) { box-shadow: inset var(--border-width) 0 0 var(--color-border), inset calc(-1 * var(--border-width)) 0 0 var(--color-border), inset 0 var(--border-width) 0 var(--color-border); }
+#page tr:last-child > td.is-pointed:not(.is-selected) { box-shadow: inset var(--border-width) 0 0 var(--color-border), inset calc(-1 * var(--border-width)) 0 0 var(--color-border), inset 0 calc(-1 * var(--border-width)) 0 var(--color-border); }
+#page tr.is-pointed > * { box-shadow: inset 0 var(--border-width) 0 var(--color-border), inset 0 calc(-1 * var(--border-width)) 0 var(--color-border); }
+/* The links of an element in the panel (its arrows, the maps that cite it): cards, set apart from the text */
+.details-part .details-links, .details-issues {  list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: grid; gap: var(--space-sm); }
+.details-link { display: grid; grid-template-columns: minmax(0, max-content) auto; justify-content: start; align-items: baseline; gap: var(--space-3xs) var(--space-sm); width: 100%; box-sizing: border-box; padding: var(--space-sm) var(--space-md); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); font: inherit; font-size: var(--font-size-sm); color: var(--color-text); text-align: left; text-decoration: none; cursor: pointer; }
+.details-link:hover { border-color: var(--color-text-muted); }
+.details-link--none { cursor: default; border-style: dashed; background: none; color: var(--color-text-muted); }
+.details-link--none:hover { border-color: var(--color-border); }
+/* A card on one line: its map above it; its name, cut short when it is long; what it says more, as a chip */
+.details-link-map { grid-column: 1 / -1; font-size: var(--font-size-2xs); color: var(--color-text-muted); }
+.details-link-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--font-weight-bold); }
+/* What is still wrong in the map: where, then what, an error in its color */
+.details-issue { flex-basis: 100%; font-size: var(--font-size-sm); color: var(--color-text-muted); text-align: left; }
+.details-issue--error { color: var(--color-negative); }
+:is(.details-arrow-label, .details-link-prop) { white-space: nowrap; color: var(--color-text-muted); padding: var(--border-width) var(--space-sm); border-radius: var(--radius-md); background: var(--color-bg); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); font-size: var(--font-size-2xs); font-weight: var(--font-weight-bold); }
+/* In a graph, the element chosen in focus: its arrows and the elements they join stand out, the rest fades */
+/* A column chosen (a person of a RACI): the values of the other columns fade */
+/* The open questions shown in the panel: what they are about stands out, the rest fades */
+#page.has-asked .view :is(li[data-src], .card, g.node, g.edge) { transition: opacity var(--duration-fade); }
+#page.has-asked .view li[data-src]:not(.is-asked, :has(.is-asked), .is-asked li) { opacity: var(--opacity-faded); }
+#page.has-asked .view .card:not(.is-asked, :has(.is-asked)) { opacity: var(--opacity-faded); }
+#page.has-asked .view :is(g.node:not(.is-asked), g.edge) { opacity: var(--opacity-faded); }
+#page .is-asked:not(g, td) { outline: var(--border-width-strong) solid var(--color-ink-amber); outline-offset: var(--border-width); border-radius: var(--radius-xs); }
+#page g.is-asked :is(rect, polygon, path) { stroke: var(--color-ink-amber); stroke-width: var(--stroke-focus); }
+#page .has-column td:not(.is-linked) li { opacity: var(--opacity-faded); transition: opacity var(--duration-fade); }
+#page svg.has-focus :is(.node, .edge, .lifeline, .lifeline-arrow) { transition: opacity var(--duration-fade); }
+#page svg.has-focus :is(.node:not(.is-selected, .is-linked), .edge:not(.is-linked), .lifeline:not(.is-selected, .is-linked), .lifeline-arrow:not(.is-selected, .is-linked)) { opacity: var(--opacity-faded); }
+#page svg.has-focus .lifeline-arrow:is(.is-selected, .is-linked) path { stroke: var(--color-text); stroke-width: var(--stroke-medium); }
+#page svg.has-focus .edge.is-linked path { stroke: var(--color-text); stroke-width: var(--stroke-medium); }
+#page svg.has-focus .edge.is-linked path.edge-head { fill: var(--color-text); stroke-width: var(--stroke-line); }
+.editor-status { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: var(--space-sm); margin: 0; font-size: var(--font-size-2xs); color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.editor-text { flex: 1; min-height: 0; }
+.editor-status span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.editor-status span:last-child { flex: none; }
+/* Export: the map alone, its title and the view shown, laid out as on the canvas, out of it, drawn as a PNG
+   image (viewer.ts) */
+.export { box-sizing: border-box; width: var(--size-canvas-page); padding: var(--space-xl) var(--space-lg); background: var(--color-bg); color: var(--color-text); }
+.export > h1 { margin: 0; font-size: var(--font-size-xl); }
