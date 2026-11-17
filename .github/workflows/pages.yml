@@ -1,5 +1,6 @@
 # The maps of the showcase and of maps/, drawn on GitHub Pages, so that the README can link to them:
-# a visitor sees them without installing anything. Needs Settings > Pages > Source: GitHub Actions.
+# a visitor sees them without installing anything. Needs Settings > Pages > Source: GitHub Actions. Only in the public
+# repository: the private one, where the work is done, has no Pages.
 name: Pages
 on:
   push:
@@ -11,6 +12,7 @@ permissions:
   id-token: write
 jobs:
   deploy:
+    if: github.repository == 'florentbx/maps.md'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
