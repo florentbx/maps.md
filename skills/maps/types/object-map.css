@@ -1,0 +1,47 @@
+/* The style of the object map (types/object-map.css). It reaches the drawing only through the hooks of the page: the
+   view (data-view-name), a property (data-prop), a short value (data-value). Only tokens of the page, and, at the top,
+   the dimensions of this type. Nothing here depends on a map. The view Objects, a catalog of cards; the view
+   Relationships is drawn by the page, a graph whose boxes show the content of each object. */
+
+:root {
+  /* The dimensions of this type */
+  --guide-card: 300px; /* an object, in the view Objects */
+}
+
+/* ---------- "Objects": a card per object, as an entry of a catalog: what it is, its other names, what it shows,
+   then what each person can do with it ---------- */
+[data-view-name="objects"] {
+  .cards { grid-template-columns: repeat(auto-fill, var(--guide-card)); gap: var(--space-lg); margin-top: var(--space-xl); align-items: start; }
+  .card { padding: var(--space-lg); border-radius: var(--radius-xl); }
+  .card h2 { margin: 0; font-size: var(--font-size-lg); }
+  .card dt { margin: var(--space-md) 0 var(--space-2xs); }
+  .card dt:is([data-prop="description"], [data-prop="also-called"]) { display: none; }
+  .card dd { margin: 0; }
+  .card dd ul { list-style: none; padding: 0; margin: 0; }
+  .card dd[data-prop="description"] { margin-top: var(--space-xs); line-height: var(--leading-normal); }
+  /* Its other names: quiet, after the description */
+  .card dd[data-prop="also-called"] { margin-top: var(--space-2xs); font-size: var(--font-size-sm); color: var(--color-text-muted); }
+  .card dd[data-prop="also-called"] ul { display: inline; }
+  .card dd[data-prop="also-called"] li { display: inline; margin: 0; }
+  .card dd[data-prop="also-called"]::before { content: "Also: "; }
+  .card dd[data-prop="also-called"] li + li::before { content: ", "; }
+  /* What it shows: its content as lines, its metadata as chips */
+  .card dd[data-prop="core-content"] li { margin: 0; padding: var(--space-2xs) 0; border-bottom: var(--border-width) solid var(--color-border); font-size: var(--font-size-sm); }
+  .card dd[data-prop="core-content"] li:last-child { border-bottom: 0; }
+  .card dd:is([data-prop="metadata"], [data-prop="calls-to-action"]) > ul { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .card dd[data-prop="metadata"] li { margin: 0; padding: 0 var(--space-sm); border-radius: var(--radius-pill); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-width) var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+  /* The other objects it shows: a line each, how many in muted */
+  .card dd[data-prop="relationships"] li { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-muted); line-height: var(--leading-normal); }
+  .card dd[data-prop="relationships"] li a { color: var(--color-text); }
+  /* What one can do: buttons, each with who can do it as a small word after it */
+  .card dd[data-prop="calls-to-action"] > ul > li { display: inline-flex; align-items: center; gap: var(--space-2xs); margin: 0; padding: 0 var(--space-sm); border-radius: var(--radius-md); box-shadow: inset 0 0 0 var(--border-width) var(--color-text-muted); font-size: var(--font-size-xs); }
+  .card dd[data-prop="calls-to-action"] li > ul { display: inline; }
+  .card dd[data-prop="calls-to-action"] li > ul > li { display: inline; color: var(--color-text-muted); }
+  .card dd[data-prop="calls-to-action"] .detail-label { display: none; }
+  .card dd[data-prop="calls-to-action"] li > ul > li::before { content: "· "; }
+}
+
+/* ---------- The panel of an object: what it is first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }

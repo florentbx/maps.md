@@ -1,0 +1,22 @@
+/* The style of the RACI (types/raci.css): a matrix of letters, each part in its color, the cells centered. It reaches
+   the drawing only through the hooks of the page (data-view-name, data-value) and uses only tokens of the page. */
+
+[data-view-name="raci"] {
+  --raci-task: 15rem; /* the column of the tasks */
+  --raci-person: 5.5rem; /* the column of a person or a role */
+  --raci-letter: 2rem; /* the chip of a letter, at its narrowest */
+  --raci-letter-height: 1.6rem;
+}
+[data-view-name="raci"] :is(th.corner, tbody th) { width: var(--raci-task); min-width: var(--raci-task); font-family: var(--font-sans); font-weight: var(--font-weight-medium); vertical-align: middle; }
+[data-view-name="raci"] :is(thead th:not(.corner), td) { width: var(--raci-person); min-width: var(--raci-person); padding: var(--space-xs); }
+[data-view-name="raci"] td { text-align: center; vertical-align: middle; }
+[data-view-name="raci"] thead th { text-align: center; vertical-align: bottom; font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text); text-transform: none; letter-spacing: 0; white-space: normal; }
+[data-view-name="raci"] td ul { list-style: none; margin: 0; padding: 0; }
+[data-view-name="raci"] td li {
+  display: inline-grid; place-items: center; min-width: var(--raci-letter); height: var(--raci-letter-height); padding: 0 var(--space-2xs); border-radius: var(--radius-sm);
+  font-family: var(--font-meta); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); background: var(--color-surface);
+}
+[data-view-name="raci"] td li[data-value="r"], .details-enum [data-value="r"] { background: var(--color-tint-blue); }
+[data-view-name="raci"] td li:is([data-value="a"], [data-value="ar"]), .details-enum :is([data-value="a"], [data-value="ar"]) { background: var(--color-tint-amber); }
+[data-view-name="raci"] td li[data-value="c"], .details-enum [data-value="c"] { background: var(--color-tint-green); }
+[data-view-name="raci"] td li[data-value="i"], .details-enum [data-value="i"] { background: var(--color-tint-gray); color: var(--color-text-muted); }

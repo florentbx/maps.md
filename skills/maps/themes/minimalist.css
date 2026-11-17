@@ -1,0 +1,77 @@
+/* An example of a theme, "Minimalist" (copy it to maps/theme.css to use it): clean as the Obsidian theme Minimal, grays
+   only, a dark gray accent, tighter corners and spaces, a smaller text (the whole scale of --font-size-*). */
+:root {
+  /* A little smaller, quieter: the text of the page and the whole scale, about 14/15 of the default one */
+  --font-size-root: 14px;
+  --font-size-2xs: .68rem;
+  --font-size-xs: .75rem;
+  --font-size-sm: .8rem;
+  --font-size-md: .84rem;
+  --font-size-lg: .93rem;
+  --font-size-xl: 1.4rem;
+  --font-size-title: 1.17rem;
+  --space-md: .75rem;
+  --space-lg: 1rem;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --border-width-strong: 2px;
+  --shadow-card: 0 1px 2px var(--color-shadow-soft);
+  --color-bg: #ffffff;
+  --color-canvas: #fafafa;
+  --color-surface: #fbfbfb;
+  --color-text: #1f1f1f;
+  --color-text-muted: #5e5e5e;
+  --color-border: #e9e9e9;
+  --color-accent: #3d3d3d;
+  --color-positive: #27784c;
+  --color-negative: #b94038;
+  --color-neutral: #8a8a8a;
+  --color-dot: #e3e3e3;
+  --color-unknown: #e1e1e1;
+  --color-hover: #f1f1f1;
+  --color-selected: #ececec;
+  --color-text-selection: #e7e7e7;
+  --color-shadow: rgba(0, 0, 0, .14);
+  --color-shadow-soft: rgba(0, 0, 0, .04);
+  --color-tint-blue: #e6eefc;
+  --color-tint-amber: #fdf0d8;
+  --color-tint-green: #e3f3ea;
+  --color-tint-purple: #f1e6f7;
+  --color-tint-red: #fce8e6;
+  --color-tint-gray: #f1f1f1;
+  --color-ink-blue: #3b6fd8;
+  --color-ink-amber: #c98a12;
+  --color-ink-purple: #8a5cc7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #262626;
+    --color-canvas: #1c1c1c;
+    --color-surface: #2c2c2c;
+    --color-text: #ececec;
+    --color-text-muted: #ababab;
+    --color-border: #3c3c3c;
+    --color-accent: #d8d8d8;
+    --color-positive: #5fc08a;
+    --color-negative: #ef7b72;
+    --color-neutral: #8a8a8a;
+    --color-dot: #353535;
+    --color-unknown: #525252;
+    --color-hover: #343434;
+    --color-selected: #3a3a3a;
+    --color-text-selection: #515151;
+    --color-shadow: rgba(0, 0, 0, .14);
+    --color-shadow-soft: rgba(0, 0, 0, .04);
+    --color-tint-blue: #1f2b42;
+    --color-tint-amber: #3a2f19;
+    --color-tint-green: #1b3326;
+    --color-tint-purple: #2f2339;
+    --color-tint-red: #3d2220;
+    --color-tint-gray: #363636;
+    --color-ink-blue: #7fa4ef;
+    --color-ink-amber: #e2ac4a;
+    --color-ink-purple: #b896e6;
+  }
+}

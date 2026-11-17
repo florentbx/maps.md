@@ -1,0 +1,77 @@
+/* The style of the backlog (types/backlog.css). A list in the order of priority, as in an issue tracker (Linear):
+   each item to do numbered, its status as a mark before its name (an empty circle to do, half full in progress, a
+   check done), its name and its description, its kind as a chip, its estimate in points; the items done at the end,
+   quieter, not numbered. It reaches the
+   drawing only through the hooks of the page (data-view-name, data-el, data-prop, data-value) and uses only tokens of
+   the page. */
+
+[data-view-name="backlog"] {
+  --backlog-number: 2rem; /* the column of the numbers */
+  --backlog-status: 1rem; /* the mark of the status */
+  --backlog-kind: 4.5rem; /* the column of the kind */
+  --backlog-estimate: 3.5rem; /* the column of the estimate */
+  --backlog-width: 60rem; /* the list, at its widest */
+}
+:root { --chip-leading: 1.6; } /* a chip, the kind or the status, in every view and in the panel: its height, from its text */
+
+/* The table becomes a list: no header, one card-like row per item */
+[data-view-name="backlog"] .grid { counter-reset: item; max-width: var(--backlog-width); }
+[data-view-name="backlog"] table { display: block; border: 0; }
+[data-view-name="backlog"] tbody { display: flex; flex-direction: column; border: 0; }
+/* The items done at the end, not numbered: the numbers are the order of what is left */
+[data-view-name="backlog"] tbody tr:has(td[data-prop="status"] li[data-value="done"]) { order: 1; counter-increment: none; }
+[data-view-name="backlog"] tbody tr:has(td[data-prop="status"] li[data-value="done"])::before { content: ""; }
+[data-view-name="backlog"] thead { display: none; }
+[data-view-name="backlog"] tbody tr {
+  counter-increment: item;
+  display: grid; grid-template-columns: var(--backlog-number) var(--backlog-status) 1fr var(--backlog-kind) var(--backlog-estimate); column-gap: var(--space-md); align-items: start;
+  padding: var(--space-md) var(--space-lg); background: var(--color-bg); border: var(--border-width) solid var(--color-border);
+}
+[data-view-name="backlog"] tbody { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+[data-view-name="backlog"] tbody tr { border: 0; border-bottom: var(--border-width) solid var(--color-border); }
+[data-view-name="backlog"] :is(th, td) { display: block; padding: 0; border: 0; background: none; min-width: 0; width: auto; }
+
+/* The number, then the name, as a title, and the description under it */
+[data-view-name="backlog"] tbody tr::before { content: counter(item); grid-row: 1 / span 2; color: var(--color-text-muted); font-family: var(--font-meta); font-size: var(--font-size-sm); padding-top: var(--space-3xs); }
+[data-view-name="backlog"] tbody th { grid-column: 3; font-family: var(--font-sans); font-size: var(--font-size-md); font-weight: var(--font-weight-bold); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+[data-view-name="backlog"] td[data-prop="description"] { grid-column: 3; color: var(--color-text-muted); font-size: var(--font-size-sm); margin-top: var(--space-2xs); }
+
+/* On the right: the kind and the status as chips, the estimate in a circle */
+[data-view-name="backlog"] td:is([data-prop="kind"], [data-prop="estimate"]) { grid-row: 1; justify-self: end; }
+[data-view-name="backlog"] td[data-prop="kind"] { grid-column: 4; }
+[data-view-name="backlog"] td[data-prop="estimate"] { grid-column: 5; }
+/* The status, a mark before the name: its word in the panel and on the board */
+[data-view-name="backlog"] td[data-prop="status"] { grid-column: 2; grid-row: 1; align-self: center; }
+[data-view-name="backlog"] tbody td[data-prop="status"] li { display: block; width: var(--backlog-status); height: var(--backlog-status); padding: 0; box-sizing: border-box; border-radius: var(--radius-pill); border: var(--border-width-strong) solid var(--color-text-muted); background: none; font-size: 0; }
+[data-view-name="backlog"] tbody td[data-prop="status"] li[data-value="in-progress"] { border-color: var(--color-accent); background: linear-gradient(90deg, var(--color-accent) 50%, transparent 50%); }
+[data-view-name="backlog"] tbody td[data-prop="status"] li[data-value="done"] { border-color: var(--color-text-muted); background: var(--color-text-muted); }
+[data-view-name="backlog"] td[data-prop="status"] li[data-value="done"]::after { content: "✓"; display: block; color: var(--color-bg); font-size: var(--font-size-2xs); line-height: 1; text-align: center; }
+/* An estimate not given: nothing in its circle */
+[data-view-name="backlog"] td[data-prop="estimate"] .undefined { display: none; }
+[data-view-name="backlog"] td ul { margin: 0; padding: 0; list-style: none; }
+[data-view-name] :is(td, dd):is([data-prop="kind"], [data-prop="status"]) li {
+  display: inline-block; padding: 0 var(--space-sm); border-radius: var(--radius-pill); font-size: var(--font-size-xs); line-height: var(--chip-leading);
+  background: var(--color-surface); color: var(--color-text-muted); border: var(--border-width) solid var(--color-border);
+}
+[data-view-name] :is(td, dd)[data-prop="kind"] li[data-value="bug"], .details-enum[data-prop="kind"] [data-value="bug"] { background: var(--color-tint-red); border-color: transparent; color: var(--color-text); }
+[data-view-name] :is(td, dd)[data-prop="kind"] li[data-value="story"], .details-enum[data-prop="kind"] [data-value="story"] { background: var(--color-tint-blue); border-color: transparent; color: var(--color-text); }
+.details-enum[data-prop="status"] [data-value="in-progress"] { background: var(--color-tint-amber); border-color: transparent; color: var(--color-text); }
+.details-enum[data-prop="status"] [data-value="done"] { background: var(--color-tint-green); border-color: transparent; color: var(--color-text); }
+[data-view-name] :is(td, dd)[data-prop="estimate"] li { font-family: var(--font-meta); font-size: var(--font-size-xs); color: var(--color-text-muted); white-space: nowrap; }
+[data-view-name] :is(td, dd)[data-prop="estimate"] li::after { content: " pts"; }
+/* ---------- Board: on each card, the kind and the estimate as in the list, side by side, with no label ---------- */
+[data-view-name="board"] .card dl { display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-sm); }
+[data-view-name="board"] .card dt { display: none; }
+[data-view-name="board"] .card dd { margin: 0; }
+[data-view-name="board"] .card dd ul { margin: 0; padding: 0; list-style: none; }
+[data-view-name="board"] .card dd[data-prop="estimate"] { margin-left: auto; }
+[data-view-name="board"] .card dd[data-prop="estimate"] .undefined { display: none; }
+
+/* A done item is quieter */
+[data-view-name="backlog"] tbody tr:has(td[data-prop="status"] li[data-value="done"]) :is(th, td[data-prop="description"]) { color: var(--color-text-muted); }
+[data-view-name="backlog"] tbody tr:has(td[data-prop="status"] li[data-value="done"]) th { text-decoration: line-through; text-decoration-color: var(--color-border); }
+
+/* ---------- The panel of an item: its description first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }

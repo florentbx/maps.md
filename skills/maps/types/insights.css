@@ -1,0 +1,24 @@
+/* The style of a map of insights (types/insights.css). The themes one under the other; each insight a card, its
+   statement as its title, its kind as a chip, its description, what it implies (in a box
+   of its own), then the observations that support it as small links at the bottom. It reaches the drawing only through the
+   hooks of the page (data-view-name, data-value, data-prop) and uses only tokens of the page. In every view (`.view`),
+   so that a view added by a copy of the type looks the same. */
+
+.view {
+  .board-columns { flex-direction: column; align-items: stretch; gap: var(--space-xl); }
+  .board-column { flex: none; padding: 0; background: none; }
+  .board-column > h3 { margin-bottom: var(--space-sm); font-size: var(--font-size-lg); }
+  .board-column .cards { display: grid; grid-template-columns: repeat(auto-fill, var(--size-board-column)); align-items: start; gap: var(--space-lg); }
+  .card dl { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs) var(--space-xs); }
+  .card dt { display: none; }
+  .card dd { margin: 0; }
+  .card dd ul { margin: 0; padding: 0; list-style: none; }
+  /* The text under them, each on a line of its own */
+  .card dd:is([data-prop="description"], [data-prop="implication"], [data-prop="supported-by"]) { flex-basis: 100%; }
+  .card dd[data-prop="description"] { margin-top: var(--space-xs); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+  /* What it implies: a box of its own, with its label, as the answer to "so what?" */
+  .card dd[data-prop="implication"] { margin-top: var(--space-sm); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--color-surface); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+  .card dd[data-prop="implication"]::before { content: "Implication"; display: block; font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
+  .card dd[data-prop="supported-by"] { margin-top: var(--space-sm); padding-top: var(--space-xs); border-top: var(--border-width) solid var(--color-border); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+  .card dd[data-prop="supported-by"] li + li { margin-top: var(--space-3xs); }
+}

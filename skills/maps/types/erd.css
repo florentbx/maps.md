@@ -1,0 +1,8 @@
+/* The style of the ERD (types/erd.css): as entity relationship diagrams are drawn, the name of each entity in a band at
+   the top of its box, its attributes under it; straight lines, the cardinalities at their ends. It reaches the drawing
+   only through the hooks of the page and uses only tokens of the page. */
+
+.node .node-head { fill: var(--color-tint-blue); }
+.node line.node-rule { stroke: var(--color-text-muted); }
+.node rect { stroke: var(--color-text-muted); }
+.node text.node-detail { fill: var(--color-text); }

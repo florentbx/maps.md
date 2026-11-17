@@ -1,0 +1,68 @@
+/* An example of a theme, "Warm" (copy it to maps/theme.css to use it): the warm paper and browns of the Obsidian
+   theme Primary, its inks (red, blue, yellow, purple), and its raised buttons and selection. */
+:root {
+  --leading-normal: 1.55;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --shadow-control: inset 0 -2px 0 var(--color-shadow-soft), 0 1px 2px var(--color-shadow);
+  --shadow-selected: inset 0 1px 0 var(--color-highlight), inset 0 -2px 0 var(--color-shadow-soft), 0 1px 3px var(--color-shadow);
+  --color-highlight: rgba(255, 255, 255, .6); /* the light top edge of what is raised */
+  --color-bg: #fcfaf8;
+  --color-canvas: #f2ece3;
+  --color-surface: #f8f5f1;
+  --color-text: #593e22;
+  --color-text-muted: #7a6243;
+  --color-border: #e4d7c3;
+  --color-accent: #af3704;
+  --color-positive: #28764e;
+  --color-negative: #b53c33;
+  --color-neutral: #9e7f56;
+  --color-dot: #e4d7c3;
+  --color-unknown: #cfb696;
+  --color-hover: #eee7dd;
+  --color-selected: #fffdfa;
+  --color-text-selection: #f3d9c4;
+  --color-shadow: rgba(89, 62, 34, .18);
+  --color-shadow-soft: rgba(89, 62, 34, .10);
+  --color-tint-blue: #e2eef4;
+  --color-tint-amber: #f8ecd2;
+  --color-tint-green: #e2f0e5;
+  --color-tint-purple: #efe6f4;
+  --color-tint-red: #f7e2dc;
+  --color-tint-gray: #eee7dd;
+  --color-ink-blue: #22729b;
+  --color-ink-amber: #d79719;
+  --color-ink-purple: #744596;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-highlight: rgba(255, 255, 255, .06);
+    --color-bg: #2e261f;
+    --color-canvas: #211b17;
+    --color-surface: #26211c;
+    --color-text: #d7c0a3;
+    --color-text-muted: #b8a284;
+    --color-border: #3b3026;
+    --color-accent: #eb6a14;
+    --color-positive: #2faa74;
+    --color-negative: #f7685e;
+    --color-neutral: #8f8172;
+    --color-dot: #3b3026;
+    --color-unknown: #6b563d;
+    --color-hover: #382e25;
+    --color-selected: #45382c;
+    --color-text-selection: #5a3a28;
+    --color-shadow: rgba(0, 0, 0, .5);
+    --color-shadow-soft: rgba(0, 0, 0, .3);
+    --color-tint-blue: #1e3440;
+    --color-tint-amber: #3d2f17;
+    --color-tint-green: #1b3326;
+    --color-tint-purple: #2f2339;
+    --color-tint-red: #422320;
+    --color-tint-gray: #382e25;
+    --color-ink-blue: #4db2d1;
+    --color-ink-amber: #e5aa1f;
+    --color-ink-purple: #9d8ee0;
+  }
+}

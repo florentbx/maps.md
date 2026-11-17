@@ -1,0 +1,18 @@
+/* The style of failure modes (types/failure-modes.css): a table, the likelihood and the severity as
+   chips, low gray, medium amber, high red: a low risk is not a reassurance. It reaches the drawing only through the hooks of the page (data-view-name,
+   data-prop, data-value) and uses only tokens of the page. */
+
+[data-view-name="failures"] {
+  --failures-name: 10rem; /* the column of the names */
+  --failures-chip: 6.5rem; /* a column of chips */
+}
+[data-view-name="failures"] tbody th { width: var(--failures-name); min-width: var(--failures-name); font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); }
+[data-view-name="failures"] :is(th, td):is([data-prop="likelihood"], [data-prop="severity"]) { width: var(--failures-chip); min-width: var(--failures-chip); }
+[data-view-name="failures"] td ul { list-style: none; margin: 0; padding: 0; }
+[data-view-name="failures"] td:is([data-prop="likelihood"], [data-prop="severity"]) li,
+.details-enum:is([data-prop="likelihood"], [data-prop="severity"]) [data-value] {
+  display: inline-block; padding: 0 var(--space-sm); border-radius: var(--radius-pill); line-height: var(--leading-normal); color: var(--color-text);
+}
+:is([data-view-name="failures"] td, .details-enum):is([data-prop="likelihood"], [data-prop="severity"]) [data-value="low"] { background: var(--color-tint-gray); }
+:is([data-view-name="failures"] td, .details-enum):is([data-prop="likelihood"], [data-prop="severity"]) [data-value="medium"] { background: var(--color-tint-amber); }
+:is([data-view-name="failures"] td, .details-enum):is([data-prop="likelihood"], [data-prop="severity"]) [data-value="high"] { background: var(--color-tint-red); font-weight: var(--font-weight-bold); }
