@@ -6,7 +6,7 @@
 
 Work with your AI visually, not through walls of text: it writes maps in Markdown, you see them drawn and edit them, and it reads them back as its context.
 
-[Get started](#get-started) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback)
+[Get started](#get-started) · [Examples](#examples) · [Our maps](#our-maps) · [Documentation](#boring-documentation) · [Feedback](#feedback-and-contributions)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="maps/images/markdown-to-map-dark.png">
@@ -43,7 +43,7 @@ Maps link to each other: a journey cites the insights it comes from, a screen th
 
 For example:
 
-- **Vibe-code from an idea to an MVP**: the brief, the flows, the screens and the rules, as maps your AI builds from.
+- **From an idea to a working app**: the brief, the flows, the screens and the rules, as maps your AI builds the app from.
 - **UX as context**: your research, journeys and personas in the repository, a UX repository that the people and the AIs who build read.
 - **Make sense of a large context**: an existing codebase or a pile of documents, mapped so that you can see it (its architecture, its data, its rules).
 
@@ -172,9 +172,11 @@ node .claude/skills/maps/check.mjs maps/
 
 It checks every map against its type (values, arrows, names, links), says the file and line of each problem, and fails on an error, so it can run in CI; your AI runs it after writing a map. It also writes, at the top of each map, the comment that tells an AI how to read it. To rename an element without breaking the links to it, your AI runs `rename.mjs`, next to the skill. `shot.mjs` (`node .claude/skills/maps/shot.mjs maps/`) takes a picture of every map, for your AI to look at what it drew; it needs Playwright.
 
-## Feedback
+## Feedback and contributions
 
 Something does not work, or a type is missing? [Open an issue](https://github.com/florentbx/maps.md/issues/new).
+
+Want to help? Contributions are very welcome, small ones too: a new type for the catalog, a fix, an example, a clearer sentence in the docs. Open an issue to share an idea.
 
 ## License
 
