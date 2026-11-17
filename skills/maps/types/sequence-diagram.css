@@ -1,0 +1,14 @@
+/* The style of the sequence diagram (types/sequence-diagram.css): the participants as tinted, rounded boxes, their
+   names in bold; the lifelines quiet, the messages dark, each over its arrow. It reaches the drawing only through the
+   classes of the page's drawing of lifelines and uses only tokens of the page. */
+
+.node--top:not(.node--unknown) rect { fill: var(--color-tint-blue); stroke: none; rx: var(--radius-md); }
+.node--top text { font-weight: var(--font-weight-bold); }
+.lifeline { stroke: var(--color-text-muted); opacity: var(--opacity-quiet); }
+.lifeline-arrow path { stroke: var(--color-text); }
+.lifeline-arrow text { fill: var(--color-text); }
+
+/* The drawing on a white board, rounded, as the board of a journey map */
+.graph svg { box-sizing: content-box; padding: var(--space-lg); background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-xl); }
+/* A reply: dashed, as in the usual notation */
+.lifeline-arrow[data-value="reply"] path { stroke-dasharray: var(--dash-back); }

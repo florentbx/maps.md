@@ -1,0 +1,31 @@
+/* The style of the service blueprint (types/service-blueprint.css): each lane in its own tint (the customer actions
+   blue, the frontstage green, the backstage amber, the support processes purple), its name in plain words; the phases
+   as titles. It reaches the drawing only through the hooks of the page (data-prop) and uses only tokens of the page. */
+
+/* The board: rounded corners, the borders drawn once between the cells, as in a journey map */
+.grid table { border-collapse: separate; border-spacing: 0; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-xl); overflow: hidden; }
+.grid :is(th, td) { border: 0; border-right: var(--border-width) solid var(--color-border); border-bottom: var(--border-width) solid var(--color-border); }
+.grid tr > :last-child { border-right: 0; }
+.grid tbody tr:last-child > * { border-bottom: 0; }
+.grid thead th { font-size: var(--font-size-md); font-weight: var(--font-weight-bold); color: var(--color-text); }
+.grid tbody th { font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+.grid--boxes tr[data-prop] td li { border: 0; }
+.grid--boxes tr[data-prop="customer-actions"] td li { background: var(--color-tint-blue); }
+.grid--boxes tr[data-prop="frontstage"] td li { background: var(--color-tint-green); }
+.grid--boxes tr[data-prop="backstage"] td li { background: var(--color-tint-amber); }
+.grid--boxes tr[data-prop="support-processes"] td li { background: var(--color-tint-purple); }
+
+/* ---------- Phases: one card per phase, its lanes one under the other, in their tints, numbered as in a journey ---------- */
+[data-view-name="phases"] { --phase-card: 18rem; } /* a phase, at its narrowest */
+[data-view-name="phases"] .cards { counter-reset: phase; grid-template-columns: repeat(auto-fill, minmax(var(--phase-card), 1fr)); }
+[data-view-name="phases"] .card { counter-increment: phase; padding: var(--space-lg); }
+[data-view-name="phases"] .card h2::before { content: counter(phase); display: inline-grid; place-items: center; width: var(--size-point); height: var(--size-point); margin-right: var(--space-sm); border-radius: 50%; background: var(--color-text); color: var(--color-bg); font-size: var(--font-size-sm); }
+[data-view-name="phases"] .card dt { margin-top: var(--space-md); font-family: var(--font-sans); font-weight: var(--font-weight-bold); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+[data-view-name="phases"] .card dd > ul { list-style: none; margin: var(--space-2xs) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2xs); }
+[data-view-name="phases"] .card dd li { margin: 0; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); font-size: var(--font-size-sm); }
+[data-view-name="phases"] .card dd[data-prop="description"] li { padding: 0; color: var(--color-text-muted); }
+[data-view-name="phases"] .card dt[data-prop="description"] { display: none; }
+[data-view-name="phases"] .card dd[data-prop="customer-actions"] li { background: var(--color-tint-blue); }
+[data-view-name="phases"] .card dd[data-prop="frontstage"] li { background: var(--color-tint-green); }
+[data-view-name="phases"] .card dd[data-prop="backstage"] li { background: var(--color-tint-amber); }
+[data-view-name="phases"] .card dd[data-prop="support-processes"] li { background: var(--color-tint-purple); }

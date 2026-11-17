@@ -1,0 +1,41 @@
+/* The style of the lean canvas (types/lean-canvas.css): each of the nine blocks with its name and its icon, its items
+   as notes. It reaches the drawing only through the hooks of the page (data-prop) and uses only tokens of the page.
+   Icons: Lucide (ISC license). */
+
+:root {
+  --i-circle-alert: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22%20%2F%3E%3Cline%20x1%3D%2212%22%20x2%3D%2212%22%20y1%3D%228%22%20y2%3D%2212%22%20%2F%3E%3Cline%20x1%3D%2212%22%20x2%3D%2212.01%22%20y1%3D%2216%22%20y2%3D%2216%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-lightbulb: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M15%2014c.2-1%20.7-1.7%201.5-2.5%201-.9%201.5-2.2%201.5-3.5A6%206%200%200%200%206%208c0%201%20.2%202.2%201.5%203.5.7.7%201.3%201.5%201.5%202.5%22%20%2F%3E%3Cpath%20d%3D%22M9%2018h6%22%20%2F%3E%3Cpath%20d%3D%22M10%2022h4%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-gauge: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22m12%2014%204-4%22%20%2F%3E%3Cpath%20d%3D%22M3.34%2019a10%2010%200%201%201%2017.32%200%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-gift: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Crect%20x%3D%223%22%20y%3D%228%22%20width%3D%2218%22%20height%3D%224%22%20rx%3D%221%22%20%2F%3E%3Cpath%20d%3D%22M12%208v13%22%20%2F%3E%3Cpath%20d%3D%22M19%2012v7a2%202%200%200%201-2%202H7a2%202%200%200%201-2-2v-7%22%20%2F%3E%3Cpath%20d%3D%22M7.5%208a2.5%202.5%200%200%201%200-5A4.8%208%200%200%201%2012%208a4.8%208%200%200%201%204.5-5%202.5%202.5%200%200%201%200%205%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-shield-check: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M20%2013c0%205-3.5%207.5-7.66%208.95a1%201%200%200%201-.67-.01C7.5%2020.5%204%2018%204%2013V6a1%201%200%200%201%201-1c2%200%204.5-1.2%206.24-2.72a1.17%201.17%200%200%201%201.52%200C14.51%203.81%2017%205%2019%205a1%201%200%200%201%201%201z%22%20%2F%3E%3Cpath%20d%3D%22m9%2012%202%202%204-4%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-truck: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M14%2018V6a2%202%200%200%200-2-2H4a2%202%200%200%200-2%202v11a1%201%200%200%200%201%201h2%22%20%2F%3E%3Cpath%20d%3D%22M15%2018H9%22%20%2F%3E%3Cpath%20d%3D%22M19%2018h2a1%201%200%200%200%201-1v-3.65a1%201%200%200%200-.22-.624l-3.48-4.35A1%201%200%200%200%2017.52%208H14%22%20%2F%3E%3Ccircle%20cx%3D%2217%22%20cy%3D%2218%22%20r%3D%222%22%20%2F%3E%3Ccircle%20cx%3D%227%22%20cy%3D%2218%22%20r%3D%222%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-users: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2%22%20%2F%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%224%22%20%2F%3E%3Cpath%20d%3D%22M22%2021v-2a4%204%200%200%200-3-3.87%22%20%2F%3E%3Cpath%20d%3D%22M16%203.13a4%204%200%200%201%200%207.75%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-receipt: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Cpath%20d%3D%22M4%202v20l2-1%202%201%202-1%202%201%202-1%202%201%202-1%202%201V2l-2%201-2-1-2%201-2-1-2%201-2-1-2%201Z%22%20%2F%3E%3Cpath%20d%3D%22M16%208h-6a2%202%200%201%200%200%204h4a2%202%200%201%201%200%204H8%22%20%2F%3E%3Cpath%20d%3D%22M12%2017.5v-11%22%20%2F%3E%3C%2Fsvg%3E");
+  --i-coins: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20%3E%3Ccircle%20cx%3D%228%22%20cy%3D%228%22%20r%3D%226%22%20%2F%3E%3Cpath%20d%3D%22M18.09%2010.37A6%206%200%201%201%2010.34%2018%22%20%2F%3E%3Cpath%20d%3D%22M7%206h1v4%22%20%2F%3E%3Cpath%20d%3D%22m16.71%2013.88.7.71-2.82%202.82%22%20%2F%3E%3C%2Fsvg%3E");
+}
+
+/* A canvas: its name as a title, its description under it, then the poster */
+.card { padding: var(--space-xl); border-radius: var(--radius-lg); cursor: default; }
+.card h2 { margin: 0; font-size: var(--font-size-title); cursor: pointer; }
+.card > dl { margin: var(--space-2xs) 0 var(--space-lg); }
+.card > dl > dt[data-prop="description"] { display: none; }
+.card > dl > dd[data-prop="description"] { margin: 0; color: var(--color-text-muted); }
+.card > dl > dd[data-prop="description"] ul { list-style: none; margin: 0; padding: 0; }
+
+/* Each block: its name in plain words, its icon in the top right, its items as notes */
+.poster { gap: var(--space-sm); }
+.poster section { position: relative; padding: var(--space-md); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.poster section h3 { margin: 0 var(--space-xl) var(--space-sm) 0; font-family: var(--font-sans); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+.poster section::after { content: ""; position: absolute; top: var(--space-md); right: var(--space-md); width: var(--size-icon); height: var(--size-icon); background: var(--color-text-muted); mask: var(--icon) center / contain no-repeat; }
+.poster section ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-xs); }
+.poster section li { margin: 0; padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); background: var(--color-surface); box-shadow: var(--shadow-note); font-size: var(--font-size-sm); line-height: var(--leading-tight); }
+
+.poster [data-prop="problem"] { --icon: var(--i-circle-alert); }
+.poster [data-prop="solution"] { --icon: var(--i-lightbulb); }
+.poster [data-prop="key-metrics"] { --icon: var(--i-gauge); }
+.poster [data-prop="unique-value-proposition"] { --icon: var(--i-gift); }
+.poster [data-prop="unfair-advantage"] { --icon: var(--i-shield-check); }
+.poster [data-prop="channels"] { --icon: var(--i-truck); }
+.poster [data-prop="customer-segments"] { --icon: var(--i-users); }
+.poster [data-prop="cost-structure"] { --icon: var(--i-receipt); }
+.poster [data-prop="revenue-streams"] { --icon: var(--i-coins); }

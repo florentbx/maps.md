@@ -1,0 +1,49 @@
+/* The style of the persona (types/persona.css). It reaches the drawing only through the hooks of the page: the view
+   (data-view-name), a property (data-prop). Only tokens of the page, and, at the top, the dimensions of this type.
+   Nothing here depends on a map. Icons: Lucide (ISC license), inline. */
+
+:root {
+  --i-target: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%2210%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%226%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222%22/%3E%3C/svg%3E");
+  --i-zap: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%202%203%2014h9l-1%208%2010-12h-9l1-8z%22/%3E%3C/svg%3E");
+  /* The dimensions of this type */
+  --persona-columns: 2; /* personas side by side */
+  --item-icon: var(--size-icon-sm); /* the icon of a goal or a frustration */
+}
+
+[data-view-name="personas"] {
+  /* The personas side by side, each a white card */
+  .cards { grid-template-columns: repeat(var(--persona-columns), minmax(0, 1fr)); gap: var(--space-lg); margin-top: var(--space-xl); }
+  .card { display: flex; flex-direction: column; padding: var(--space-xl); border-radius: var(--radius-xl); }
+  .card ul { list-style: none; padding: 0; }
+
+  /* The head: its role as its name, then who it is */
+  .card h2 { margin: 0; font-size: var(--font-size-title); line-height: var(--leading-tight); }
+  .card dt { display: none; }
+  .card dd { margin: 0; }
+  .card dd[data-prop="description"] { margin-top: var(--space-xs); font-size: var(--font-size-md); line-height: var(--leading-normal); color: var(--color-text-muted); }
+
+  /* The poster: no boxes, the parts set apart by space */
+  .poster { gap: var(--space-xl) var(--space-xl); margin-top: var(--space-xl); }
+  .poster section { min-height: 0; padding: 0; border: 0; }
+  .poster li { font-size: var(--font-size-md); line-height: var(--leading-tight); }
+  .poster li + li { margin-top: var(--space-sm); }
+
+  /* The quotes: their own words, first, in a quiet block */
+  .poster [data-prop="quotes"] { padding: var(--space-md) var(--space-lg); border-radius: var(--radius-lg); background: var(--color-surface); }
+  .poster [data-prop="quotes"] h3 { display: none; }
+  .poster [data-prop="quotes"] li { font-size: var(--font-size-lg); font-style: italic; line-height: var(--leading-normal); }
+
+  /* Goals and frustrations: an icon each, its color the only accent */
+  .poster :is([data-prop="goals"], [data-prop="frustrations"]) li { position: relative; padding-left: calc(var(--item-icon) + var(--space-sm)); }
+  .poster :is([data-prop="goals"], [data-prop="frustrations"]) li::before { content: ""; position: absolute; left: 0; top: var(--space-3xs); width: var(--item-icon); height: var(--item-icon); background: var(--ink); -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+  .poster [data-prop="goals"] { --ink: var(--color-positive); --icon: var(--i-target); }
+  .poster [data-prop="frustrations"] { --ink: var(--color-negative); --icon: var(--i-zap); }
+
+  /* How they go about it, and when: quieter */
+  .poster :is([data-prop="behaviours"], [data-prop="context-of-use"]) li { color: var(--color-text-muted); }
+}
+
+/* ---------- The panel of a persona: who it is first, with no label ---------- */
+.details-props > [data-prop="description"] { order: -1; }
+.details-props > [data-prop="description"] dt { display: none; }
+.details-props > [data-prop="description"] dd { margin: 0; font-size: var(--font-size-md); line-height: var(--leading-normal); }
