@@ -81,7 +81,10 @@ export class MapEmbed extends MarkdownRenderChild {
       const title = createDiv({ cls: 'maps-md-embed-title' });
       title.createEl('a', { cls: 'internal-link', text: file.title, attr: { href: '#', 'data-href': this.file.path } });
       title.createSpan({ cls: 'map-type', text: file.map.meta.type });
-      this.box.replaceChildren(title, page);
+      // In a canvas, as in the Map view: the details of a value and the sources of a fact are left to the panel.
+      const canvas = createDiv({ cls: 'maps-canvas' });
+      canvas.append(page);
+      this.box.replaceChildren(title, canvas);
       this.unmount = mount(page, html, this.id);
       // The context and the open questions are in the Map view: here, the drawing alone.
       page.querySelectorAll(':scope > .context, :scope > .open-questions').forEach((s) => s.remove());

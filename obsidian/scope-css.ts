@@ -121,3 +121,12 @@ export function scopeCss(css: string, options: ScopeOptions): string {
       .join('\n');
   return walk(uncomment(css), options.scope);
 }
+
+/** Every selector of the style rules of a stylesheet, at any depth of its at-rules (not in `@keyframes`): for the tests. */
+export function selectorsOf(css: string): string[] {
+  return blocks(uncomment(css)).flatMap(({ prelude, body }) => {
+    if (body === undefined) return [];
+    if (prelude.startsWith('@')) return NESTED.test(prelude) ? selectorsOf(body) : [];
+    return selectors(prelude);
+  });
+}

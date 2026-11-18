@@ -210,12 +210,12 @@ export class MapView extends FileView {
     if (tab !== undefined) selectTab(this.contentEl, tab);
     if (place) this.pan.restore(place);
     else this.pan.home();
+    this.plugin.mapShown(this);
     if (this.pendingAnchor && this.ctx) {
       const anchor = this.pendingAnchor;
       this.pendingAnchor = undefined;
       requestAnimationFrame(() => this.reveal(anchor));
     } else this.publishDetails();
-    this.plugin.mapShown(this);
   }
 
   /** The bar: the title and the type of the map, About this map, its open questions, what the check finds wrong. */
@@ -383,7 +383,9 @@ export class MapView extends FileView {
       target = targetOf(this.page, anchor);
     }
     if (!target) return;
-    const pointed = pointedAt(this.ctx, target);
+    // The item a link reaches, itself when it is an element (a story in its board), else what a click on it selects.
+    const own = (target as HTMLElement).dataset?.el;
+    const pointed = own ? { details: elementDetails(own) } : pointedAt(this.ctx, target);
     if (pointed) this.showDetails(pointed.details);
     else target.classList.add('target');
     this.pan.center(target);

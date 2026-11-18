@@ -15,5 +15,5 @@
     "skipLibCheck": true
   },
   "include": ["renderer", "bin", "obsidian"],
-  "exclude": ["obsidian/dist", "obsidian/smoke/out"]
+  "exclude": ["obsidian/dist", "obsidian/smoke"]
 }

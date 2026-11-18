@@ -9,8 +9,9 @@
   "scripts": {
     "build": "tsx renderer/build.ts",
     "check-types": "tsc --noEmit",
-    "test": "tsx renderer/test-render.ts && tsx renderer/test-check.ts && tsx renderer/test-rename.ts && tsx renderer/test-complete.ts",
-    "build:obsidian": "tsx obsidian/build.ts"
+    "test": "tsx renderer/test-render.ts && tsx renderer/test-check.ts && tsx renderer/test-rename.ts && tsx renderer/test-complete.ts && tsx obsidian/test-scope.ts",
+    "build:obsidian": "tsx obsidian/build.ts",
+    "smoke:obsidian": "tsx obsidian/smoke/run.ts"
   },
   "devDependencies": {
     "@codemirror/autocomplete": "6.20.4",
