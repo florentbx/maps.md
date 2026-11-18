@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsx renderer/build.ts",
     "check-types": "tsc --noEmit",
-    "test": "tsx renderer/test-render.ts && tsx renderer/test-check.ts && tsx renderer/test-rename.ts && tsx renderer/test-complete.ts"
+    "test": "tsx renderer/test-render.ts && tsx renderer/test-check.ts && tsx renderer/test-rename.ts && tsx renderer/test-complete.ts",
+    "build:obsidian": "tsx obsidian/build.ts"
   },
   "devDependencies": {
     "@codemirror/autocomplete": "6.20.4",
@@ -24,6 +25,7 @@
     "@types/node": "22.20.5",
     "elkjs": "0.9.3",
     "esbuild": "0.28.2",
+    "obsidian": "1.14.4",
     "tsx": "4.23.15",
     "typescript": "7.0.2"
   },
@@ -35,5 +37,10 @@
     "skills",
     "maps.html"
   ],
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "overrides": {
+    "obsidian": {
+      "@codemirror/view": "$@codemirror/view"
+    }
+  }
 }

@@ -1,4 +1,4 @@
-// The TypeScript settings of the code of maps.md (renderer/, bin/init.mjs): strict, checked by `npm run check-types` and by
+// The TypeScript settings of the code of maps.md (renderer/, bin/init.mjs, obsidian/): strict, checked by `npm run check-types` and by
 // the CI, never compiled by tsc: esbuild (renderer/build.ts) makes the JavaScript people run.
 {
   "compilerOptions": {
@@ -14,5 +14,6 @@
     "checkJs": true,
     "skipLibCheck": true
   },
-  "include": ["renderer", "bin"]
+  "include": ["renderer", "bin", "obsidian"],
+  "exclude": ["obsidian/dist", "obsidian/smoke/out"]
 }

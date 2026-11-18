@@ -33,10 +33,13 @@ const fileKey = (name: string) => name.toLowerCase();
  *  definitions is a project, whose maps take their types there (the nearest one up) and link among themselves. `rootOf`
  *  gives the folder of the project of a path, with its `/` (`showcase/1-courts/`), or undefined when there is none;
  *  `prefixOf` what its names start with: '' in a folder of one project, else where the project is in the folder
- *  (`1-courts/`), so that two projects can have maps of the same name. */
-export function projectsOf(paths: string[]) {
+ *  (`1-courts/`), so that two projects can have maps of the same name. `types`, the name of the folder of the types:
+ *  `types` but in the Obsidian plugin, where it is a setting. */
+export function projectsOf(paths: string[], types = 'types') {
   const slash = (p: string) => p.replace(/\\/g, '/');
-  const roots = [...new Set(paths.map((p) => /^(.*\/)?types\/[^/]+\.md$/i.exec(slash(p))).filter((m) => m).map((m) => m![1] ?? ''))].sort((a, b) => b.length - a.length);
+  const name = types.replace(/[.*+?^$()|[\]\\{}]/g, '\\$&'); // as text in a pattern
+  const folder = new RegExp(`^(.*\\/)?${name}\\/[^/]+\\.md$`, 'i');
+  const roots = [...new Set(paths.map((p) => folder.exec(slash(p))).filter((m) => m).map((m) => m![1] ?? ''))].sort((a, b) => b.length - a.length);
   const rootOf = (path: string) => roots.find((r) => slash(path).startsWith(r)) ?? roots.at(-1);
   // The part the roots share, up to a `/`: left out of the names, which keep only where each project is.
   let common = roots.length > 1 ? roots.reduce((a, b) => { let k = 0; while (k < a.length && a[k] === b[k]) k++; return a.slice(0, k); }) : '';
@@ -83,10 +86,11 @@ function linesOf(items: Item[], path: string[]) {
 }
 
 /** Indexes the `.md` files of a folder, given as `{ path, text }`, and every link of its maps. `hrefOf(file, anchor)`
- *  gives the address of a file, or of one of its elements (the page; none for the check). */
-export function buildIndex(sources: Source[], { hrefOf = () => '' }: { hrefOf?: HrefOf } = {}): LinkIndex {
+ *  gives the address of a file, or of one of its elements (the page; none for the check); `types`, the name of the
+ *  folder of the types (`projectsOf`). */
+export function buildIndex(sources: Source[], { hrefOf = () => '', types }: { hrefOf?: HrefOf; types?: string } = {}): LinkIndex {
   const files = new Map<string, IndexedFile>();
-  const { prefixOf } = projectsOf(sources.map((s) => s.path));
+  const { prefixOf } = projectsOf(sources.map((s) => s.path), types);
   for (const { path, text } of sources) {
     const name = path.split(/[\\/]/).pop()!.replace(/\.md$/i, '');
     let map: MapDoc | undefined;

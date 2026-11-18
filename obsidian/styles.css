@@ -1,0 +1,67 @@
+/* maps.md in Obsidian: the layer of the plugin over renderer/style.css, which build.ts scopes under .maps-md (every
+   rule of the page holds only inside a map of the plugin). Here: the colors and fonts of Obsidian for the tokens of
+   the page, so that light and dark, and any community theme, apply; the layout of the Map view, the side panel and an
+   embedded map; and what Obsidian's own styles would otherwise change in them. Only tokens, as in style.css. */
+
+/* The colors of the roles of the page, from those of Obsidian. The tints and inks (the colors a layout names, by hue)
+   stay those of maps.md, light or dark with Obsidian (.theme-dark). Two classes, over the dark ones of style.css. */
+.theme-light .maps-md, .theme-dark .maps-md {
+  --color-bg: var(--background-primary);
+  --color-canvas: var(--background-secondary);
+  --color-surface: var(--background-primary);
+  --color-text: var(--text-normal);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--background-modifier-border);
+  --color-accent: var(--interactive-accent);
+  --color-positive: var(--color-green);
+  --color-negative: var(--text-error);
+  --color-code-bg: var(--code-background);
+  --color-dot: var(--background-modifier-border);
+  --color-hover: var(--background-modifier-hover);
+  --color-selected: var(--background-modifier-active-hover);
+  --color-text-selection: var(--text-selection);
+  /* The fonts of Obsidian; the boxes of the drawings are measured in the font of .maps-md (draw.ts, its host). */
+  --font-sans: var(--font-interface);
+  --font-mono: var(--font-monospace);
+  --font-meta: var(--font-monospace);
+}
+
+/* The container of a map is not a page: no height of a window, nothing hidden */
+.maps-md.maps-md { height: auto; overflow: visible; background: none; }
+/* Obsidian's buttons have a height and a shadow of their own: the page's are drawn by style.css */
+.maps-md button:not(.maps-md-native, .clickable-icon) { height: auto; box-shadow: none; }
+
+/* The Map view: the bar, the tabs of the views, then the canvas, which fills the rest */
+.workspace-leaf-content .view-content.maps-md-view { display: flex; flex-direction: column; height: 100%; padding: 0; overflow: hidden; background: var(--color-canvas); }
+.maps-md-view .bar { white-space: nowrap; }
+.maps-md-stage { position: relative; flex: 1; min-height: 0; }
+.maps-md-view .navigation { position: absolute; right: 0; bottom: 0; z-index: var(--z-bar); margin: var(--space-md); }
+.maps-md-view .navigation[hidden] { display: none; }
+.maps-md-view .views-bar[hidden] { display: none; }
+.maps-md-view .views-bar .views { display: flex; }
+.maps-md-missing { max-width: var(--size-text); }
+.maps-md-actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
+
+/* The side panel: the details of maps.html */
+.workspace-leaf-content .view-content.maps-md-details { display: flex; flex-direction: column; padding: 0; background: var(--color-bg); }
+.maps-md-details-head { display: flex; justify-content: flex-end; min-height: var(--size-button); padding: var(--space-xs) var(--space-sm) 0; }
+.maps-md-details .details-body, .maps-md-issues .details-body { padding: var(--space-xs) var(--space-lg) var(--space-2xl); }
+.maps-md .maps-md-line, .maps-md .maps-md-path { margin-left: var(--space-xs); font-family: var(--font-meta); font-size: var(--font-size-2xs); font-weight: normal; color: var(--color-text-muted); }
+.maps-md-check-file { margin-top: var(--space-xl); }
+.maps-md-check-file h3 { margin: 0 0 var(--space-xs); font-size: var(--font-size-md); }
+.maps-md-check-file .maps-md-path { display: block; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.maps-md .maps-md-recheck { margin-left: var(--space-xs); padding: 0 var(--space-xs); border: 0; background: none; color: var(--color-accent); font: inherit; cursor: pointer; }
+.workspace-leaf-content .view-content.maps-md-issues { padding: 0; }
+
+/* A map embedded in a note: drawn at the size of a page, in a box that scrolls */
+.internal-embed.maps-md-embedded { display: block; }
+.maps-md.maps-md-embed { overflow: auto; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text); font: var(--font-size-root)/var(--leading-normal) var(--font-sans); }
+.maps-md-embed .maps-page { width: var(--size-canvas-page); padding: var(--space-md) var(--space-lg) var(--space-xl); }
+.maps-md-embed-title { position: sticky; left: 0; display: flex; align-items: baseline; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg) 0; }
+.maps-md-embed-title a { font-weight: var(--font-weight-bold); }
+.maps-md-embed .views { margin-top: var(--space-sm); border-bottom: var(--border-width) solid var(--color-border); }
+.maps-md-embed .context, .maps-md-embed .open-questions { display: none; }
+
+/* The suggestions of the catalog, and the status bar */
+.maps-md-suggestion-description { display: block; color: var(--text-muted); }
+.maps-md-status--error { color: var(--text-error); }

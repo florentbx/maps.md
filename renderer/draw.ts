@@ -601,7 +601,7 @@ let measurer: CanvasRenderingContext2D | null | undefined;
 function textWidth(text: string, size = G.font, bold = false) {
   if (measurer === undefined) measurer = typeof document === 'undefined' ? null : document.createElement('canvas').getContext('2d');
   if (!measurer) return text.length * G.char * (size / G.font);
-  const style = getComputedStyle(document.body);
+  const style = getComputedStyle(host ?? document.body);
   const font = `${bold ? style.getPropertyValue('--font-weight-bold').trim() || 'bold' : 'normal'} ${size}px ${style.fontFamily}`;
   const key = `${font}\n${text}`;
   if (!widths.has(key)) {
@@ -640,6 +640,9 @@ interface Detail {
  *  `data-value`): read in the page, on a hidden copy of the hooks of the box; with no page (the tests), shown. Read
  *  again for each map, whose type has its own style (drawMap). */
 const hiddenLabels = new Map<string, boolean>();
+/** Where the drawing will be shown, for the font it is measured in and the style of its type (`drawMap`): the body of
+ *  the page, or the view of the Obsidian plugin, whose styles hold only inside it. */
+let host: HTMLElement | undefined;
 function labelHidden(view: string, prop: string, hooks: string) {
   if (typeof document === 'undefined') return false;
   const key = `${view}\n${prop}\n${hooks}`;
@@ -649,7 +652,7 @@ function labelHidden(view: string, prop: string, hooks: string) {
     probe.dataset.viewName = view;
     probe.style.cssText = 'position: fixed; left: -200vw; top: 0; visibility: hidden;';
     probe.innerHTML = `<div class="graph"><svg><g ${hooks}><text class="node-detail"${propOf(prop)}><tspan class="detail-label">${escapeHtml(prop)}: </tspan></text></g></svg></div>`;
-    document.body.append(probe);
+    (host ?? document.body).append(probe);
     hiddenLabels.set(key, getComputedStyle(probe.querySelector('.detail-label')!).display === 'none');
     probe.remove();
   }
@@ -1622,10 +1625,12 @@ export function linksData(map: MapDoc, links: PageLinks) {
 }
 
 /** A map as HTML: context, drawing, open questions. `definition` is the parsed type
- *  definition; `links` comes from the folder (`linksOf`). */
-export async function drawMap(map: MapDoc, typeDefinition: Definition, links: PageLinks) {
+ *  definition; `links` comes from the folder (`linksOf`); `options.host`, the element it will be shown in, when it is
+ *  not the body of the page (the Obsidian plugin): its text is measured there. One drawing at a time with a host. */
+export async function drawMap(map: MapDoc, typeDefinition: Definition, links: PageLinks, options: { host?: HTMLElement } = {}) {
   const definition = definitionFor(typeDefinition, map.meta); // with the settings its front matter chooses
   hiddenLabels.clear(); // the style of its type
+  host = options.host;
   const layoutError = definition.layoutError ? `<p class="error">Layout not used: ${escapeHtml(definition.layoutError)}</p>` : '';
   const { views: all = [], ...main } = (definition.layout ?? { shape: definition.shape }) as Layout;
   // `views: <name>, <name>` in the front matter keeps only these views of the type (`views: none`, none of them).

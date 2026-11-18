@@ -1,0 +1,10 @@
+{
+  "id": "maps-md",
+  "name": "maps.md",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "See your maps drawn: journeys, flows, data models, roadmaps written as Markdown with maps.md, drawn from their type, with their links and their check.",
+  "author": "Florent Brimeux",
+  "authorUrl": "https://github.com/florentbx/maps.md",
+  "isDesktopOnly": false
+}

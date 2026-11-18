@@ -1,6 +1,7 @@
 // The arrows of a sequence between its values (`- text → [[#Element#Value]]`, a service blueprint; `li[data-to]` to
 // `li[data-v]`), drawn by the page over the grid once it is laid out, since they depend on where the values end up, and
-// again when its size changes (a tab shown, the page resized). Imported by viewer.ts, for its effect.
+// again when its size changes (a tab shown, the page resized). Imported by viewer.ts, which calls `watchArrows` once;
+// the Obsidian plugin (obsidian/) calls `drawArrows` itself, on the grids of its own views.
 // A target below or above: down or up, across just before the target, then into it; on the same row: straight across.
 // Two arrows that would run on the same line in opposite directions (up and down a column, or between two values that
 // point to each other) run side by side, apart. The values hide the lines under them.
@@ -59,14 +60,18 @@ function drawArrows(grid: HTMLElement) {
   svg.innerHTML = `<defs><marker id="seq-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>${paths.map((p) => `<path d="${p.d}" data-from="${p.from}" data-to="${p.to}"${p.chain ? ' class="in-chain"' : ''} marker-end="url(#seq-head)"/>`).join('')}`;
   grid.append(svg);
 }
-export { drawArrows };
-const resized = new ResizeObserver((entries) => entries.forEach((e) => drawArrows(e.target as HTMLElement)));
-const watched = new WeakSet<Element>();
-const watch = () =>
-  document.querySelectorAll<HTMLElement>('.grid--arrows').forEach((grid) => {
-    if (watched.has(grid)) return;
-    watched.add(grid);
-    resized.observe(grid);
-  });
-new MutationObserver(watch).observe(document.documentElement, { childList: true, subtree: true });
-watch();
+/** Draws the arrows of every grid with arrows under `root`, as it is laid out, and again when its size changes: the
+ *  grids added later too. */
+function watchArrows(root: Element = document.documentElement) {
+  const resized = new ResizeObserver((entries) => entries.forEach((e) => drawArrows(e.target as HTMLElement)));
+  const watched = new WeakSet<Element>();
+  const watch = () =>
+    root.querySelectorAll<HTMLElement>('.grid--arrows').forEach((grid) => {
+      if (watched.has(grid)) return;
+      watched.add(grid);
+      resized.observe(grid);
+    });
+  new MutationObserver(watch).observe(root, { childList: true, subtree: true });
+  watch();
+}
+export { drawArrows, watchArrows };

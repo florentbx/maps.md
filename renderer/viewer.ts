@@ -7,7 +7,8 @@
 
 import Panzoom, { type PanzoomEventDetail } from '@panzoom/panzoom';
 import { chipOf, drawMap, drawPlain, linksData, propOf, valueOf } from './draw.ts'; // the hooks of a style, in the panel as on the map
-import { drawArrows } from './arrows.ts';
+import { drawArrows, watchArrows } from './arrows.ts';
+watchArrows(); // the arrows between the values of a sequence, drawn once its grid is laid out
 import { brokenLinkWhere, checkMap, type Issue } from './checks.ts';
 import { addedLabels, propose } from './complete.ts';
 import { createEditor } from './editor.ts';

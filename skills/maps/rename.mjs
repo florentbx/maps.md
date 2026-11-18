@@ -81,9 +81,11 @@ var markdownFiles = (dir) => filesUnder(dir).filter((p) => p.toLowerCase().endsW
 var WIKILINK = /\[\[([^\]|#]*)((?:#[^\]|#]*)*)(?:\|([^\]]*))?\]\]/g;
 var anchorOf = (name) => `el-${nameKey(name)}`;
 var fileKey = (name) => name.toLowerCase();
-function projectsOf(paths) {
+function projectsOf(paths, types = "types") {
   const slash = (p) => p.replace(/\\/g, "/");
-  const roots = [...new Set(paths.map((p) => /^(.*\/)?types\/[^/]+\.md$/i.exec(slash(p))).filter((m) => m).map((m) => m[1] ?? ""))].sort((a, b) => b.length - a.length);
+  const name = types.replace(/[.*+?^$()|[\]\\{}]/g, "\\$&");
+  const folder2 = new RegExp(`^(.*\\/)?${name}\\/[^/]+\\.md$`, "i");
+  const roots = [...new Set(paths.map((p) => folder2.exec(slash(p))).filter((m) => m).map((m) => m[1] ?? ""))].sort((a, b) => b.length - a.length);
   const rootOf = (path) => roots.find((r) => slash(path).startsWith(r)) ?? roots.at(-1);
   let common = roots.length > 1 ? roots.reduce((a, b) => {
     let k = 0;
@@ -123,9 +125,9 @@ function linesOf(items, path) {
   }
   return lines;
 }
-function buildIndex(sources2, { hrefOf = () => "" } = {}) {
+function buildIndex(sources2, { hrefOf = () => "", types } = {}) {
   const files = /* @__PURE__ */ new Map();
-  const { prefixOf } = projectsOf(sources2.map((s) => s.path));
+  const { prefixOf } = projectsOf(sources2.map((s) => s.path), types);
   for (const { path, text } of sources2) {
     const name = path.split(/[\\/]/).pop().replace(/\.md$/i, "");
     let map;
