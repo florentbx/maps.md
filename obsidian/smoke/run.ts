@@ -162,8 +162,9 @@ try {
 
   // A map whose type is missing: the message, and the type added from the catalog.
   s = await smoke('open', 'notes/team');
-  check(s.type === 'markdown', 'a map whose type is not found opens as Markdown', s.type);
-  await smoke('command', 'toggle-map-view');
+  check(s.type === 'markdown' && s.headerActions.includes('Open as map'), 'a map whose type is not found opens as Markdown, with the toggle (the catalog has its type)', s);
+  await page.click(`${active}.view-action[aria-label="Open as map"]`);
+  await smoke('idle');
   const missing = await page.textContent(`${active}.maps-md-missing`);
   check(missing?.includes('raci') && missing.includes('Add “raci” from the catalog'), 'a missing type is said, with the type of the catalog to add', missing);
   await shot('missing-type');

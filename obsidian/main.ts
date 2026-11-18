@@ -213,7 +213,9 @@ export default class MapsPlugin extends Plugin {
     for (const leaf of this.app.workspace.getLeavesOfType('markdown')) {
       const view = leaf.view as MarkdownView;
       const file = view.file;
-      const want = Boolean(file && this.isMap(file) && (this.store.hasType(file.path, this.app.metadataCache.getFileCache(file)?.frontmatter?.type) || this.store.projectOf(file.path) !== undefined));
+      // A map whose type is found, or in a project, or whose type the catalog has (it can be added from the Map view).
+      const type = file && this.app.metadataCache.getFileCache(file)?.frontmatter?.type;
+      const want = Boolean(file && this.isMap(file) && (this.store.hasType(file.path, type) || this.store.projectOf(file.path) !== undefined || this.catalog.has(String(type))));
       const action = this.headerActions.get(view);
       if (want && !action) this.headerActions.set(view, view.addAction('map', 'Open as map', () => this.setMode(leaf, 'map')));
       else if (!want && action) (action.remove(), this.headerActions.delete(view));
