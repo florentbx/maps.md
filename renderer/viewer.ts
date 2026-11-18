@@ -554,7 +554,7 @@ function listOf(maps: IndexedFile[]) {
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([name, sub]) => `<li><details open><summary class="row" style="--depth: ${depth}">${escapeHtml(name)}</summary><ul>${rows(sub, depth + 1)}</ul></details></li>`),
       ...folder.maps.map(
-        (f) => `<li><a class="row" style="--depth: ${depth}" href="${hrefOf(f, '')}" data-map="${escapeHtml(f.name)}" title="${escapeHtml(f.path)}"><span class="row-title">${escapeHtml(f.title)}</span>${f.isMap ? `<span class="row-caption">${escapeHtml(f.map.meta.type)}</span>` : ''}</a></li>`,
+        (f) => `<li><a class="row" style="--depth: ${depth}" href="${hrefOf(f, '')}" data-map="${escapeHtml(f.key)}" title="${escapeHtml(f.path)}"><span class="row-title">${escapeHtml(f.title)}</span>${f.isMap ? `<span class="row-caption">${escapeHtml(f.map.meta.type)}</span>` : ''}</a></li>`,
       ),
     ].join('');
   return `<ul>${rows(root, 0)}</ul>`;
@@ -680,7 +680,7 @@ async function show(keep = false) {
   fitBar();
   toEditor(file);
   if (detailsOpen()) panelShown(); // the same content, drawn again, or the panel closes
-  $('maps').querySelectorAll<HTMLElement>('[data-map]').forEach((row) => (row.dataset.map === file.name ? row.setAttribute('aria-current', 'page') : row.removeAttribute('aria-current')));
+  $('maps').querySelectorAll<HTMLElement>('[data-map]').forEach((row) => (row.dataset.map === file.key ? row.setAttribute('aria-current', 'page') : row.removeAttribute('aria-current')));
   document.title = `${file.title} · maps.md`;
   const target = wanted.anchor && targetOf(wanted.anchor);
   if (keep) document.querySelector<HTMLElement>(`[data-view="${view}"]`)?.click(); // the canvas stays where it was
@@ -690,10 +690,10 @@ async function show(keep = false) {
     const reached = pointedAt(target);
     if (reached) reached.show();
     else target.classList.add('target');
-    if (file.name !== shownName) home();
+    if (file.key !== shownName) home();
     center(target);
   } else home();
-  shownName = file.name;
+  shownName = file.key;
 }
 
 /** What a link reaches on the canvas: the item drawn where its path is written, the last one shown on screen, or its
