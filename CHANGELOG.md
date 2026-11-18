@@ -6,6 +6,14 @@ latest one). The maps declare no version.
 
 ## Unreleased
 
+**A plugin for Obsidian, a first prototype** (`obsidian/`, `npm run build:obsidian`): the maps of a vault drawn in a
+Map view, a toggle away from the Markdown of the note; the details of what is clicked in a side panel, with the maps
+that cite it and the open questions about it; links followed in Obsidian, to the item they reach; the map drawn again
+as it, its project or its types change; the types of each project, with the catalog of 28 types in the plugin and a
+command to add one; the check of the vault, each issue with its line, and **N to fix** for the map shown; a map embedded
+in a note (`![[map]]`) drawn there; the colors and fonts of Obsidian, light and dark. Not yet run inside Obsidian
+itself: see `obsidian/README.md`.
+
 ## 0.1.0
 
 The first version: the skill and its catalog of 28 types, the page (`maps.html`), the check, `serve`, `rename` and

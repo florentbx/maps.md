@@ -148,6 +148,8 @@ Every way to open them:
 | On your computer | A browser only | Open `maps/maps.html`, click **Open a folder**, choose `maps/` | In Chrome and Edge; read only in the others | When you open the folder again |
 | In a container | A cloud session (Claude Code on the web, or a cloud session in the app) | Ask your AI to publish the maps as a private artifact | Yes: kept in the artifact, your AI writes them into the files when you ask, or when it publishes again | When you ask again |
 
+**In Obsidian**: a first prototype of a plugin draws the maps of a vault, with their details, links and check; see [`obsidian/README.md`](obsidian/README.md).
+
 **Common surprises** (another one? [tell us](https://github.com/florentbx/maps.md/issues/new))
 
 - **The button reads Markdown, not Edit, and the Markdown says `Read only`**: the page cannot write the file. You may only view the artifact (ask who shared it), or you opened `maps.html` in a browser other than Chrome or Edge.
