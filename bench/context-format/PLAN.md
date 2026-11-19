@@ -29,7 +29,8 @@ Two measures only: **token cost** and **effective understanding**.
 - **Sub-agents, no API key**: Claude Code sub-agents on Sonnet, as the AI really reads maps (with its Read tool).
   Each agent is told to read every file of its folder in full first, then to answer, from these files only, and to
   return its answers as JSON, with the list of the files it read (an agent that skipped a file is run again).
-- **3 agents per form** (12 in all), to see the variance of the model. Same prompt, only the folder changes.
+- **1 agent per form** (4 in all), same prompt, only the folder changes. A second agent is run on two forms only
+  when their scores differ by less than 2 points, to tell a real gap from the variance of the model.
 
 ## Questions
 
@@ -51,15 +52,15 @@ question whose answer is only in the Markdown is kept and tagged: it shows what 
 Grading: lists by share of right elements (missed elements lower it), 0 and an **invention** counted for any element
 that is not in the maps. Scores are out of 20, with decimals: a ceiling is far less likely than with right/wrong.
 
-**Calibration first**: one A agent and one B agent answer the 20 questions. If both score 19/20 or more, the
-questions are made harder (longer chains, larger lists) before the full run.
+**Against a ceiling**: A and B run first. If both score 19/20 or more, the questions are made harder (longer
+chains, larger lists) before A+def and B+css run, and A and B are run again.
 
 ## Measures
 
 | Measure | How |
 | --- | --- |
-| Tokens | The total tokens each agent reports when it ends (its reading of the folder + the answers), mean of 3, per form. Plus the size in characters of each folder, for a figure that does not depend on the agent |
-| Understanding | Score out of 20, per kind of question, mean of 3 |
+| Tokens | The total tokens each agent reports when it ends (its reading of the folder + the answers), per form. Plus the size in characters of each folder, for a figure that does not depend on the agent |
+| Understanding | Score out of 20, per kind of question |
 | Inventions | Count, per form |
 | Headline | Score per 10K tokens, per form |
 
@@ -69,16 +70,16 @@ changes anything to understanding), **A vs A+def** (what knowing the type brings
 ## Steps
 
 1. Export the four folders (a short script, no API). Write the 20 questions and their gold answers.
-2. Calibration: 1 agent on A, 1 on B; harden the questions if both reach 19/20.
-3. Run the 12 agents in parallel (the 2 of the calibration are not counted).
+2. Run the agents of A and B; harden the questions if both reach 19/20.
+3. Run the agents of A+def and B+css; a second agent where two forms are within 2 points.
 4. Grade, and write `RESULTS.md` here: the table above, and the questions where the forms differ, explained.
 
 ## Limits
 
 - Tokens reported by an agent include its prompt and its tools: the same for A and B, so the gap is real, but the
   absolute figures are not the cost of the maps alone.
-- One project, 20 questions, 3 runs per form: enough to see a large gap (cost x3 is certain; understanding to be seen), not a
-  small one. B+css (~250K tokens to read) may also push an agent to skim: the list of the files it read shows it.
+- One project, 20 questions, one run per form: enough to see a large gap (cost x3 is certain; understanding to be
+  seen), not a small one; a gap under 2 points is checked with a second run before it is reported. B+css (~250K tokens to read) may also push an agent to skim: the list of the files it read shows it.
   If the result is close, the next step is a second project (`3-coop`, the most linked).
 - The HTML is the HTML of this renderer: it says nothing of a cleaner HTML.
 - If every form still scores the same, that is a result too: the same understanding, for 3 to 25 times the tokens.
