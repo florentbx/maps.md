@@ -1,4 +1,4 @@
-# Benchmark plan: a project's maps as Markdown vs as HTML, in Claude Sonnet's context
+# Benchmark plan: a project's maps as Markdown vs as HTML, in Claude Haiku's context
 
 Status: plan, not run yet.
 
@@ -26,7 +26,10 @@ Two measures only: **token cost** and **effective understanding**.
 
   The HTML is written on one line by the renderer: line breaks are added between tags, so that the Read tool can read
   each file in full (they change the tokens very little; measured).
-- **Sub-agents, no API key**: Claude Code sub-agents on Sonnet, as the AI really reads maps (with its Read tool).
+- **Model: Claude Haiku 5.5.** A smaller model feels the form of its context more than Sonnet does, so a gap shows
+  sooner and a ceiling is less likely; it is also the cheapest to read B+css (~250K tokens). What holds for Haiku is
+  checked on Sonnet only if it matters (see Steps).
+- **Sub-agents, no API key**: Claude Code sub-agents on Haiku, as the AI really reads maps (with its Read tool).
   Each agent is told to read every file of its folder in full first, then to answer, from these files only, and to
   return its answers as JSON, with the list of the files it read (an agent that skipped a file is run again).
 - **1 agent per form** (4 in all), same prompt, only the folder changes. A second agent is run on two forms only
@@ -34,7 +37,7 @@ Two measures only: **token cost** and **effective understanding**.
 
 ## Questions
 
-**20 questions, hard by design.** Sonnet would get simple lookups right in every form: a score of 20/20 everywhere
+**20 questions, hard by design.** Even Haiku would get simple lookups right in every form: a score of 20/20 everywhere
 says nothing. So no question can be answered from one line of one map; each needs what a form can hide: every
 element of a list, an arrow, a link to another map, or the absence of something.
 
@@ -72,7 +75,9 @@ changes anything to understanding), **A vs A+def** (what knowing the type brings
 1. Export the four folders (a short script, no API). Write the 20 questions and their gold answers.
 2. Run the agents of A and B; harden the questions if both reach 19/20.
 3. Run the agents of A+def and B+css; a second agent where two forms are within 2 points.
-4. Grade, and write `RESULTS.md` here: the table above, and the questions where the forms differ, explained.
+4. Optional: if the forms differ, one Sonnet agent on A and one on B, to see whether the gap holds on a larger
+   model.
+5. Grade, and write `RESULTS.md` here: the table above, and the questions where the forms differ, explained.
 
 ## Limits
 
@@ -83,4 +88,4 @@ changes anything to understanding), **A vs A+def** (what knowing the type brings
   If the result is close, the next step is a second project (`3-coop`, the most linked).
 - The HTML is the HTML of this renderer: it says nothing of a cleaner HTML.
 - If every form still scores the same, that is a result too: the same understanding, for 3 to 25 times the tokens.
-  A replication on Claude Haiku would then show whether a smaller model feels the form.
+  On Haiku, that would mean the form does not matter for understanding, only for cost.
