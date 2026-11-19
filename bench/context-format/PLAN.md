@@ -4,24 +4,32 @@ Status: plan, not run yet.
 
 ## Question
 
-When an AI reads a map as its context, which form serves it better, at what cost:
+When an AI reads a map as its context, which form gives it **the best understanding of the map for the fewest
+tokens**:
 
 - **A. The Markdown** of the map (`<map>.md`), what maps.md stores and what the AI reads today;
 - **B. The HTML** of the same map, as the page draws it (the boxes, tables, tabs and SVG of the renderer)?
 
-"Better" is measured on four axes: **accuracy** of answers, **hallucinations**, **input tokens / cost**, **latency**.
+Two axes, and only two:
+
+1. **Token cost**: what the map costs in context.
+2. **Effective understanding**: what the AI actually gets right about the map, from finding a value to reasoning on
+   it, without inventing anything.
+
+Both are joined in one headline number: **understanding per token** (see Metrics). Latency is out of scope.
 
 Model under test: Claude Sonnet 5.5 (`claude-sonnet-5-5`).
 
 ## Hypotheses
 
-- **H1 (accuracy)**: A is at least as accurate as B overall; B loses on structure (arrows drawn as SVG paths, links
-  reduced to `↗` marks with the target only in a `title` attribute) and on lists repeated across views.
-- **H2 (cost)**: B costs 3 to 4 times the input tokens of A without CSS, far more with it.
-- **H3 (hallucination)**: B produces more wrong answers to questions about elements that are not in the map, because
-  of the noise of the markup (filter buttons, view tabs, repeated content).
+- **H1 (cost)**: B costs 3 to 4 times the input tokens of A without CSS, far more with it.
+- **H2 (understanding)**: A is understood at least as well as B; B loses most on relations (arrows drawn as SVG paths,
+  links reduced to `↗` marks with the target only in a `title` attribute) and on lists repeated across views.
+- **H3 (faithfulness)**: B makes the AI invent more, because of the noise of the markup (filter buttons, tabs,
+  repeated content).
 
-The benchmark is built so that any of these can be refuted.
+The benchmark is built so that any of these can be refuted, including in favour of HTML (its tables and views lay
+out what the Markdown leaves implicit, such as a matrix or the elements grouped by status).
 
 ## What the repository already shows (measured on 2026-11-19, no API call)
 
@@ -47,100 +55,125 @@ And three facts that the benchmark must account for:
 | --- | --- | --- |
 | **A** | The map's `.md` file, as is | Baseline |
 | **B** | The HTML fragment of `drawMap()`, wrapped in a minimal `<!doctype html>` page, with no CSS | Main comparison: the map as drawn |
-| **B+css** | B with `renderer/style.css`, the type's `.css` and the theme inlined in `<style>` | Realistic "self-contained HTML file"; tokens measured for all maps, accuracy run on a 30% sample (CSS should not change accuracy, only cost) |
-| A+def (optional) | A plus the type definition `<type>.md` | What the skill really gives the AI; tells whether the gap closes once the AI knows the type |
+| **B+css** | B with `renderer/style.css`, the type's `.css` and the theme inlined in `<style>` | Realistic "self-contained HTML file": tokens counted for every map, understanding tested on a 30% sample (CSS should change the cost, not the understanding: the sample checks it) |
+| A+def (optional) | A plus the type definition `<type>.md` | What the skill really gives the AI: tells whether knowing the type changes the understanding, and at what extra cost |
 
 Same system prompt in every condition, only the document changes:
 "Answer only from the document. If the document does not say it, answer `NOT_IN_MAP`."
 
-## Two levels
+Two levels:
 
-1. **One map in context** (31 maps of `showcase/`, plus the 4 of `maps/`): questions on that map.
-2. **A whole project in context** (`showcase/2-spliit`, 10 maps; `showcase/3-coop`, 11 maps): questions that need
-   two maps and the links between them. In A, the Markdown files concatenated with their path; in B, the HTML pages
-   concatenated with their path.
+1. **One map in context** (31 maps of `showcase/`, plus the 4 of `maps/`).
+2. **A whole project in context** (`showcase/2-spliit`, 10 maps; `showcase/3-coop`, 11 maps): understanding that
+   needs several maps and the links between them, where the token gap adds up.
 
-## Questions and gold answers
+## Axis 1: token cost
 
-Generated from the parsed map (`readMap`, `elementsOf` in renderer/read.ts), so the gold answer comes from the source
-and no hand labelling is needed for the closed questions. About 8 questions per map, ~280 in total, plus ~40 project
-questions.
+Measured exactly, never estimated:
 
-| Category | Example | Grading |
-| --- | --- | --- |
-| Lookup | "What is the Status of the initiative *Club onboarding*?" | Exact match (normalized) |
-| Filter / count | "List every initiative whose Status is planned." | Set F1 + exact count |
-| Structure | Graph: "Which components does *API* call?"; tree: "What is the parent of X?"; sequence: "Which step comes after X?" | Set F1 / exact |
-| Links | "Which map and element does *X* cite?" | Exact (map name + element) |
-| Negative | A property or element that does not exist (made from a near name) | Must answer `NOT_IN_MAP` |
-| Synthesis (~5 per project) | "What are the three main pain points of the journey, and the insight behind each?" | Rubric graded by Claude Opus 5.5 (`claude-opus-5-5`), blind to the condition (the judge sees the Markdown as reference) |
-| Round trip (optional, stage 2) | "Add an element *Y* with these properties; return the map in its Markdown format." | `check.mjs` passes + the new element is right. Measures whether an AI that read HTML can still write the map back |
+- `messages.countTokens` on every document in every condition (free): **tokens per map**, per type, per shape
+  (cards, sequence, graph, tree), per project.
+- Where the tokens of B go: share of tags and attributes, of repeated views, of SVG paths, of CSS. Measured by
+  counting the tokens of B with each part removed, so that a cleaner HTML could be specified if B is ever worth it.
+- `usage` of every answer: input and output tokens actually billed (the AI may also answer longer from HTML).
+- In dollars, at Sonnet 5.5's price ($2 / $10 per MTok), for one question and for a working session (a project in
+  context, 20 questions).
 
-**Presence check** before any run: for each closed question, check that the gold answer is in the visible text of
-both A and B. A question whose answer is missing from B (e.g. a link target only in `title`) is kept but tagged
-`lost-in-html`, and reported apart: it is a finding, not noise.
+This axis needs no question and can be delivered first.
+
+## Axis 2: effective understanding
+
+Understanding is tested in five levels, from reading to reasoning, so that the result says *where* a form helps or
+hurts, not only a global score. Questions are generated from the parsed map (`readMap`, `elementsOf` in
+renderer/read.ts): the gold answer comes from the source, with no hand labelling. About 8 to 10 per map, ~300 in
+total, plus ~40 at the project level.
+
+| Level | What it tests | Example | Grading |
+| --- | --- | --- | --- |
+| 1. Find | A value of an element | "What is the Status of *Club onboarding*?" | Exact match (normalized) |
+| 2. Gather | Every element that meets a condition, and how many | "List every initiative whose Status is planned." | Set F1 + exact count |
+| 3. Relate | The structure: arrows, parents, order | "Which components does *API* call?", "What is the parent of X?", "Which step comes after X?" | Set F1 / exact |
+| 4. Follow | Links to other maps and elements | "Which insight does the phase *X* rest on?"; at the project level, a question that needs the cited map | Exact (map + element) |
+| 5. Reason | A conclusion the map supports but does not state | "Which planned initiative depends on one still undecided?", "Which pain point has no opportunity?" | Gold from the parsed map when it can be computed; else a rubric graded by Claude Opus 5.5 (`claude-opus-5-5`), blind to the condition |
+
+And across every level, **faithfulness**:
+
+- Negative questions (an element or property that does not exist, built from a near name): the answer must be
+  `NOT_IN_MAP`.
+- In every list answer, elements that are not in the map are counted as **inventions**.
+
+Optional, after the first results, a sixth level, **Use**: "Add an element *Y* with these properties; return the map
+in its Markdown format." Graded by `check.mjs` and the new element. It measures whether an AI that read the HTML can
+still work on the map, which is what maps.md is for.
+
+**Presence check** before any run: each closed question's gold answer must be in the visible text of both A and B.
+A question whose answer is missing from B (e.g. a link target only in `title`) is kept but tagged `lost-in-html` and
+reported apart: it is a finding about the form, not noise.
 
 Answers are returned as JSON through structured outputs (`output_config.format`), so grading is deterministic.
+
+## Metrics
+
+| Metric | Definition |
+| --- | --- |
+| Tokens per map | `countTokens` of the document, per condition |
+| Understanding score | Mean score over the questions (exact = 0/1, F1 for lists, rubric 0-1 for level 5), overall and per level |
+| Invention rate | Wrong answers to negative questions + invented elements in lists, per 100 questions |
+| **Understanding per token** | Understanding score / thousands of input tokens: the headline, how much is understood for what is paid |
+| Cost per correct answer | Dollars billed (input + output) / correct answers |
+| Ratio B / A | Of each metric above, with a 95% confidence interval |
+
+Statistics: paired design (every question in every condition, 3 repetitions for the model's variance); McNemar test
+on binary answers, Wilcoxon signed-rank on F1 and rubric scores, bootstrap confidence intervals. With ~300 pairs x 3
+repetitions, a gap of ~6-8 points of understanding is detectable. The 20 largest disagreements between A and B are
+read and explained in the report.
 
 ## Protocol
 
 - Model: `claude-sonnet-5-5`, adaptive thinking (default), effort `medium` for the main run; an effort `low` run on
-  the pilot to see if the gap depends on it. No `temperature` (not accepted).
-- **Paired design**: every question is asked in every condition; 3 repetitions per (question, condition) for the
-  model's variance.
+  the pilot, to see whether a weaker effort widens the gap. No `temperature` (not accepted).
 - Order of questions shuffled; the document first in the prompt, the question after it.
-- Cost run through the **Message Batches API** (-50%), with prompt caching on the document (one cache per map and
-  condition, questions after the breakpoint).
-- **Latency** measured apart, on 40 questions per condition, with direct streaming calls and no cache: time to first
-  token and total time.
-- Tokens: `messages.countTokens` for every document (exact, no estimate), and `usage` of every response.
-
-## Metrics and analysis
-
-- Accuracy per condition, overall, per category, per map type and per shape (cards, sequence, graph, tree).
-- Hallucination rate: wrong answers to negative questions + invented elements in lists.
-- Input tokens, output tokens, cost per question and **cost per correct answer**.
-- Latency: TTFT and total, median and p90.
-- Statistics: McNemar test on paired binary answers (A vs B), Wilcoxon signed-rank on F1 and judge scores, 95%
-  bootstrap confidence intervals. With ~280 pairs x 3 repetitions, a gap of ~6-8 points of accuracy is detectable.
-- Qualitative: the 20 largest disagreements between A and B, read and explained.
+- Run through the **Message Batches API** (-50%), with prompt caching on the document (one cache per map and
+  condition, the question after the breakpoint). Caching changes the bill, not the tokens the model reads: both are
+  reported, so that the comparison of forms stays on the uncached count.
 
 ## Cost estimate (to confirm with countTokens in step 1)
 
-Rough: ~1.5K input tokens per map in A, ~5-6K in B, ~25K in B+css. ~280 questions x 3 repetitions:
+Rough: ~1.5K input tokens per map in A, ~5-6K in B, ~25K in B+css. ~300 questions x 3 repetitions, batch -50%:
 
-| Condition | Input tokens | Cost at $2 / $10 per MTok, batch -50% |
-| --- | --- | --- |
-| A | ~1.3M | ~$1.5 |
-| B | ~5M | ~$5 |
-| B+css (30% sample) | ~6M | ~$6 |
-| Outputs (all) | ~0.8M | ~$4 |
-| Project level + judge + latency runs | | ~$10 |
+| Part | Cost at $2 / $10 per MTok |
+| --- | --- |
+| A | ~$1.5 |
+| B | ~$5 |
+| B+css (30% sample) | ~$6 |
+| Outputs | ~$4 |
+| Project level + judge | ~$8 |
 
-Total about **$25-35**. Prompt caching lowers it further. Nothing is billed before the pilot is approved.
+Total about **$25-30**; less with caching. Nothing is billed before the pilot is approved.
 
 ## Steps
 
 | # | Step | Output | API cost |
 | --- | --- | --- | --- |
-| 1 | `export.ts`: render every map to A, B, B+css; count tokens | `out/docs/`, `out/tokens.csv` | ~0 (countTokens is free) |
-| 2 | `questions.ts`: generate questions and gold answers; presence check; hand-write the synthesis questions | `questions.json`, `questions.manual.json` | 0 |
+| 1 | `export.ts`: render every map to A, B, B+css; count tokens; split the tokens of B | `out/docs/`, `out/tokens.csv`, **axis 1 complete** | 0 (countTokens is free) |
+| 2 | `questions.ts`: generate the questions of levels 1-5 and their gold; presence check; hand-write the rubric questions | `questions.json`, `questions.manual.json` | 0 |
 | 3 | Pilot: `showcase/1-courts` only, 1 repetition, effort low and medium | first numbers, prompt fixes | ~$2 |
-| 4 | Full run (batch) + latency run | `out/answers.jsonl` | ~$25-35 |
+| 4 | Full run (batch) | `out/answers.jsonl` | ~$25 |
 | 5 | `grade.ts` + `report.ts`: grading, judge, statistics, charts | `RESULTS.md` | ~$3 (judge) |
 
 Code in TypeScript, as the rest of the repository, with `@anthropic-ai/sdk` as a dev dependency; nothing of
 `bench/` is shipped (`package.json` `files` does not list it). Generated outputs (`out/`) are not committed, only
-`RESULTS.md`.
+`RESULTS.md`. Steps 1 and 3-5 need an Anthropic API key in the environment.
 
 ## Threats to validity
 
 - **The examples are written by an AI with maps.md**: the Markdown may be "easier" for a model of the same family.
   Mitigation: also run the 4 maps of `maps/`, written differently; report per project.
-- **Generated questions favour what the parser sees**, so the Markdown structure. Mitigation: the synthesis questions
-  are written by hand, from the drawn map, not from the source.
-- **The HTML of maps.md is one HTML among many**: the result says "the HTML of this renderer", not "any HTML". A
-  cleaned HTML (semantic tags only, no UI chrome, one view) could be added as a condition B-clean if B loses.
+- **Generated questions favour what the parser sees**, so the Markdown structure. Mitigation: the level 5 questions
+  are written by hand from the drawn map, not from the source.
+- **The HTML of maps.md is one HTML among many**: the result says "the HTML of this renderer", not "any HTML". The
+  token split of step 1 says what a cleaner HTML (B-clean: no UI chrome, one view, links as text) would cost; it is
+  added as a condition if B understands better but costs too much.
 - **One model**: the result holds for Sonnet 5.5; a short replication on Claude Haiku 5.5 would show whether the gap
   grows with a smaller model.
 
@@ -148,4 +181,4 @@ Code in TypeScript, as the rest of the repository, with `@anthropic-ai/sdk` as a
 
 1. Keep B+css on a sample only (recommended) or on every map.
 2. Add A+def (recommended: it is what the skill really gives).
-3. Include the round trip (stage 2) now or after the first results (recommended: after).
+3. Include level 6, Use, now or after the first results (recommended: after).
