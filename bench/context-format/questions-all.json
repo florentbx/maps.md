@@ -1,0 +1,22 @@
+[
+ {"id":"M1","kind":"cross","q":"Across the three projects, list every decision whose status is superseded, with its project and the decision that supersedes it.","gold":["1-courts: Take 10% from each booking > Take 8% from the club, no fee for the player","2-spliit: Round the balances, not each expense > Compute every share in one place","3-coop: Swap one for one, within the team > Give a shift away through a pool open to all members"]},
+ {"id":"M2","kind":"cross","q":"Across the three projects, list every decision whose status is proposed, with its project.","gold":["1-courts: Book with an account only","3-coop: A swap no longer needs the approval of the office"]},
+ {"id":"M3","kind":"count","q":"Which project has the most decisions in its decision log, and how many?","gold":["2-spliit","12"]},
+ {"id":"M4","kind":"cross","q":"In the system architectures of all projects, list every component whose kind is database, with its project and its technology.","gold":["1-courts: Courtly database, Supabase (PostgreSQL)","2-spliit: Browser storage, localStorage","2-spliit: PostgreSQL, PostgreSQL, Prisma migrations"]},
+ {"id":"M5","kind":"cross","q":"Which hosting platform appears in the architectures of both Courtly and Spliit, and in which component of each?","gold":["Vercel","1-courts: Courtly web app","2-spliit: Vercel Cron"]},
+ {"id":"M6","kind":"cross","q":"Which terms are defined in both the glossary of Courtly and the glossary of Spliit?","gold":["none"]},
+ {"id":"M7","kind":"structure","q":"Compare the life of a booking (Courtly) and the life of a group (Spliit): how many states does each have, and which states of each have no outgoing arrow?","gold":["booking: 7 states; Expired, Cancelled, refunded, Cancelled by the club, Paid out","group: 4 states; Purged"]},
+ {"id":"M8","kind":"structure","q":"In the life of a group (Spliit), which state can go back to an earlier state, to which one, and by which event?","gold":["Scheduled for deletion","to Active","someone restores it"]},
+ {"id":"M9","kind":"cross","q":"Give the duration, with its unit, of: the hold of a slot while paying in Courtly; the grace period before a group is deleted in Spliit; how long before the shift a member of the co-op must email the office about a swap.","gold":["10 minutes","30 days","48 hours"]},
+ {"id":"M10","kind":"list","q":"Which failure modes of Spliit have a high severity?","gold":["Anyone with the link changes a group","Expense reached outside its group","Instance misconfigured"]},
+ {"id":"M11","kind":"count","q":"How many failure modes of Spliit have a low severity?","gold":["7"]},
+ {"id":"M12","kind":"list","q":"Which decisions of Spliit were decided by BastiOfBerlin, each with its pull request number?","gold":["Compute every share in one place (#562)","Check the feature flags on the server (#560)","Sum the total balance per currency (#583)","Keep the group's amount in a repayment in another currency (#588)"]},
+ {"id":"M13","kind":"cross","q":"Across the three projects, on which single date were the most decisions taken, in which project, and how many?","gold":["2026-11-12","1-courts","7"]},
+ {"id":"M14","kind":"links","q":"In Spliit, the decision 'Compute every share in one place' cites a business rule: which one? And which decision did it supersede?","gold":["Leftover minor unit","Round the balances, not each expense"]},
+ {"id":"M15","kind":"structure","q":"In the data model of Spliit, which entities have a 'belongs to' relation to Group?","gold":["Participant","Expense","Activity"]},
+ {"id":"M16","kind":"list","q":"Which split modes does Spliit have, and which is the default?","gold":["EVENLY","BY_SHARES","BY_PERCENTAGE","BY_AMOUNT","default EVENLY"]},
+ {"id":"M17","kind":"reason","q":"A 48 € booking is played on Courtly: how much does the club get? If that amount were recorded as an amount in Spliit, which integer would be stored?","gold":["44.16 €","4416"]},
+ {"id":"M18","kind":"cross","q":"How many personas does the co-op define, and how many roles have their own column in Courtly's map of who can do what?","gold":["3","4"]},
+ {"id":"M19","kind":"trap","q":"What commission does Spliit take on each expense?","gold":["NOT_IN_MAPS"]},
+ {"id":"M20","kind":"trap","q":"Which decision of the co-op set the 30-day grace period, and on which date?","gold":["NOT_IN_MAPS"]}
+]
