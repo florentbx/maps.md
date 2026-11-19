@@ -96,6 +96,24 @@ Your maps are plain Markdown files in your repository, not records in a tool.
 - **Yours**: no account, no server, nothing to lock you in. Readable in any editor, on GitHub, by any AI; versioned and reviewed with your code. If maps.md stopped tomorrow, your maps would stay as they are.
 - **Flexible**: what a map says is apart from how it is drawn. The same file can be shown as a board, a table or a matrix, and take your brand's theme, without a word changed.
 
+## Light in your AI's context
+
+You see the drawing; your AI reads the Markdown. The same map, for a fraction of the tokens: more room in its context for your code and your conversation.
+
+We gave Claude Haiku the 31 maps of the three examples, each time in one form, and asked 20 questions that need all of them: links across maps, full lists, arrows, counts, and traps.
+
+| What the AI reads | Tokens of the maps | Right answers |
+| --- | --- | --- |
+| **The Markdown** of the maps | **~77K** | **19.75/20** |
+| The same maps as HTML, as the page draws them | ~290K (x3.7) | 19.5/20 |
+| The same maps as HTML files with their CSS | ~1.5M (x20) | Does not fit in a context of 1M tokens |
+
+- **The same understanding**: the AI got the HTML right too, and invented nothing in any form. The HTML only costs more.
+- **Nothing lost**: a drawing leaves out what does not fit on screen (the labels of arrows, the types of a data model); the Markdown keeps every word.
+- **Before you paste a drawing or an export into your AI**: give it the `.md` instead.
+
+[The benchmark](bench/context-format/RESULTS.md): how it was run, the questions, every answer. The tokens are estimated from the runs, not counted one by one.
+
 ## Next to other diagram tools
 
 Mermaid draws what you already know; maps.md holds what you and your AI know, and what you don't yet, and draws it.
