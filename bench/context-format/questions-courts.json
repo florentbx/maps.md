@@ -1,0 +1,22 @@
+[
+ {"id":"Q1","kind":"list","q":"In the map of who can do what, list every action that the desk staff can do (yes or own).","gold":["Cancel a slot","Block a slot","See the bookings of a club"]},
+ {"id":"Q2","kind":"list","q":"In the map of who can do what, list every action that the Courtly team can do (yes).","gold":["Cancel a booking","See the bookings of a club","See the payouts and the commission","Approve a club"]},
+ {"id":"Q3","kind":"list","q":"In the story map, list every story whose release is Release 2.","gold":["Set the club's own deadline to cancel","Filter indoor courts only","Pay with Apple Pay or Google Pay","Get a reminder the day before","Invite the other players to the booking","Export the bookings for the accountant"]},
+ {"id":"Q4","kind":"list","q":"In the story map, list every story whose release is Later.","gold":["Sync with the club's own calendar","See the clubs on a map","Read the reviews of a club","Split the price between the players","Find players to complete a game"]},
+ {"id":"Q5","kind":"list","q":"In the decisions, list every decision whose status is not accepted, each with its status.","gold":["Take 10% from each booking: superseded","Book with an account only: proposed"]},
+ {"id":"Q6","kind":"links","q":"The roadmap initiative 'Two more pilot clubs' cites a success metric of another map. Which map, and which metric, word for word?","gold":["brief","3 pilot clubs at launch, each with all its courts on Courtly."]},
+ {"id":"Q7","kind":"links","q":"The acceptance scenario 'A blocked slot is not offered' checks a story. Name that story, the decision that this story cites, and the consequence of that decision that the scenario verifies.","gold":["Block a slot booked outside Courtly","Block slots by hand, no sync","Blocking a slot must take two clicks"]},
+ {"id":"Q8","kind":"links","q":"The business rule 'Club cancels' applies to a state of the life of a booking. Which state, and what is the value of its Slot property?","gold":["Cancelled by the club","undefined (not said)"]},
+ {"id":"Q9","kind":"links","q":"Which acceptance scenarios check the business rule 'Player cancels', and which decision does that rule rest on?","gold":["Cancel in time","Too late to cancel","One cancellation deadline, 24 hours"]},
+ {"id":"Q10","kind":"links","q":"The business rules 'Commission' and 'Weekly payout' apply to a state of the life of a booking. Which state? From which state and by which event does a booking reach it?","gold":["Paid out","from Played","next Monday"]},
+ {"id":"Q11","kind":"links","q":"The context of the life of a booking names the architecture component that holds the money. Name it, and give every arrow that leaves this component in the architecture: its target and its label.","gold":["Stripe Connect","to Courtly web app","payment done, refund done (webhook)"],"lost_in_html":"the arrow labels of the architecture are not drawn (its layout hides them)"},
+ {"id":"Q12","kind":"structure","q":"In the life of a booking, list every state from which no arrow leaves.","gold":["Expired","Cancelled, refunded","Cancelled by the club","Paid out"]},
+ {"id":"Q13","kind":"structure","q":"In the life of a booking, give every path from Held to Paid out, as the sequence of its states.","gold":["Held > Paid > Played > Paid out (the only path)"]},
+ {"id":"Q14","kind":"structure","q":"In the story map, under which activity and which step is the story 'Get the confirmation by email'? How many stories of that activity are in the MVP?","gold":["The player books","Get the proof","3"]},
+ {"id":"Q15","kind":"structure","q":"In the architecture, which components receive no arrow from any other component?","gold":["Player","Club manager"]},
+ {"id":"Q16","kind":"count","q":"How many stories of the story map are in the MVP?","gold":["21"]},
+ {"id":"Q17","kind":"count","q":"Which business rules are checked by no acceptance scenario?","gold":["Peak price"]},
+ {"id":"Q18","kind":"count","q":"Which roadmap initiatives have no owner (the owner is not said)?","gold":["Reviews of clubs","Cancellation deadline per club","Split the price between the players","Matchmaking, lessons, an app on the stores"]},
+ {"id":"Q19","kind":"trap","q":"What is the technology of the component 'Courtly API' in the architecture?","gold":["NOT_IN_MAPS"]},
+ {"id":"Q20","kind":"trap","q":"On which date was the decision 'Take 12% from each booking' taken?","gold":["NOT_IN_MAPS"]}
+]
