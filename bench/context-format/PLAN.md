@@ -33,20 +33,26 @@ Two measures only: **token cost** and **effective understanding**.
 
 ## Questions
 
-**20 questions**, written by hand from the Markdown, each with its gold answer, then checked to be answerable from
-the HTML too (a question whose answer is only in the Markdown is kept and tagged: it shows what the HTML loses).
+**20 questions, hard by design.** Sonnet would get simple lookups right in every form: a score of 20/20 everywhere
+says nothing. So no question can be answered from one line of one map; each needs what a form can hide: every
+element of a list, an arrow, a link to another map, or the absence of something.
 
-| Kind | Count | Example |
-| --- | --- | --- |
-| Find a value | 4 | "What is the status of the initiative X on the roadmap?" |
-| Gather a list | 4 | "Which roles can cancel a booking?" |
-| Structure | 4 | "From which states can a booking go to *cancelled*?" |
-| Follow links between maps | 4 | "Which decision does the rule X come from?" |
-| Reason | 2 | "Which initiative of the roadmap has no acceptance scenario?" |
-| Trap (not in the maps) | 2 | Must answer `NOT_IN_MAPS` |
+Written by hand from the Markdown, each with its gold answer, then checked to be answerable from the HTML too (a
+question whose answer is only in the Markdown is kept and tagged: it shows what the HTML loses).
 
-Grading: 1 per right answer, partial for lists (share of right elements), 0 and an **invention** counted for any
-element that is not in the maps.
+| Kind | Count | Example | Why it is hard |
+| --- | --- | --- | --- |
+| Exhaustive list | 5 | "Every rule that applies to a cancellation, across all maps." | One missed element costs; skimming shows |
+| Several maps | 6 | "The roadmap initiative that delivers the story X: which architecture component does it touch, and which decision set that component?" | 2-3 links to follow; links are `↗` marks in the HTML |
+| Structure | 4 | "Every path from *pending* to *refunded* in the life of a booking." | Arrows are SVG paths in the HTML |
+| Absence and counting | 3 | "Which stories of the story map have no acceptance scenario? How many?" | Needs the whole of two maps |
+| Trap | 2 | A near name that does not exist, or a link that is not there | Must answer `NOT_IN_MAPS`; an answer is an invention |
+
+Grading: lists by share of right elements (missed elements lower it), 0 and an **invention** counted for any element
+that is not in the maps. Scores are out of 20, with decimals: a ceiling is far less likely than with right/wrong.
+
+**Calibration first**: one A agent and one B agent answer the 20 questions. If both score 19/20 or more, the
+questions are made harder (longer chains, larger lists) before the full run.
 
 ## Measures
 
@@ -63,8 +69,9 @@ changes anything to understanding), **A vs A+def** (what knowing the type brings
 ## Steps
 
 1. Export the four folders (a short script, no API). Write the 20 questions and their gold answers.
-2. Run the 12 agents in parallel.
-3. Grade, and write `RESULTS.md` here: the table above, and the questions where the forms differ, explained.
+2. Calibration: 1 agent on A, 1 on B; harden the questions if both reach 19/20.
+3. Run the 12 agents in parallel (the 2 of the calibration are not counted).
+4. Grade, and write `RESULTS.md` here: the table above, and the questions where the forms differ, explained.
 
 ## Limits
 
@@ -74,3 +81,5 @@ changes anything to understanding), **A vs A+def** (what knowing the type brings
   small one. B+css (~250K tokens to read) may also push an agent to skim: the list of the files it read shows it.
   If the result is close, the next step is a second project (`3-coop`, the most linked).
 - The HTML is the HTML of this renderer: it says nothing of a cleaner HTML.
+- If every form still scores the same, that is a result too: the same understanding, for 3 to 25 times the tokens.
+  A replication on Claude Haiku would then show whether a smaller model feels the form.
