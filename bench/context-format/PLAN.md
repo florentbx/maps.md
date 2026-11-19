@@ -1,6 +1,6 @@
 # Benchmark plan: a project's maps as Markdown vs as HTML, in Claude Haiku's context
 
-Status: plan, not run yet.
+Status: run on 2026-11-19, see [RESULTS.md](RESULTS.md).
 
 ## Question
 
