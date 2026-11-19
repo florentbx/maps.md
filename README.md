@@ -102,13 +102,13 @@ You see the drawing; your AI reads the Markdown. The same map, for a fraction of
 
 We gave Claude Haiku the 31 maps of the three examples, each time in one form, and asked 20 questions that need all of them: links across maps, full lists, arrows, counts, and traps.
 
-| What the AI reads | Tokens of the maps | Right answers |
-| --- | --- | --- |
-| **The Markdown** of the maps | **~77K** | **19.75/20** |
-| The same maps as HTML, as the page draws them | ~290K (x3.7) | 19.5/20 |
-| The same maps as HTML files with their CSS | ~1.5M (x20) | Does not fit in a context of 1M tokens |
+| What the AI reads | Cost in tokens |
+| --- | --- |
+| **The Markdown** of the maps | **x1** |
+| The same maps as HTML, as the page draws them | x3.7 |
+| The same maps as HTML files with their CSS | x20, more than a context of 1M tokens |
 
-- **The same understanding**: the AI got the HTML right too, and invented nothing in any form. The HTML only costs more.
+- **The same understanding**: the AI answered as well in every form, and invented nothing. The HTML only costs more.
 - **Nothing lost**: a drawing leaves out what does not fit on screen (the labels of arrows, the types of a data model); the Markdown keeps every word.
 - **Before you paste a drawing or an export into your AI**: give it the `.md` instead.
 
